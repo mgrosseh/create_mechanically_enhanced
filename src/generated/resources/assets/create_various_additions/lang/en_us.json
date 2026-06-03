@@ -1,5 +1,21 @@
 {
   "block.create_various_additions.food_replicator": "Food Replicator",
   "create_various_additions.scroll_value_behaviour.analog_scoll_value": "Analog Value",
-  "itemGroup.create_various_additions": "Create: Various Additions"
+  "create_various_additions.tool_slot.gearbox": "Gearbox",
+  "create_various_additions.tool_slot.tank": "Tank",
+  "create_various_additions.tool_slot.tip": "Tip",
+  "create_various_additions.tool_slots.empty_slot": "Empty",
+  "create_various_additions.tool_slots.none": "No slots",
+  "create_various_additions.tool_slots.title": "Slots",
+  "create_various_additions.tooltip.mechanical_tool.air.infix": " / ",
+  "create_various_additions.tooltip.mechanical_tool.air.postfix": "\n",
+  "create_various_additions.tooltip.mechanical_tool.air.prefix": "Air: ",
+  "create_various_additions.tooltip.mechanical_tool.no_air": "No Tank\n",
+  "item.create_various_additions.mechanical_drill": "Mechanical Drill",
+  "item.create_various_additions.small_copper_tank": "Small Copper Tank",
+  "item.create_various_additions.small_netherite_tank": "Small Netherite Tank",
+  "item.create_various_additions.small_vertical_andesite_gearbox": "Small Vertical Andesite Gearbox",
+  "item.create_various_additions.small_vertical_brass_gearbox": "Small Vertical Brass Gearbox",
+  "itemGroup.create_various_additions": "Create: Mechanically Enhanced",
+  "itemGroup.create_various_additions.create_mechanically_enhanced": "Create Mechanically Enhanced"
 }

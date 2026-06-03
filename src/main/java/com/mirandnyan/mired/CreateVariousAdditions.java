@@ -1,5 +1,7 @@
 package com.mirandnyan.mired;
 
+import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPart;
+import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalToolSlot;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;
@@ -22,13 +24,14 @@ import net.neoforged.fml.ModContainer;
 public class CreateVariousAdditions {
 
     public static final String MOD_ID = "create_various_additions";
-    public static final String MOD_NAME = "Create: Various Additions";
+    public static final String MOD_NAME = "Create: Mechanically Enhanced";
 
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public static IEventBus modEventBus;
     public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(MOD_ID)
-            //.defaultCreativeTab((ResourceKey<CreativeModeTab>) null)
+            .defaultCreativeTab("create_mechanically_enhanced")
+            .build()
             .setTooltipModifierFactory(item -> new ItemDescription.Modifier(item, FontHelper.Palette.STANDARD_CREATE)
                             .andThen(TooltipModifier.mapNull(KineticStats.create(item))));
 
@@ -40,13 +43,16 @@ public class CreateVariousAdditions {
 
         CVABlocks.register();
         CVAItems.register();
-        //MiredCreativeModeTabs.register(modEventBus);
+        CVADataComponents.register(modEventBus);
 
         CVATranslations.register();
+        MechanicalPart.register();
+        MechanicalToolSlot.register();
 
         modEventBus.addListener(EventPriority.HIGHEST, CVADatagen::gatherDataHighPriority);
     }
 
+    @Deprecated
     public static CreateRegistrate getRegistrate() {
         return REGISTRATE;
     }

@@ -9,4 +9,8 @@ public class FoodReplicatorBlockEntity extends KineticBlockEntity {
     public FoodReplicatorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
     }
+
+    /*
+    Analysis mode:
+     */
 }

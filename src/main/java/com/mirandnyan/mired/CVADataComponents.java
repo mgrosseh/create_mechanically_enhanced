@@ -1,0 +1,44 @@
+package com.mirandnyan.mired;
+
+import com.mirandnyan.mired.content.equipment.mechanical_mods.FilledToolSlot;
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.util.ExtraCodecs;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import org.jetbrains.annotations.ApiStatus;
+
+import java.util.List;
+import java.util.function.UnaryOperator;
+
+public class CVADataComponents {
+    private static final DeferredRegister.DataComponents DATA_COMPONENTS =
+            DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, CreateVariousAdditions.MOD_ID);
+
+    public static final DataComponentType<List<FilledToolSlot>> TOOL_SLOTS_COMPONENT_TYPE = register(
+            "tool_slots",
+builder -> builder.persistent(FilledToolSlot.CODEC.listOf()).networkSynchronized(CatnipStreamCodecBuilders.list(FilledToolSlot.STREAM_CODEC))
+    );
+
+    public static final DataComponentType<Integer> PRESSURIZED_AIR = register(
+      "pressurized_air",
+            builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT)
+    );
+
+    public static final DataComponentType<Integer> PRESSURIZED_AIR_CAPACITY = register(
+            "pressurized_air_capacity",
+            builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT)
+    );
+    private static <T> DataComponentType<T> register(String name, UnaryOperator<DataComponentType.Builder<T>> builder) {
+        DataComponentType<T> type = builder.apply(DataComponentType.builder()).build();
+        DATA_COMPONENTS.register(name, () -> type);
+        return type;
+    }
+
+    @ApiStatus.Internal
+    public static void register(IEventBus modEventBus) {
+        DATA_COMPONENTS.register(modEventBus);
+    }
+}
