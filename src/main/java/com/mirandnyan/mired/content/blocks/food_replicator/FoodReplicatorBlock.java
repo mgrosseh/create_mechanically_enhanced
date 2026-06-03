@@ -1,6 +1,6 @@
 package com.mirandnyan.mired.content.blocks.food_replicator;
 
-import com.mirandnyan.mired.CVABlocks;
+import com.mirandnyan.mired.CMEBlocks;
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.kinetics.base.KineticBlock;
 import com.simibubi.create.foundation.block.IBE;
@@ -64,7 +64,7 @@ public class FoodReplicatorBlock extends KineticBlock implements IBE<FoodReplica
     }
     @Override
     public BlockEntityType<? extends FoodReplicatorBlockEntity> getBlockEntityType() {
-        return CVABlocks.FOOD_REPLICATOR_BLOCK_ENTITY.get();
+        return CMEBlocks.FOOD_REPLICATOR_BLOCK_ENTITY.get();
     }
 
     // BLOCK STATE

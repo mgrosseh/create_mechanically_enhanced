@@ -1,6 +1,6 @@
 package com.mirandnyan.mired.content.blocks.helpers;
 
-import com.mirandnyan.mired.CreateVariousAdditions;
+import com.mirandnyan.mired.CreateMechanicallyEnhanced;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
@@ -26,7 +26,7 @@ public abstract class BlockStateGenerator<T extends Block> {
         return block_model(p, model_location, suffix);
     }
     protected ModelFile block_model(final RegistrateBlockstateProvider p, final String infix, final String suffix) {
-        return p.models().getExistingFile(CreateVariousAdditions.path("block/" + infix + "/" + suffix));
+        return p.models().getExistingFile(CreateMechanicallyEnhanced.path("block/" + infix + "/" + suffix));
     }
 
     protected static ConfiguredModel.Builder<MultiPartBlockStateBuilder.PartBuilder> rotate(ConfiguredModel.Builder<MultiPartBlockStateBuilder.PartBuilder> builder, Direction dir) {

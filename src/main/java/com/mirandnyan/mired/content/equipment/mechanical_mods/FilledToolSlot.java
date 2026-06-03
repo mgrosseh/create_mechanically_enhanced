@@ -1,11 +1,10 @@
 package com.mirandnyan.mired.content.equipment.mechanical_mods;
 
-import com.mirandnyan.mired.CVATranslations;
+import com.mirandnyan.mired.CMETranslations;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
@@ -72,10 +71,10 @@ public record FilledToolSlot(
                                 @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         var maybe_part = getPart();
         var part = maybe_part.isEmpty()
-                ? CVATranslations.TOOL_SLOTS_EMPTY.resolveComponent()
-                : CVATranslations.Components.item(maybe_part.get().get().getItem());
+                ? CMETranslations.TOOL_SLOTS_EMPTY.resolveComponent()
+                : CMETranslations.Components.item(maybe_part.get().get().getItem());
 
-        tooltip.add(CVATranslations.Components.line(
+        tooltip.add(CMETranslations.Components.line(
                 getSlot().get().lang().resolveComponent(),
                 Component.literal(": "),
                 part

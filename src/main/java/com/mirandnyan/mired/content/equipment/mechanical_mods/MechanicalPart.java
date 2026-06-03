@@ -1,9 +1,6 @@
 package com.mirandnyan.mired.content.equipment.mechanical_mods;
 
-import com.mirandnyan.mired.CVAItems;
-import com.mirandnyan.mired.CVATags;
-import com.mirandnyan.mired.CVATranslations;
-import com.mirandnyan.mired.CreateVariousAdditions;
+import com.mirandnyan.mired.*;
 import com.mirandnyan.mired.content.equipment.mechanical_drill.MechanicalDrillItem;
 import com.mirandnyan.mired.content.equipment.mechanical_mods.parts.MechanicalCogPartData;
 import com.mirandnyan.mired.content.equipment.mechanical_mods.parts.MechanicalDrillPartData;
@@ -14,14 +11,11 @@ import com.tterrag.registrate.util.entry.RegistryEntry;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.Registry;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.Unit;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.component.Tool;
 import net.neoforged.neoforge.registries.RegistryBuilder;
@@ -33,7 +27,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static com.mirandnyan.mired.CreateVariousAdditions.REGISTRATE;
+import static com.mirandnyan.mired.CreateMechanicallyEnhanced.REGISTRATE;
 
 public class MechanicalPart {
     public static final ResourceKey<Registry<MechanicalPart>> REGISTRY =
@@ -50,7 +44,7 @@ public class MechanicalPart {
 
     public final @NotNull PartialModel model;
 
-    protected CVATranslations.LangEntry lang;
+    protected CMETranslations.LangEntry lang;
 
     protected MechanicalPart(@NotNull ResourceKey<MechanicalToolSlot> validSlot,
                              @NotNull ResourceKey<Item> validItem,
@@ -85,18 +79,18 @@ public class MechanicalPart {
     // TODO: maybe make them with transform(Item, MechanicalToolSlot, apply) out of Items
     public static final RegistryEntry<MechanicalPart, MechanicalPart> COPPER_TANK = register("copper_tank",
             MechanicalToolSlot.TANK_SLOT,
-            CVAItems.SMALL_COPPER_TANK,
+            CMEItems.SMALL_COPPER_TANK,
             new MechanicalTankPartData(800)
     );
     public static final RegistryEntry<MechanicalPart, MechanicalPart> NETHERITE_TANK = register("netherite_tank",
             MechanicalToolSlot.TANK_SLOT,
-            CVAItems.SMALL_NETHERITE_TANK,
+            CMEItems.SMALL_NETHERITE_TANK,
             new MechanicalTankPartData(1200)
     );
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> ANDESITE_GEARBOX = register("andesite_gearbox",
             MechanicalToolSlot.GEARBOX_SLOT,
-            CVAItems.SMALL_ANDESITE_VERTICAL_GEARBOX,
+            CMEItems.SMALL_ANDESITE_VERTICAL_GEARBOX,
             new MechanicalPartData() {
                 @Override
                 public int getTransferRatio() {
@@ -106,7 +100,7 @@ public class MechanicalPart {
     );
     public static final RegistryEntry<MechanicalPart, MechanicalPart> BRASS_GEARBOX = register("brass_gearbox",
             MechanicalToolSlot.GEARBOX_SLOT,
-            CVAItems.SMALL_BRASS_VERTICAL_GEARBOX,
+            CMEItems.SMALL_BRASS_VERTICAL_GEARBOX,
             new MechanicalPartData() {
                 @Override
                 public int getTransferRatio() {
@@ -118,18 +112,18 @@ public class MechanicalPart {
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> BRASS_COG = register("brass_cog",
             MechanicalToolSlot.COG_SLOT,
-            CVAItems.SMALL_BRASS_COG,
+            CMEItems.SMALL_BRASS_COG,
             new MechanicalCogPartData(100)
     );
     public static final RegistryEntry<MechanicalPart, MechanicalPart> WOODEN_COG = register("wooden_cog",
             MechanicalToolSlot.COG_SLOT,
-            CVAItems.SMALL_WOODEN_COG,
+            CMEItems.SMALL_WOODEN_COG,
             new MechanicalCogPartData(0)
     );
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> DEFAULT_GRIP = register("default_grip",
             MechanicalToolSlot.GRIP_SLOT,
-            CVAItems.DEFAULT_GRIP,
+            CMEItems.DEFAULT_GRIP,
             new MechanicalPartData() {} // TODO
     );
 
@@ -152,11 +146,11 @@ public class MechanicalPart {
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> IRON_DRILL_HEAD = register("iron_drill_head",
             MechanicalToolSlot.TIP_SLOT,
-            CVAItems.IRON_DRILL_HEAD,
+            CMEItems.IRON_DRILL_HEAD,
             new MechanicalDrillPartData(
                     new Tool(List.of(
                             Tool.Rule.deniesDrops(BlockTags.INCORRECT_FOR_IRON_TOOL),
-                            Tool.Rule.minesAndDrops(CVATags.Blocks.MINEABLE_WITH_MECHANICAL_DRILL, Tiers.IRON.getSpeed())),
+                            Tool.Rule.minesAndDrops(CMETags.Blocks.MINEABLE_WITH_MECHANICAL_DRILL, Tiers.IRON.getSpeed())),
                             1.0F,
                             0
                     )
@@ -164,11 +158,11 @@ public class MechanicalPart {
     );
     public static final RegistryEntry<MechanicalPart, MechanicalPart> DIAMOND_DRILL_HEAD = register("diamond_drill_head",
             MechanicalToolSlot.TIP_SLOT,
-            CVAItems.DIAMOND_DRILL_HEAD,
+            CMEItems.DIAMOND_DRILL_HEAD,
             new MechanicalDrillPartData(
                     new Tool(List.of(
-                            Tool.Rule.deniesDrops(CVATags.Blocks.INCORRECT_FOR_MECHANICAL_DRILL),
-                            Tool.Rule.minesAndDrops(CVATags.Blocks.MINEABLE_WITH_MECHANICAL_DRILL, Tiers.DIAMOND.getSpeed())),
+                            Tool.Rule.deniesDrops(CMETags.Blocks.INCORRECT_FOR_MECHANICAL_DRILL),
+                            Tool.Rule.minesAndDrops(CMETags.Blocks.MINEABLE_WITH_MECHANICAL_DRILL, Tiers.DIAMOND.getSpeed())),
                             1.0F,
                             0
                     )
@@ -192,7 +186,7 @@ public class MechanicalPart {
             ItemEntry<?> validItem, MechanicalPartData data) {
 
         return REGISTRATE.object(name).simple(REGISTRY, () ->
-                new MechanicalPart(validSlot.getKey(), validItem.getKey(), data, CreateVariousAdditions.asResource("tool_part", name), name));
+                new MechanicalPart(validSlot.getKey(), validItem.getKey(), data, CreateMechanicallyEnhanced.asResource("tool_part", name), name));
     }
 
     @ApiStatus.Internal

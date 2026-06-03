@@ -1,8 +1,8 @@
 package com.mirandnyan.mired.content.equipment.mechanical_drill;
 
-import com.mirandnyan.mired.CVADataComponents;
-import com.mirandnyan.mired.CVAItems;
-import com.mirandnyan.mired.CVATranslations;
+import com.mirandnyan.mired.CMEDataComponents;
+import com.mirandnyan.mired.CMEItems;
+import com.mirandnyan.mired.CMETranslations;
 import com.mirandnyan.mired.content.equipment.MechanicalTool;
 import com.mirandnyan.mired.content.equipment.mechanical_mods.FilledToolSlot;
 import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPart;
@@ -49,7 +49,7 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
     // TODO: no enchant, no anvil
 
     public static ItemStack defaultItemStack() {
-        var stack = CVAItems.MECHANICAL_DRILL.asStack();
+        var stack = CMEItems.MECHANICAL_DRILL.asStack();
         RegistryEntry<MechanicalPart, MechanicalPart>[] defaultParts = new RegistryEntry[]{
                 MechanicalPart.DEFAULT_GRIP,
                 MechanicalPart.WOODEN_COG,
@@ -61,6 +61,8 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
             var slot = new FilledToolSlot(part.get().validSlot, part.getKey());
             insertFilledToolSlot(stack, slot);
         }
+        var capacity = stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR_CAPACITY, 0);
+        stack.set(CMEDataComponents.PRESSURIZED_AIR, capacity);
         return stack;
     }
 
@@ -112,11 +114,11 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
             return;
         EquipmentSlot equipmentSlot = EquipmentSlot.MAINHAND;
         ItemStack item = player.getMainHandItem();
-        if (!CVAItems.MECHANICAL_DRILL.isIn(item)) {
+        if (!CMEItems.MECHANICAL_DRILL.isIn(item)) {
             item = player.getOffhandItem();
             equipmentSlot = EquipmentSlot.OFFHAND;
         }
-        if (!CVAItems.MECHANICAL_DRILL.isIn(item))
+        if (!CMEItems.MECHANICAL_DRILL.isIn(item))
             return;
         useAirOrHurtAndBreak(player, equipmentSlot, item);
     }
@@ -133,7 +135,7 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
-        List<FilledToolSlot> slots = stack.getOrDefault(CVADataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
             slot.getPart().ifPresent(p -> p.get().data.inventoryTick(
                     stack, level, entity, slotId, isSelected
@@ -213,27 +215,27 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context,
                                 @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        List<FilledToolSlot> slots = stack.getOrDefault(CVADataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
 
         tooltip.add(Component.empty());
 
         if (slots.isEmpty())
-            tooltip.add(CVATranslations.TOOL_SLOTS_NONE.resolveComponent());
+            tooltip.add(CMETranslations.TOOL_SLOTS_NONE.resolveComponent());
         else
-            tooltip.add(CVATranslations.TOOL_SLOTS_TITLE.resolveComponent());
+            tooltip.add(CMETranslations.TOOL_SLOTS_TITLE.resolveComponent());
         for (FilledToolSlot slot : slots) {
             slot.appendHoverText(stack, context, tooltip, flagIn);
         }
 
         var maxAir = getMaxAir(stack);
         if (maxAir == 0)
-            tooltip.add(CVATranslations.MECHANICAL_TOOL_NO_AIR.resolveComponent());
+            tooltip.add(CMETranslations.MECHANICAL_TOOL_NO_AIR.resolveComponent());
         else {
-            tooltip.add(Component.empty().append(CVATranslations.MECHANICAL_TOOL_AIR_LEVEL_PRE.resolveComponent())
-                    .append(CVATranslations.Components.number(getAir(stack)))
-                    .append(CVATranslations.MECHANICAL_TOOL_AIR_LEVEL_IN.resolveComponent())
-                    .append(CVATranslations.Components.number(maxAir))
-                    .append(CVATranslations.MECHANICAL_TOOL_AIR_LEVEL_POST.resolveComponent())
+            tooltip.add(Component.empty().append(CMETranslations.MECHANICAL_TOOL_AIR_LEVEL_PRE.resolveComponent())
+                    .append(CMETranslations.Components.number(getAir(stack)))
+                    .append(CMETranslations.MECHANICAL_TOOL_AIR_LEVEL_IN.resolveComponent())
+                    .append(CMETranslations.Components.number(maxAir))
+                    .append(CMETranslations.MECHANICAL_TOOL_AIR_LEVEL_POST.resolveComponent())
             );
         }
         super.appendHoverText(stack, context, tooltip, flagIn);
@@ -242,19 +244,19 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
     // -- Cog --
     @Override
     public float getDestroySpeed(ItemStack stack, BlockState state) {
-        int multiplier = 100 + stack.getOrDefault(CVADataComponents.SPEED_MODIFIER, 0);
+        int multiplier = 100 + stack.getOrDefault(CMEDataComponents.SPEED_MODIFIER, 0);
         return super.getDestroySpeed(stack, state) * (multiplier / 100f);
     }
 
     // -- Air Storage --
     public static int getMaxAir(ItemStack stack) {
-        return stack.getOrDefault(CVADataComponents.PRESSURIZED_AIR_CAPACITY, 0);
+        return stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR_CAPACITY, 0);
     }
     public static int getAir(ItemStack stack) {
-        return stack.getOrDefault(CVADataComponents.PRESSURIZED_AIR, 0);
+        return stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR, 0);
     }
     public static void setAir(ItemStack stack, int air) {
-        stack.set(CVADataComponents.PRESSURIZED_AIR, air);
+        stack.set(CMEDataComponents.PRESSURIZED_AIR, air);
     }
     public static void drainInternalTank(ItemStack stack, int amount) {
         setAir(stack, getAir(stack) - amount);

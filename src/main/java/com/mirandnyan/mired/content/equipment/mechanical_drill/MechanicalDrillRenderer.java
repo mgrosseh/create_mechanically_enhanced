@@ -1,6 +1,6 @@
 package com.mirandnyan.mired.content.equipment.mechanical_drill;
 
-import com.mirandnyan.mired.CVADataComponents;
+import com.mirandnyan.mired.CMEDataComponents;
 import com.mirandnyan.mired.content.equipment.mechanical_mods.FilledToolSlot;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
@@ -19,7 +19,7 @@ public class MechanicalDrillRenderer extends CustomRenderedItemModelRenderer {
                           PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
         boolean renderedAnything = false;
 
-        List<FilledToolSlot> slots = stack.getOrDefault(CVADataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
             if (slot.getPart().isEmpty())
                 return;

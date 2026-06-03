@@ -1,6 +1,5 @@
 package com.mirandnyan.mired.events;
 
-import com.mirandnyan.mired.CVAClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;

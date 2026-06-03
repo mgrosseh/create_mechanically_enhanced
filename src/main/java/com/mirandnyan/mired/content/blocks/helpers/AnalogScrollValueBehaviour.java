@@ -1,7 +1,7 @@
 package com.mirandnyan.mired.content.blocks.helpers;
 
 import com.google.common.collect.ImmutableList;
-import com.mirandnyan.mired.CVATranslations;
+import com.mirandnyan.mired.CMETranslations;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsBoard;
@@ -18,7 +18,7 @@ public class AnalogScrollValueBehaviour extends ScrollValueBehaviour {
 
     @Override
     public ValueSettingsBoard createBoard(final Player player, final BlockHitResult hitResult) {
-        return new ValueSettingsBoard(this.label, this.max, 15, ImmutableList.of(CVATranslations.ANALOG_SCROLL_VALUE.resolveComponent()),
+        return new ValueSettingsBoard(this.label, this.max, 15, ImmutableList.of(CMETranslations.ANALOG_SCROLL_VALUE.resolveComponent()),
                 new ValueSettingsFormatter(ValueSettings::format));
     }
 }

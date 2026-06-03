@@ -1,0 +1,87 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"parent": "create:item/handheld_blockzapper/item",
+	"ambientocclusion": false,
+	"textures": {
+		"particle": "create_mechanically_enhanced:block/small_netherite_backtank",
+		"copper_backtank": "create_mechanically_enhanced:block/small_netherite_backtank"
+	},
+	"elements": [
+		{
+			"from": [5.5, 4, -4.5],
+			"to": [10.5, 5, 0.5],
+			"faces": {
+				"north": {"uv": [1, 0, 6, 1], "texture": "#copper_backtank"},
+				"east": {"uv": [1, 0, 6, 1], "texture": "#copper_backtank"},
+				"south": {"uv": [1, 0, 6, 1], "texture": "#copper_backtank"},
+				"west": {"uv": [1, 0, 6, 1], "texture": "#copper_backtank"},
+				"up": {"uv": [5, 11, 10, 16], "texture": "#copper_backtank"},
+				"down": {"uv": [5, 11, 10, 16], "texture": "#copper_backtank"}
+			}
+		},
+		{
+			"from": [5.5, -3, -4.5],
+			"to": [10.5, -1, 0.5],
+			"faces": {
+				"north": {"uv": [1, 6, 6, 8], "texture": "#copper_backtank"},
+				"east": {"uv": [1, 6, 6, 8], "texture": "#copper_backtank"},
+				"south": {"uv": [1, 6, 6, 8], "texture": "#copper_backtank"},
+				"west": {"uv": [1, 6, 6, 8], "texture": "#copper_backtank"},
+				"up": {"uv": [0, 11, 5, 16], "texture": "#copper_backtank"},
+				"down": {"uv": [0, 11, 5, 16], "texture": "#copper_backtank"}
+			}
+		},
+		{
+			"from": [4.5, -1, -5.5],
+			"to": [11.5, 4, 1.5],
+			"faces": {
+				"north": {"uv": [0, 1, 7, 6], "texture": "#copper_backtank"},
+				"east": {"uv": [0, 1, 7, 6], "texture": "#copper_backtank"},
+				"south": {"uv": [0, 1, 7, 6], "texture": "#copper_backtank"},
+				"west": {"uv": [0, 1, 7, 6], "texture": "#copper_backtank"},
+				"up": {"uv": [9, 4, 16, 11], "texture": "#copper_backtank"},
+				"down": {"uv": [9, 4, 16, 11], "texture": "#copper_backtank"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"translation": [0, 0.5, -0.5],
+			"scale": [0.55, 0.55, 0.55]
+		},
+		"thirdperson_lefthand": {
+			"translation": [0, 0.5, -0.5],
+			"scale": [0.55, 0.55, 0.55]
+		},
+		"firstperson_righthand": {
+			"rotation": [11, 11, 0],
+			"translation": [0.25, 2.25, 2.75],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"firstperson_lefthand": {
+			"rotation": [11, 11, 0],
+			"translation": [0.25, 2.25, 2.75],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"ground": {
+			"rotation": [0, 0, 90],
+			"translation": [0, -0.75, 4],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"gui": {
+			"rotation": [-23, 145, 0],
+			"translation": [3, -2.25, 0],
+			"scale": [0.625, 0.625, 0.625]
+		},
+		"head": {
+			"rotation": [0, -180, 0],
+			"translation": [0, 13, 7]
+		},
+		"fixed": {
+			"rotation": [0, 90, 0],
+			"translation": [3.75, 0, 0],
+			"scale": [0.5, 0.5, 0.5]
+		}
+	}
+}

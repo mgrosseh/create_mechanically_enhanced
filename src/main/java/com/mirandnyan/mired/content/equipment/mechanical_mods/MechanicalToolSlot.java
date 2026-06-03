@@ -1,6 +1,6 @@
 package com.mirandnyan.mired.content.equipment.mechanical_mods;
 
-import com.mirandnyan.mired.CVATranslations;
+import com.mirandnyan.mired.CMETranslations;
 import com.mojang.serialization.Codec;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import io.netty.buffer.ByteBuf;
@@ -10,10 +10,10 @@ import net.minecraft.resources.ResourceKey;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 import org.jetbrains.annotations.ApiStatus;
 
-import static com.mirandnyan.mired.CreateVariousAdditions.REGISTRATE;
+import static com.mirandnyan.mired.CreateMechanicallyEnhanced.REGISTRATE;
 
 // TODO name
-public record MechanicalToolSlot(CVATranslations.LangEntry lang) {
+public record MechanicalToolSlot(CMETranslations.LangEntry lang) {
 
     public static final ResourceKey<Registry<MechanicalToolSlot>> REGISTRY =
             REGISTRATE.makeRegistry("mechanical_tool_slot", RegistryBuilder::new);
@@ -22,17 +22,17 @@ public record MechanicalToolSlot(CVATranslations.LangEntry lang) {
     public static final StreamCodec<ByteBuf, ResourceKey<MechanicalToolSlot>> STREAM_CODEC = ResourceKey.streamCodec(REGISTRY);
 
     public static final RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> TANK_SLOT = register("tank",
-            CVATranslations.TANK_TOOL_SLOT);
+            CMETranslations.TANK_TOOL_SLOT);
     public static final RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> GEARBOX_SLOT = register("gearbox",
-            CVATranslations.GEARBOX_TOOL_SLOT);
+            CMETranslations.GEARBOX_TOOL_SLOT);
     public static final RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> TIP_SLOT = register("tip",
-            CVATranslations.TIP_TOOL_SLOT);
+            CMETranslations.TIP_TOOL_SLOT);
     public static final RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> COG_SLOT = register("cog",
-            CVATranslations.COG_TOOL_SLOT);
+            CMETranslations.COG_TOOL_SLOT);
     public static final RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> GRIP_SLOT = register("grip",
-            CVATranslations.GRIP_TOOL_SLOT);
+            CMETranslations.GRIP_TOOL_SLOT);
 
-    public static RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> register(String name, CVATranslations.LangEntry lang) {
+    public static RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> register(String name, CMETranslations.LangEntry lang) {
         return REGISTRATE.object(name).simple(REGISTRY, () -> new MechanicalToolSlot(lang));
     }
     public static RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> get(ResourceKey<MechanicalToolSlot> slot) {

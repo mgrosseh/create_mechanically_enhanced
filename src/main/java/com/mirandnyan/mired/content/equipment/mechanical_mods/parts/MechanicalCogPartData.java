@@ -1,7 +1,6 @@
 package com.mirandnyan.mired.content.equipment.mechanical_mods.parts;
 
-import com.mirandnyan.mired.CVAClient;
-import com.mirandnyan.mired.CVADataComponents;
+import com.mirandnyan.mired.CMEDataComponents;
 import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPart;
 import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPartData;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -22,13 +21,13 @@ public class MechanicalCogPartData extends MechanicalPartData {
 
     @Override
     public void onInserted(ItemStack tool) {
-        var speed = tool.getOrDefault(CVADataComponents.SPEED_MODIFIER, 0);
-        tool.set(CVADataComponents.SPEED_MODIFIER, speed + speedModifier);
+        var speed = tool.getOrDefault(CMEDataComponents.SPEED_MODIFIER, 0);
+        tool.set(CMEDataComponents.SPEED_MODIFIER, speed + speedModifier);
     }
     @Override
     public void onRemoved(ItemStack tool) {
-        var speed = tool.getOrDefault(CVADataComponents.SPEED_MODIFIER, 0);
-        tool.set(CVADataComponents.SPEED_MODIFIER, Math.max(speed - speedModifier, 0));
+        var speed = tool.getOrDefault(CMEDataComponents.SPEED_MODIFIER, 0);
+        tool.set(CMEDataComponents.SPEED_MODIFIER, Math.max(speed - speedModifier, 0));
     }
 
     @Override

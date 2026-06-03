@@ -1,13 +1,9 @@
 package com.mirandnyan.mired.content.equipment;
 
-import com.mirandnyan.mired.CVADataComponents;
+import com.mirandnyan.mired.CMEDataComponents;
 import com.mirandnyan.mired.content.equipment.mechanical_mods.FilledToolSlot;
 import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalToolSlot;
-import com.mojang.serialization.Codec;
 import com.tterrag.registrate.util.entry.RegistryEntry;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -22,7 +18,7 @@ public class MechanicalTool extends Item {
     }
 
     protected static @Nullable FilledToolSlot getToolSlot(ItemStack stack, RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> slot) {
-        List<FilledToolSlot> slots = stack.get(CVADataComponents.TOOL_SLOTS_COMPONENT_TYPE);
+        List<FilledToolSlot> slots = stack.get(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE);
         if (slots == null)
             return null;
         for (FilledToolSlot toolSlot : slots) {
@@ -32,7 +28,7 @@ public class MechanicalTool extends Item {
         return null;
     }
     protected static @Nullable FilledToolSlot insertFilledToolSlot(ItemStack stack, FilledToolSlot slot) {
-        List<FilledToolSlot> slots = stack.get(CVADataComponents.TOOL_SLOTS_COMPONENT_TYPE);
+        List<FilledToolSlot> slots = stack.get(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE);
         ArrayList<FilledToolSlot> newSlots = slots == null ? new ArrayList<>() : new ArrayList<>(slots);
 
         FilledToolSlot removed = null;
@@ -45,7 +41,7 @@ public class MechanicalTool extends Item {
         }
         slot.getPart().ifPresent(part -> part.get().data.onInserted(stack));
         newSlots.add(slot);
-        stack.set(CVADataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.copyOf(newSlots));
+        stack.set(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.copyOf(newSlots));
         return removed;
     }
 }

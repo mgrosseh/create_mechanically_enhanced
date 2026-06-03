@@ -1,6 +1,6 @@
 package com.mirandnyan.mired.ponder;
 
-import com.mirandnyan.mired.CreateVariousAdditions;
+import com.mirandnyan.mired.CreateMechanicallyEnhanced;
 import com.simibubi.create.foundation.ponder.CreatePonderPlugin;
 import net.createmod.ponder.api.level.PonderLevel;
 import net.createmod.ponder.api.registration.IndexExclusionHelper;
@@ -14,7 +14,7 @@ public class CVAPonderPlugin extends CreatePonderPlugin {
 
     @Override
     public @NotNull String getModId() {
-        return CreateVariousAdditions.MOD_ID;
+        return CreateMechanicallyEnhanced.MOD_ID;
     }
 
     @Override
