@@ -27,6 +27,10 @@ public record MechanicalToolSlot(CVATranslations.LangEntry lang) {
             CVATranslations.GEARBOX_TOOL_SLOT);
     public static final RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> TIP_SLOT = register("tip",
             CVATranslations.TIP_TOOL_SLOT);
+    public static final RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> COG_SLOT = register("cog",
+            CVATranslations.COG_TOOL_SLOT);
+    public static final RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> GRIP_SLOT = register("grip",
+            CVATranslations.GRIP_TOOL_SLOT);
 
     public static RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> register(String name, CVATranslations.LangEntry lang) {
         return REGISTRATE.object(name).simple(REGISTRY, () -> new MechanicalToolSlot(lang));

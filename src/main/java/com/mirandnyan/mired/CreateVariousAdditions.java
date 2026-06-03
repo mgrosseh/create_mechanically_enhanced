@@ -20,6 +20,8 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.ModContainer;
 
+import java.util.Arrays;
+
 @Mod(CreateVariousAdditions.MOD_ID)
 public class CreateVariousAdditions {
 
@@ -30,8 +32,7 @@ public class CreateVariousAdditions {
 
     public static IEventBus modEventBus;
     public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(MOD_ID)
-            .defaultCreativeTab("create_mechanically_enhanced")
-            .build()
+            .defaultCreativeTab((ResourceKey<CreativeModeTab>) null)
             .setTooltipModifierFactory(item -> new ItemDescription.Modifier(item, FontHelper.Palette.STANDARD_CREATE)
                             .andThen(TooltipModifier.mapNull(KineticStats.create(item))));
 
@@ -39,10 +40,10 @@ public class CreateVariousAdditions {
         modEventBus = eventBus;
         REGISTRATE.registerEventListeners(modEventBus);
 
-        //REGISTRATE.setCreativeTab(MiredCreativeModeTabs.MAIN);
+        REGISTRATE.setCreativeTab(CVAItems.MAIN);
 
         CVABlocks.register();
-        CVAItems.register();
+        CVAItems.register(modEventBus);
         CVADataComponents.register(modEventBus);
 
         CVATranslations.register();
@@ -66,6 +67,10 @@ public class CreateVariousAdditions {
         return ResourceLocation.tryBuild(MOD_ID, path);
     }
 
+    public static ResourceLocation asResource(String... pathParts) {
+        return asResource(String.join("/", pathParts));
+
+    }
     public static ResourceLocation asResource(String path) {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
     }

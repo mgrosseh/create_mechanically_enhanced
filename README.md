@@ -1,8 +1,9 @@
 
-CREATE: VARIOUS ADDITIONS
+CREATE: MECHANICALLY ENHANCED (WIP)
 =======
 
-Adds various additions to create.
+Adds various methods of enhancing the player: Mechanical Armor, Tools and Doohickies 
+as well as enhanced food that can be imbued with potion effects.
 
 # Dependencies
 - NeoForge for Minecraft 1.21.1

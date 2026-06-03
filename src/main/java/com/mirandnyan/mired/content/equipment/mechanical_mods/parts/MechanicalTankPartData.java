@@ -1,6 +1,7 @@
-package com.mirandnyan.mired.content.equipment.mechanical_mods;
+package com.mirandnyan.mired.content.equipment.mechanical_mods.parts;
 
 import com.mirandnyan.mired.CVADataComponents;
+import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPartData;
 import net.minecraft.world.item.ItemStack;
 
 public class MechanicalTankPartData extends MechanicalPartData {

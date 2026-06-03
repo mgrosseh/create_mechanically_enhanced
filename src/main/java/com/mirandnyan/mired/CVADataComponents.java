@@ -1,6 +1,7 @@
 package com.mirandnyan.mired;
 
 import com.mirandnyan.mired.content.equipment.mechanical_mods.FilledToolSlot;
+import com.mojang.serialization.Codec;
 import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
@@ -31,6 +32,13 @@ builder -> builder.persistent(FilledToolSlot.CODEC.listOf()).networkSynchronized
             "pressurized_air_capacity",
             builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT)
     );
+
+    public static final DataComponentType<Integer> SPEED_MODIFIER = register(
+            "mechanical_tool_speed_modifier",
+            builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
+    );
+
+
     private static <T> DataComponentType<T> register(String name, UnaryOperator<DataComponentType.Builder<T>> builder) {
         DataComponentType<T> type = builder.apply(DataComponentType.builder()).build();
         DATA_COMPONENTS.register(name, () -> type);

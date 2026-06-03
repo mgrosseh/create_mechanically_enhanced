@@ -22,11 +22,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 
+import static com.mirandnyan.mired.CreateVariousAdditions.REGISTRATE;
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
 
 public class CVABlocks {
-    private static final CreateRegistrate REGISTRATE = CreateVariousAdditions.getRegistrate();
-
 
     public static final BlockEntry<FoodReplicatorBlock> FOOD_REPLICATOR = REGISTRATE.block("food_replicator", FoodReplicatorBlock::new)
             .initialProperties(AllBlocks.BRASS_CASING)

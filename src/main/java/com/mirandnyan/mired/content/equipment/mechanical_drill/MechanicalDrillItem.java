@@ -2,21 +2,22 @@ package com.mirandnyan.mired.content.equipment.mechanical_drill;
 
 import com.mirandnyan.mired.CVADataComponents;
 import com.mirandnyan.mired.CVAItems;
-import com.mirandnyan.mired.CVATags;
 import com.mirandnyan.mired.CVATranslations;
 import com.mirandnyan.mired.content.equipment.MechanicalTool;
 import com.mirandnyan.mired.content.equipment.mechanical_mods.FilledToolSlot;
 import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPart;
 import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalToolSlot;
 import com.simibubi.create.content.equipment.armor.BacktankUtil;
-import net.minecraft.core.component.DataComponents;
+import com.simibubi.create.foundation.item.CustomArmPoseItem;
+import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
+import com.tterrag.registrate.util.entry.RegistryEntry;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.EquipmentSlotGroup;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.SlotAccess;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -24,40 +25,50 @@ import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
-import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 @EventBusSubscriber
-public class MechanicalDrill extends MechanicalTool {
+public class MechanicalDrillItem extends MechanicalTool implements CustomArmPoseItem {
 
+    public static final int DEFAULT_DURABILITY = 600;
     public static final int DEFAULT_TRANSFER_RATIO = 2;
     public static final int INTERNAL_AIR_COLOR = 0x9090F0;
     // TODO: no enchant, no anvil
 
-    public MechanicalDrill(Properties properties) {
-        super(properties
-                .rarity(Rarity.UNCOMMON)
-                .durability(DEFAULT_TRANSFER_RATIO) // TODO separate from backtank
-                .attributes(createAttributes())
-                .component(DataComponents.TOOL, createToolProperties())
-        );
+    public static ItemStack defaultItemStack() {
+        var stack = CVAItems.MECHANICAL_DRILL.asStack();
+        RegistryEntry<MechanicalPart, MechanicalPart>[] defaultParts = new RegistryEntry[]{
+                MechanicalPart.DEFAULT_GRIP,
+                MechanicalPart.WOODEN_COG,
+                MechanicalPart.ANDESITE_GEARBOX,
+                MechanicalPart.COPPER_TANK,
+                MechanicalPart.IRON_DRILL_HEAD,
+        };
+        for (var part : defaultParts) {
+            var slot = new FilledToolSlot(part.get().validSlot, part.getKey());
+            insertFilledToolSlot(stack, slot);
+        }
+        return stack;
     }
 
-
-    protected static Tool createToolProperties() {
-        return new Tool(List.of(
-                Tool.Rule.deniesDrops(CVATags.Blocks.INCORRECT_FOR_MECHANICAL_DRILL),
-                Tool.Rule.minesAndDrops(CVATags.Blocks.MINEABLE_WITH_MECHANICAL_DRILL, Tiers.DIAMOND.getSpeed())),
-                1.0F,
-                0
+    public MechanicalDrillItem(Properties properties) {
+        super(properties
+                .rarity(Rarity.UNCOMMON)
+                .durability(DEFAULT_DURABILITY)
+                .attributes(createAttributes())
         );
     }
     public static ItemAttributeModifiers createAttributes() {
@@ -110,22 +121,32 @@ public class MechanicalDrill extends MechanicalTool {
         useAirOrHurtAndBreak(player, equipmentSlot, item);
     }
 
-    // TODO: simplify function count
     protected static void useAirOrHurtAndBreak(Player player, EquipmentSlot slot, ItemStack stack) {
-        if (!absorbDamage(player, stack))
-            stack.hurtAndBreak(1, player, slot);
-    }
-    protected static boolean absorbDamage(Player player, ItemStack stack) {
-        if (hasAir(stack)) {
-            drainInternalTank(stack, airTransferRatio(stack));
-            return true;
-        }
-        return false;
+            if (hasAir(stack)) {
+                drainInternalTank(stack, airTransferRatio(stack));
+                return;
+            }
+        stack.hurtAndBreak(1, player, slot);
     }
 
-    // -- TODO: temp exchange parts --
+    // -- Parts --
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        List<FilledToolSlot> slots = stack.getOrDefault(CVADataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        for (var slot : slots) {
+            slot.getPart().ifPresent(p -> p.get().data.inventoryTick(
+                    stack, level, entity, slotId, isSelected
+            ));
+        }
+        super.inventoryTick(stack, level, entity, slotId, isSelected);
+    }
+
+    // Change parts
     public boolean overrideOtherStackedOnMe(ItemStack stack, @NotNull ItemStack other, @NotNull Slot slot,
                                             @NotNull ClickAction action, @NotNull Player player, @NotNull SlotAccess access) {
+        if (!player.isCreative())
+            return false;
         if (stack.getCount() != 1)
             return false;
         if (other.isEmpty())
@@ -152,8 +173,44 @@ public class MechanicalDrill extends MechanicalTool {
         return true;
     }
 
+
+
+    // -- Visuals --
+    @SuppressWarnings("removal")
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+        consumer.accept(SimpleCustomRenderer.create(this, new MechanicalDrillRenderer()));
+    }
+
+    // prevent bobbing after mine
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return oldStack != newStack && slotChanged;
+    }
+
+    @Override
+    public @NotNull UseAnim getUseAnimation(@NotNull ItemStack stack) {
+        return UseAnim.NONE;
+    }
+
+    // disable swing animation
+    @Override
+    public boolean onEntitySwing(ItemStack stack, LivingEntity entity, InteractionHand hand) {
+        return true;
+    }
+
+
+    // make look nice in third person
+    @Override
+    @Nullable
+    public HumanoidModel.ArmPose getArmPose(ItemStack stack, AbstractClientPlayer player, InteractionHand hand) {
+        return HumanoidModel.ArmPose.CROSSBOW_HOLD;
+    }
+
     // -- Tooltips --
     @Override
+    @OnlyIn(Dist.CLIENT)
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context,
                                 @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         List<FilledToolSlot> slots = stack.getOrDefault(CVADataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
@@ -180,6 +237,13 @@ public class MechanicalDrill extends MechanicalTool {
             );
         }
         super.appendHoverText(stack, context, tooltip, flagIn);
+    }
+
+    // -- Cog --
+    @Override
+    public float getDestroySpeed(ItemStack stack, BlockState state) {
+        int multiplier = 100 + stack.getOrDefault(CVADataComponents.SPEED_MODIFIER, 0);
+        return super.getDestroySpeed(stack, state) * (multiplier / 100f);
     }
 
     // -- Air Storage --
@@ -254,8 +318,10 @@ public class MechanicalDrill extends MechanicalTool {
     }
 
     @Override
-    public int getBarColor(ItemStack stack) {
-        return INTERNAL_AIR_COLOR;
+    public int getBarColor(@NotNull ItemStack stack) {
+        if (getAir(stack) > 0)
+            return INTERNAL_AIR_COLOR;
+        return super.getBarColor(stack);
     }
     @Override
     public boolean isBarVisible(@NotNull ItemStack stack) {
@@ -263,11 +329,10 @@ public class MechanicalDrill extends MechanicalTool {
     }
 
     // -- Other Functions --
+    // TODO: false if durability 1
     @Override
-    public float getDestroySpeed(ItemStack stack, BlockState state) {
-        Tool tool = stack.get(DataComponents.TOOL);
-
-        return tool != null ? tool.getMiningSpeed(state) : 1.0F;
+    public boolean canAttackBlock(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player) {
+        return super.canAttackBlock(state, worldIn, pos, player);
     }
 
     @Override

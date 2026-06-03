@@ -1,53 +1,50 @@
 package com.mirandnyan.mired;
 
-import com.mirandnyan.mired.content.equipment.mechanical_drill.MechanicalDrill;
-import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPart;
-import com.simibubi.create.AllItems;
+import com.mirandnyan.mired.content.equipment.mechanical_drill.MechanicalDrillItem;
+import com.simibubi.create.AllCreativeModeTabs;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.providers.DataGenContext;
-import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.providers.RegistrateItemModelProvider;
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.mirandnyan.mired.CreateVariousAdditions.REGISTRATE;
 
 public class CVAItems {
-    private static final CreateRegistrate REGISTRATE = CreateVariousAdditions.getRegistrate();
+    public static final List<ItemEntry<?>> creativeModeItem = new ArrayList<>();
 
-    public static final ItemEntry<MechanicalDrill> MECHANICAL_DRILL = REGISTRATE.item("mechanical_drill", MechanicalDrill::new)
+    protected static ItemEntry<Item> part(String name) {
+        var item = REGISTRATE.item(name, Item::new)
+                .properties(p -> p.stacksTo(1))
+                .model(CVAItems::getExisting)
+                .register();
+        creativeModeItem.add(item);
+        return item;
+    }
+
+    public static final ItemEntry<MechanicalDrillItem> MECHANICAL_DRILL = REGISTRATE.item("mechanical_drill", MechanicalDrillItem::new)
             .model(getExisting("default"))
             .register();
 
-
-    public static final ItemEntry<Item> SMALL_BRASS_VERTICAL_GEARBOX = REGISTRATE.item("small_vertical_brass_gearbox", Item::new)
-            .properties(p -> p.stacksTo(1))
-            .model(CVAItems::getExisting)
-            .register();
-    public static final ItemEntry<Item> SMALL_ANDESITE_VERTICAL_GEARBOX = REGISTRATE.item("small_vertical_andesite_gearbox", Item::new)
-            .properties(p -> p.stacksTo(1))
-            .model(CVAItems::getExisting)
-            .register();
-
-    public static final ItemEntry<Item> SMALL_COPPER_TANK = REGISTRATE.item("small_copper_tank", Item::new)
-            .properties(p -> p.stacksTo(1))
-            .model(CVAItems::getExisting)
-            .register();
-    public static final ItemEntry<Item> SMALL_NETHERITE_TANK = REGISTRATE.item("small_netherite_tank", Item::new)
-            .properties(p -> p.stacksTo(1))
-            .model(CVAItems::getExisting)
-            .register();
-
-
-//    public static final ItemEntry<Item> TEST_ITEM = REGISTRATE.item("test", Item::new)
-//            .model(CVAItems::getExisting)
-//            .register();
+    public static final ItemEntry<Item> SMALL_BRASS_VERTICAL_GEARBOX = part("small_vertical_brass_gearbox");
+    public static final ItemEntry<Item> SMALL_ANDESITE_VERTICAL_GEARBOX = part("small_vertical_andesite_gearbox");
+    public static final ItemEntry<Item> SMALL_COPPER_TANK = part("small_copper_tank");
+    public static final ItemEntry<Item> SMALL_NETHERITE_TANK = part("small_netherite_tank");
+    public static final ItemEntry<Item> SMALL_WOODEN_COG = part("small_wooden_cog");
+    public static final ItemEntry<Item> SMALL_BRASS_COG = part("small_brass_cog");
+    public static final ItemEntry<Item> DEFAULT_GRIP = part("part_default_grip");
+    public static final ItemEntry<Item> IRON_DRILL_HEAD = part("part_iron_drill_head");
+    public static final ItemEntry<Item> DIAMOND_DRILL_HEAD = part("part_diamond_drill_head");
 
 
     protected static <T extends Item> ModelFile getExisting(DataGenContext<Item, T> ctx, RegistrateItemModelProvider prov) {
@@ -58,8 +55,28 @@ public class CVAItems {
                 prov.withExistingParent("item/" + ctx.getName(), prov.modLoc("item/" + ctx.getName() + "/" + sublocation));
     }
 
+    // -- Creative Mode Tab --
 
-    public static void register() {
-        // load class
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
+            DeferredRegister.create(Registries.CREATIVE_MODE_TAB, CreateVariousAdditions.MOD_ID);
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MAIN =
+            CREATIVE_MODE_TABS.register("tab",
+                    () -> CreativeModeTab.builder()
+                            .title(CVATranslations.CREATIVE_MODE_TAB.resolveComponent())
+                            .withTabsBefore(AllCreativeModeTabs.BASE_CREATIVE_TAB.getId())
+                            .icon(SMALL_BRASS_VERTICAL_GEARBOX::asStack)
+                            .displayItems((parameters, output) -> {
+                                output.accept(MechanicalDrillItem.defaultItemStack());
+                                output.accept(CVABlocks.FOOD_REPLICATOR);
+                                for (var x : creativeModeItem) {
+                                    output.accept(x);
+                                }
+                            }).build()
+            );
+
+
+
+    public static void register(IEventBus modEventBus) {
+        CREATIVE_MODE_TABS.register(modEventBus);
     }
 }
