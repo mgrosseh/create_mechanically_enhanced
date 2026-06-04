@@ -4,10 +4,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickAction;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 
 public abstract class MechanicalPartData {
@@ -28,4 +32,9 @@ public abstract class MechanicalPartData {
     }
 
     public void playerTick(Player player, ItemStack stack) { }
+
+    public boolean tryHandlingStackedOnMe(@NotNull ItemStack stack, @NotNull ItemStack other, @NotNull Slot slot,
+                                       @NotNull ClickAction action, @NotNull Player player, @NotNull SlotAccess access) {
+        return false;
+    }
 }

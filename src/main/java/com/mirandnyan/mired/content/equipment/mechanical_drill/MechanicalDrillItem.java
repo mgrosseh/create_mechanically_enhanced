@@ -157,16 +157,40 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
     // Change parts
     public boolean overrideOtherStackedOnMe(ItemStack stack, @NotNull ItemStack other, @NotNull Slot slot,
                                             @NotNull ClickAction action, @NotNull Player player, @NotNull SlotAccess access) {
-        if (!player.isCreative())
-            return false;
-        if (stack.getCount() != 1)
-            return false;
+        if (tryMechanicalPartsHandlingStackOnMe(stack, other, slot, action, player, access))
+            return true;
+
         if (other.isEmpty())
             return false;
         if (!(action == ClickAction.SECONDARY && slot.allowModification(player)))
             return false;
 
-        // TODO
+        return tryAddingMechanicalPart(stack, other, player, access);
+    }
+
+    protected boolean tryMechanicalPartsHandlingStackOnMe(@NotNull ItemStack stack, @NotNull ItemStack other,
+                                                          @NotNull Slot slot, @NotNull ClickAction action,
+                                                          @NotNull Player player, @NotNull SlotAccess access) {
+        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        for (var tool_slot : slots) {
+            var part = tool_slot.getPart();
+            if (part.isEmpty())
+                continue;
+            var handled = part.get().get().data.tryHandlingStackedOnMe(stack, other, slot, action, player, access);
+            if (handled)
+                return true;
+        }
+
+        return false;
+    }
+
+    protected boolean tryAddingMechanicalPart(@NotNull ItemStack stack, @NotNull ItemStack other,
+                                              @NotNull Player player, @NotNull SlotAccess access) {
+        if (!player.isCreative())
+            return false;
+        if (stack.getCount() != 1)
+            return false;
+
         var maybe_part = MechanicalPart.getOfItem(other.getItem());
         if (maybe_part.isEmpty())
             return false;
@@ -254,7 +278,7 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
     // -- Cog --
     @Override
     public float getDestroySpeed(ItemStack stack, BlockState state) {
-        int multiplier = 100 + stack.getOrDefault(CMEDataComponents.SPEED_MODIFIER, 0);
+        int multiplier = Math.max(100 + stack.getOrDefault(CMEDataComponents.SPEED_MODIFIER, 0), 0);
         return super.getDestroySpeed(stack, state) * (multiplier / 100f);
     }
 
