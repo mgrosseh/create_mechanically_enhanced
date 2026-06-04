@@ -198,7 +198,7 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
     // prevent bobbing after mine
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
-        return oldStack != newStack && slotChanged;
+        return !oldStack.equals(newStack) && slotChanged;
     }
 
     @Override
