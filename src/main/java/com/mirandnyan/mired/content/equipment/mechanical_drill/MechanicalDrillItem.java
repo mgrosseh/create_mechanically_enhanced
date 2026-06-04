@@ -48,7 +48,14 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
     public static final int DEFAULT_DURABILITY = 600;
     public static final int DEFAULT_TRANSFER_RATIO = 2;
     public static final int INTERNAL_AIR_COLOR = 0x9090F0;
+
     // TODO: no enchant, no anvil
+    // TODO: has slot: tag + if part has slot then this has that slot
+    // TODO: parts: incompatible with tag
+    // TODO: add right click (as opposed to right hold = refill) as an action parts can access
+    // TODO: right / left click on drill in inventory
+
+    // TODO: head: explosion generator, saw
 
     public static ItemStack defaultItemStack() {
         var stack = CMEItems.MECHANICAL_DRILL.asStack();

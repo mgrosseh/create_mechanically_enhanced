@@ -44,6 +44,9 @@ public class CMEItems {
     public static final ItemEntry<Item> DEFAULT_GRIP = part("part_default_grip");
     public static final ItemEntry<Item> IRON_DRILL_HEAD = part("part_iron_drill_head");
     public static final ItemEntry<Item> DIAMOND_DRILL_HEAD = part("part_diamond_drill_head");
+    public static final ItemEntry<Item> NETHERITE_DRILL_HEAD = part("part_netherite_drill_head");
+
+    public static final ItemEntry<Item> SMALL_MECHANICAL_BLAZE = part("small_mechanical_blaze");
 
 
     protected static <T extends Item> ModelFile getExisting(DataGenContext<Item, T> ctx, RegistrateItemModelProvider prov) {

@@ -4,15 +4,15 @@
 	"parent": "create:item/handheld_blockzapper/item",
 	"ambientocclusion": false,
 	"textures": {
-		"2": "block/diamond_block",
+		"2": "block/netherite_block",
 		"drill_back": "block/anvil",
 		"10": "create:block/andesite_casing_very_short",
-		"particle": "block/diamond_block"
+		"particle": "block/netherite_block"
 	},
 	"elements": [
 		{
-			"from": [5, 6, -8],
-			"to": [11, 12, -5],
+			"from": [5, 6, 10],
+			"to": [11, 12, 13],
 			"faces": {
 				"north": {"uv": [5, 0, 11, 6], "texture": "#2"},
 				"east": {"uv": [1, 1, 7, 4], "rotation": 270, "texture": "#10"},
@@ -23,8 +23,8 @@
 			}
 		},
 		{
-			"from": [5.5, 6.5, -10],
-			"to": [10.5, 11.5, -8],
+			"from": [5.5, 6.5, 8],
+			"to": [10.5, 11.5, 10],
 			"faces": {
 				"north": {"uv": [0, 0, 5, 5], "texture": "#2"},
 				"east": {"uv": [0, 0, 5, 2], "rotation": 90, "texture": "#2"},
@@ -35,8 +35,8 @@
 			}
 		},
 		{
-			"from": [6, 7, -12],
-			"to": [10, 11, -10],
+			"from": [6, 7, 6],
+			"to": [10, 11, 8],
 			"faces": {
 				"north": {"uv": [0, 0, 4, 4], "texture": "#2"},
 				"east": {"uv": [0, 0, 4, 2], "rotation": 90, "texture": "#2"},
@@ -47,8 +47,8 @@
 			}
 		},
 		{
-			"from": [6.5, 7.5, -14],
-			"to": [9.5, 10.5, -12],
+			"from": [6.5, 7.5, 4],
+			"to": [9.5, 10.5, 6],
 			"faces": {
 				"north": {"uv": [0, 0, 3, 3], "texture": "#2"},
 				"east": {"uv": [0, 0, 2, 3], "texture": "#2"},
@@ -59,8 +59,8 @@
 			}
 		},
 		{
-			"from": [7, 8, -16],
-			"to": [9, 10, -14],
+			"from": [7, 8, 2],
+			"to": [9, 10, 4],
 			"faces": {
 				"north": {"uv": [0, 0, 2, 2], "texture": "#2"},
 				"east": {"uv": [0, 0, 2, 2], "texture": "#2"},
@@ -71,8 +71,8 @@
 			}
 		},
 		{
-			"from": [6, 12, -9],
-			"to": [10, 14, -5],
+			"from": [6, 12, 9],
+			"to": [10, 14, 13],
 			"faces": {
 				"north": {"uv": [0, 0, 4, 2], "rotation": 180, "texture": "#10"},
 				"east": {"uv": [4, 3, 0, 1], "texture": "#10"},
@@ -83,8 +83,8 @@
 			}
 		},
 		{
-			"from": [6, 4, -9],
-			"to": [10, 6, -5],
+			"from": [6, 4, 9],
+			"to": [10, 6, 13],
 			"faces": {
 				"north": {"uv": [0, 0, 4, 2], "texture": "#10"},
 				"east": {"uv": [0, 3, 4, 1], "rotation": 180, "texture": "#10"},
@@ -95,8 +95,8 @@
 			}
 		},
 		{
-			"from": [3, 7, -9],
-			"to": [5, 11, -5],
+			"from": [3, 7, 9],
+			"to": [5, 11, 13],
 			"faces": {
 				"north": {"uv": [0, 0, 4, 2], "rotation": 270, "texture": "#10"},
 				"east": {"uv": [0, 0, 4, 4], "rotation": 90, "texture": "#10"},
@@ -107,8 +107,8 @@
 			}
 		},
 		{
-			"from": [11, 7, -9],
-			"to": [13, 11, -5],
+			"from": [11, 7, 9],
+			"to": [13, 11, 13],
 			"faces": {
 				"north": {"uv": [0, 0, 4, 2], "rotation": 90, "texture": "#10"},
 				"east": {"uv": [4, 4, 0, 0], "texture": "#10"},
@@ -121,40 +121,37 @@
 	],
 	"display": {
 		"thirdperson_righthand": {
-			"translation": [0, 0.5, -0.5],
+			"rotation": [75, 45, 0],
+			"translation": [0, 0.5, 0],
 			"scale": [0.55, 0.55, 0.55]
 		},
 		"thirdperson_lefthand": {
-			"translation": [0, 0.5, -0.5],
+			"rotation": [75, 45, 0],
+			"translation": [0, 0.5, 0],
 			"scale": [0.55, 0.55, 0.55]
 		},
 		"firstperson_righthand": {
-			"rotation": [11, 11, 0],
-			"translation": [0.25, 2.25, 2.75],
+			"rotation": [0, 45, 0],
 			"scale": [0.5, 0.5, 0.5]
 		},
 		"firstperson_lefthand": {
-			"rotation": [11, 11, 0],
-			"translation": [0.25, 2.25, 2.75],
+			"rotation": [0, 45, 0],
 			"scale": [0.5, 0.5, 0.5]
 		},
 		"ground": {
-			"rotation": [0, 0, 90],
-			"translation": [0, -0.75, 4],
+			"translation": [0, 0.5, 4],
 			"scale": [0.5, 0.5, 0.5]
 		},
 		"gui": {
-			"rotation": [-23, 145, 0],
-			"translation": [3, -2.25, 0],
+			"rotation": [30, -135, 0],
 			"scale": [0.625, 0.625, 0.625]
 		},
 		"head": {
-			"rotation": [0, -180, 0],
-			"translation": [0, 13, 7]
+			"rotation": [-90, -180, 0],
+			"translation": [0, 9.75, 1.25]
 		},
 		"fixed": {
-			"rotation": [0, 90, 0],
-			"translation": [3.75, 0, 0],
+			"translation": [0, 0, -1],
 			"scale": [0.5, 0.5, 0.5]
 		}
 	}

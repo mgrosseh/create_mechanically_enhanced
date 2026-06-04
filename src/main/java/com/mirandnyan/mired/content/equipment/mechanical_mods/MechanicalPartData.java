@@ -24,7 +24,7 @@ public abstract class MechanicalPartData {
 
     public void render(ItemStack stack, MechanicalPart part, PartialItemModelRenderer renderer, ItemDisplayContext transformType,
                           PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-        renderer.renderSolid(part.model.get(), light);
+        renderer.renderSolid(part.models[0].get(), light);
     }
 
     public void playerTick(Player player, ItemStack stack) { }

@@ -1,5 +1,7 @@
 # Exclude Assets
 asset_creation/assets
+!asset_creation/assets/README.md
+!asset_creation/assets/sync_mod_assets.sh
 ### Gradle ###
 .gradle
 build/

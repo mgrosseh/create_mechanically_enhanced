@@ -31,6 +31,8 @@ public record MechanicalToolSlot(CMETranslations.LangEntry lang) {
             CMETranslations.COG_TOOL_SLOT);
     public static final RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> GRIP_SLOT = register("grip",
             CMETranslations.GRIP_TOOL_SLOT);
+    public static final RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> GEARED_TOP_SLOT = register("geared_top",
+            CMETranslations.GEARED_TOP_TOOL_SLOT); // TODO: should provide left / right slots of it ; name
 
     public static RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> register(String name, CMETranslations.LangEntry lang) {
         return REGISTRATE.object(name).simple(REGISTRY, () -> new MechanicalToolSlot(lang));

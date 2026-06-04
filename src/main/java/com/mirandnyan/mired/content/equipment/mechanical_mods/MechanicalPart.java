@@ -2,6 +2,7 @@ package com.mirandnyan.mired.content.equipment.mechanical_mods;
 
 import com.mirandnyan.mired.*;
 import com.mirandnyan.mired.content.equipment.mechanical_drill.MechanicalDrillItem;
+import com.mirandnyan.mired.content.equipment.mechanical_mods.parts.MechanicalBlazePartData;
 import com.mirandnyan.mired.content.equipment.mechanical_mods.parts.MechanicalCogPartData;
 import com.mirandnyan.mired.content.equipment.mechanical_mods.parts.MechanicalDrillPartData;
 import com.mirandnyan.mired.content.equipment.mechanical_mods.parts.MechanicalTankPartData;
@@ -48,20 +49,23 @@ public class MechanicalPart {
 
     public final @NotNull String name;
 
-    public final @NotNull PartialModel model;
+    public final @NotNull PartialModel[] models;
 
     protected CMETranslations.LangEntry lang;
 
     protected MechanicalPart(@NotNull ResourceKey<MechanicalToolSlot> validSlot,
                              @NotNull ResourceKey<Item> validItem,
                              MechanicalPartData data,
-                             @NotNull ResourceLocation model,
-                             @NotNull String name) {
+                             @NotNull String name,
+                             @NotNull ResourceLocation... models) {
         this.name = name;
         this.validSlot = validSlot;
         this.validItem = validItem;
         this.data = data;
-        this.model = PartialModel.of(model);
+        this.models = new PartialModel[models.length];
+        for (int i = 0; i < models.length; i++) {
+            this.models[i] = PartialModel.of(models[i]);
+        }
     }
 
     public boolean isItem(Item item) {
@@ -167,12 +171,31 @@ public class MechanicalPart {
             CMEItems.DIAMOND_DRILL_HEAD,
             new MechanicalDrillPartData(
                     new Tool(List.of(
-                            Tool.Rule.deniesDrops(CMETags.Blocks.INCORRECT_FOR_MECHANICAL_DRILL),
+                            Tool.Rule.deniesDrops(BlockTags.INCORRECT_FOR_DIAMOND_TOOL),
                             Tool.Rule.minesAndDrops(CMETags.Blocks.MINEABLE_WITH_MECHANICAL_DRILL, Tiers.DIAMOND.getSpeed())),
-                            1.0F,
+                            1.2F,
                             0
                     )
             )
+    );
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> NETHERITE_DRILL_HEAD = register("netherite_drill_head",
+            MechanicalToolSlot.TIP_SLOT,
+            CMEItems.NETHERITE_DRILL_HEAD,
+            new MechanicalDrillPartData(
+                    new Tool(List.of(
+                            Tool.Rule.deniesDrops(BlockTags.INCORRECT_FOR_NETHERITE_TOOL),
+                            Tool.Rule.minesAndDrops(CMETags.Blocks.MINEABLE_WITH_MECHANICAL_DRILL, Tiers.NETHERITE.getSpeed())),
+                            1.5F,
+                            0
+                    )
+            )
+    );
+
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> SMALL_MECHANICAL_BLAZE = register("small_mechanical_blaze",
+            MechanicalToolSlot.GEARED_TOP_SLOT,
+            CMEItems.SMALL_MECHANICAL_BLAZE,
+            new MechanicalBlazePartData(), // TODO
+            CreateMechanicallyEnhanced.asResource("tool_part", "small_mechanical_blaze", "base_inert")
     );
 
 
@@ -192,7 +215,16 @@ public class MechanicalPart {
             ItemEntry<?> validItem, MechanicalPartData data) {
 
         return REGISTRATE.object(name).simple(REGISTRY, () ->
-                new MechanicalPart(validSlot.getKey(), validItem.getKey(), data, CreateMechanicallyEnhanced.asResource("tool_part", name), name));
+                new MechanicalPart(validSlot.getKey(), validItem.getKey(), data, name, CreateMechanicallyEnhanced.asResource("tool_part", name)));
+    }
+    protected static RegistryEntry<MechanicalPart, MechanicalPart> register(
+            String name,
+            RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> validSlot,
+            ItemEntry<?> validItem, MechanicalPartData data,
+            ResourceLocation... models) {
+
+        return REGISTRATE.object(name).simple(REGISTRY, () ->
+                new MechanicalPart(validSlot.getKey(), validItem.getKey(), data, name, models));
     }
 
 

@@ -57,6 +57,7 @@ public class MechanicalDrillPartData extends MechanicalPartData {
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         if (!(entity instanceof Player player) || !isSelected)
             return;
+        // TODO: use ID
         var name = player.getName().getString();
         stack.set(CMEDataComponents.LAST_TOOL_HOLDER_NAME, name);
     }

@@ -4,10 +4,10 @@
 	"parent": "create:item/handheld_blockzapper/item",
 	"ambientocclusion": false,
 	"textures": {
-		"2": "block/diamond_block",
+		"2": "block/netherite_block",
 		"drill_back": "block/anvil",
 		"10": "create:block/andesite_casing_very_short",
-		"particle": "block/diamond_block"
+		"particle": "block/netherite_block"
 	},
 	"elements": [
 		{
