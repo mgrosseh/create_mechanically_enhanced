@@ -1,0 +1,7 @@
+{
+  "parent": "create_mechanically_enhanced:tool_part/small_mechanical_blaze/large_rods",
+  "textures": {
+    "0": "create_mechanically_enhanced:block/small_mechanical_blaze/superheated_idle",
+    "particle": "create_mechanically_enhanced:block/small_mechanical_blaze/superheated_idle"
+  }
+}

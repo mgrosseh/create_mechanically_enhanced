@@ -55,11 +55,6 @@ public class MechanicalDrillPartData extends MechanicalPartData {
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
-        if (!(entity instanceof Player player) || !isSelected)
-            return;
-        // TODO: use ID
-        var name = player.getName().getString();
-        stack.set(CMEDataComponents.LAST_TOOL_HOLDER_NAME, name);
     }
 
 
@@ -69,9 +64,8 @@ public class MechanicalDrillPartData extends MechanicalPartData {
             return;
 
         var data = ClientData.of(player.getName().getString());
-        if (clevel.levelRenderer.destroyingBlocks.containsKey(player.getId())) {
+        if (clevel.levelRenderer.destroyingBlocks.containsKey(player.getId()))
             data.pAngle.bump(5.5);
-        }
 
         data.pAngle.tick();
     }

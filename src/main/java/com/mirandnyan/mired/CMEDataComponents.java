@@ -42,9 +42,9 @@ builder -> builder.persistent(FilledToolSlot.CODEC.listOf()).networkSynchronized
             builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
     );
 
-    public static final DataComponentType<Integer> BLAZE_BURNING_TIME = register(
+    public static final DataComponentType<Long> BLAZE_BURNING_TIME = register(
             "mechanical_blaze_remaining_burning_time",
-            builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT)
+            builder -> builder.persistent(Codec.LONG).networkSynchronized(ByteBufCodecs.VAR_LONG)
     );
     public static final DataComponentType<Unit> BLAZE_BURNING_SUPER = register(
             "mechanical_blaze_burning_supercharged",

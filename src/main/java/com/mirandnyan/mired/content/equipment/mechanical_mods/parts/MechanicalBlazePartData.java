@@ -10,6 +10,9 @@ import com.simibubi.create.AllTags;
 import com.simibubi.create.api.data.datamaps.BlazeBurnerFuel;
 import com.simibubi.create.api.registry.CreateDataMaps;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
+import net.createmod.catnip.animation.AnimationTickHolder;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Holder;
 import net.minecraft.util.Unit;
@@ -24,13 +27,43 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.WeakHashMap;
+
 public class MechanicalBlazePartData extends MechanicalPartData {
+
+    private static int i = 0;
+    private static final int BASE_INERT = i++;
+    private static final int BASE_IDLE = i++;
+    private static final int BASE_WORKING = i++;
+    private static final int BASE_IDLE_SUPERHEATED = i++;
+    private static final int BASE_WORKING_SUPERHEATED = i++;
+    private static final int SMALL_RODS = i++;
+    private static final int LARGE_RODS = i++;
+    private static final int SMALL_RODS_SUPERHEATED = i++;
+    private static final int LARGE_RODS_SUPERHEATED = i++;
+    private static final int COG = i++;
+
 
     @Override
     public boolean tryHandlingStackedOnMe(@NotNull ItemStack stack, @NotNull ItemStack other, @NotNull Slot slot,
                                           @NotNull ClickAction action, @NotNull Player player, @NotNull SlotAccess access) {
+        var gameTime = player.level().getGameTime();
         if (AllItems.CREATIVE_BLAZE_CAKE.isIn(other)) {
-            // TODO
+            var infinite = stack.has(CMEDataComponents.BLAZE_BURNING_INFINITE);
+            var superheated = stack.has(CMEDataComponents.BLAZE_BURNING_SUPER);
+
+            if (infinite && superheated) {
+                stack.remove(CMEDataComponents.BLAZE_BURNING_INFINITE);
+                stack.remove(CMEDataComponents.BLAZE_BURNING_SUPER);
+                return true;
+            }
+            if (!infinite) {
+                stack.remove(CMEDataComponents.BLAZE_BURNING_SUPER);
+                stack.set(CMEDataComponents.BLAZE_BURNING_INFINITE, Unit.INSTANCE);
+                return true;
+            }
+            stack.set(CMEDataComponents.BLAZE_BURNING_SUPER, Unit.INSTANCE);
+            return true;
         }
         if (stack.has(CMEDataComponents.BLAZE_BURNING_INFINITE))
             return false;
@@ -40,7 +73,7 @@ public class MechanicalBlazePartData extends MechanicalPartData {
         BlazeBurnerFuel normalFuel = holder.getData(CreateDataMaps.REGULAR_BLAZE_BURNER_FUELS);
 
         if (superheatedFuel != null) {
-            stack.set(CMEDataComponents.BLAZE_BURNING_TIME, superheatedFuel.burnTime());
+            stack.set(CMEDataComponents.BLAZE_BURNING_TIME, gameTime + superheatedFuel.burnTime());
             stack.set(CMEDataComponents.BLAZE_BURNING_SUPER, Unit.INSTANCE);
 
             if (!player.isCreative())
@@ -51,8 +84,15 @@ public class MechanicalBlazePartData extends MechanicalPartData {
             return false;
 
 
+        if (normalFuel == null) {
+            var burnTime = other.getBurnTime(null);
+            if (burnTime > 0) {
+                normalFuel = new BlazeBurnerFuel(burnTime);
+            }
+        }
+
         if (normalFuel != null) {
-            var time = stack.getOrDefault(CMEDataComponents.BLAZE_BURNING_TIME, 0);
+            long time = stack.getOrDefault(CMEDataComponents.BLAZE_BURNING_TIME, gameTime);
             stack.set(CMEDataComponents.BLAZE_BURNING_TIME, time + normalFuel.burnTime());
 
             if (!player.isCreative())
@@ -64,26 +104,75 @@ public class MechanicalBlazePartData extends MechanicalPartData {
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
-        var infinite = stack.has(CMEDataComponents.BLAZE_BURNING_TIME);
+        var infinite = stack.has(CMEDataComponents.BLAZE_BURNING_INFINITE);
         if (infinite)
             return;
 
-        var time = stack.getOrDefault(CMEDataComponents.BLAZE_BURNING_TIME, 0);
+        long time = stack.getOrDefault(CMEDataComponents.BLAZE_BURNING_TIME, 0L);
         var superheated = stack.has(CMEDataComponents.BLAZE_BURNING_SUPER);
-
-        // TODO
-
-
-
+        if (time != 0 && time <= level.getGameTime()) {
+            if (superheated)
+                stack.remove(CMEDataComponents.BLAZE_BURNING_SUPER);
+            stack.remove(CMEDataComponents.BLAZE_BURNING_TIME);
+        }
     }
+
+    private static class ClientData {
+        boolean mining = false;
+        static WeakHashMap<String, ClientData> clientData = new WeakHashMap<>();
+
+        static ClientData of(String name) {
+            return clientData.computeIfAbsent(name, s -> new ClientData());
+        }
+    }
+    @Override
+    public void playerTick(Player player, ItemStack stack) {
+        if (!(player.level() instanceof ClientLevel clevel))
+            return;
+        var data = ClientData.of(player.getName().getString());
+        data.mining = clevel.levelRenderer.destroyingBlocks.containsKey(player.getId());
+    }
+
+    private boolean isMining(ItemStack stack) {
+        var name = stack.get(CMEDataComponents.LAST_TOOL_HOLDER_NAME);
+        return name != null && ClientData.of(name).mining;
+    }
+
 
     @Override
     public void render(ItemStack stack, MechanicalPart part, PartialItemModelRenderer renderer, ItemDisplayContext transformType, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
+        long time = stack.getOrDefault(CMEDataComponents.BLAZE_BURNING_TIME, 0L);
+        if (stack.has(CMEDataComponents.BLAZE_BURNING_INFINITE))
+            time = 1;
+        var supercharged = stack.has(CMEDataComponents.BLAZE_BURNING_SUPER);
 
         ms.pushPose();
-        ms.mulPose(Axis.YP.rotationDegrees(180));
-        ms.translate(0, 13 / 16f, 10 / 16f);
-        super.render(stack, part, renderer, transformType, ms, buffer, light, overlay);
+        ms.translate(0, 13 / 16f, -10 / 16f);
+
+        // cog
+        ms.pushPose();
+        int speedModifier = Math.max(stack.getOrDefault(CMEDataComponents.SPEED_MODIFIER, 100), 0);
+        float angle = AnimationTickHolder.getRenderTime() * -1 * 2.5f * (speedModifier / 100f);
+        angle %= 360;
+        ms.mulPose(Axis.YP.rotationDegrees(angle));
+        renderer.renderSolid(part.models[COG].get(), light);
+        ms.popPose();
+
+        // rods
+
+        // base
+        // working
+        var working = isMining(stack) && time != 0;
+        if (working && supercharged)
+            renderer.renderSolid(part.models[BASE_WORKING_SUPERHEATED].get(), light);
+        else if (working)
+            renderer.renderSolid(part.models[BASE_WORKING].get(), light);
+        else if (supercharged)
+            renderer.renderSolid(part.models[BASE_IDLE_SUPERHEATED].get(), light);
+        else if (time != 0)
+            renderer.renderSolid(part.models[BASE_IDLE].get(), light);
+        else
+            renderer.renderSolid(part.models[BASE_INERT].get(), light);
         ms.popPose();
     }
 }

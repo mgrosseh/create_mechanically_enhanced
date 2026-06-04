@@ -11,11 +11,13 @@ import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.Registry;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.Unit;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -194,8 +196,18 @@ public class MechanicalPart {
     public static final RegistryEntry<MechanicalPart, MechanicalPart> SMALL_MECHANICAL_BLAZE = register("small_mechanical_blaze",
             MechanicalToolSlot.GEARED_TOP_SLOT,
             CMEItems.SMALL_MECHANICAL_BLAZE,
-            new MechanicalBlazePartData(), // TODO
-            CreateMechanicallyEnhanced.asResource("tool_part", "small_mechanical_blaze", "base_inert")
+            new MechanicalBlazePartData(),
+            // TODO: auto assign names to not use hardcoded order
+            CreateMechanicallyEnhanced.asResource("tool_part", "small_mechanical_blaze", "base_inert"),
+            CreateMechanicallyEnhanced.asResource("tool_part", "small_mechanical_blaze", "base_idle"),
+            CreateMechanicallyEnhanced.asResource("tool_part", "small_mechanical_blaze", "base_working"),
+            CreateMechanicallyEnhanced.asResource("tool_part", "small_mechanical_blaze", "base_idle_superheated"),
+            CreateMechanicallyEnhanced.asResource("tool_part", "small_mechanical_blaze", "base_working_superheated"),
+            CreateMechanicallyEnhanced.asResource("tool_part", "small_mechanical_blaze", "small_rods"),
+            CreateMechanicallyEnhanced.asResource("tool_part", "small_mechanical_blaze", "large_rods"),
+            CreateMechanicallyEnhanced.asResource("tool_part", "small_mechanical_blaze", "small_rods_superheated"),
+            CreateMechanicallyEnhanced.asResource("tool_part", "small_mechanical_blaze", "large_rods_superheated"),
+            CreateMechanicallyEnhanced.asResource("tool_part", "small_mechanical_blaze", "cog")
     );
 
 
@@ -232,7 +244,7 @@ public class MechanicalPart {
     public static void entityTick(EntityTickEvent.Post event) {
         if (!(event.getEntity() instanceof Player player))
             return;
-        ItemStack stack = player.getMainHandItem();
+        ItemStack stack = player.getMainHandItem(); // TODO offhand too with boolean
 
         List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
