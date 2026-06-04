@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "create_mechanically_enhanced:block/food_replicator/block",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "create_mechanically_enhanced:block/food_replicator/block"
+    },
+    "facing=south": {
+      "model": "create_mechanically_enhanced:block/food_replicator/block",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "create_mechanically_enhanced:block/food_replicator/block",
+      "y": 270
+    }
+  }
+}
