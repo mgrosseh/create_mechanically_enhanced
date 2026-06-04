@@ -4,9 +4,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+
 
 public abstract class MechanicalPartData {
 
@@ -24,4 +26,6 @@ public abstract class MechanicalPartData {
                           PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
         renderer.renderSolid(part.model.get(), light);
     }
+
+    public void playerTick(Player player, ItemStack stack) { }
 }

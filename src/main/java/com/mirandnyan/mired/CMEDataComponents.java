@@ -1,9 +1,11 @@
 package com.mirandnyan.mired;
 
 import com.mirandnyan.mired.content.equipment.mechanical_mods.FilledToolSlot;
+import com.mirandnyan.mired.content.equipment.mechanical_mods.parts.MechanicalDrillPartData;
 import com.mojang.serialization.Codec;
 import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.util.ExtraCodecs;
@@ -38,8 +40,12 @@ builder -> builder.persistent(FilledToolSlot.CODEC.listOf()).networkSynchronized
             builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
     );
 
+    public static final DataComponentType<String> LAST_TOOL_HOLDER_NAME = register(
+            "last_tool_holder_name",
+            builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8)
+    );
 
-    private static <T> DataComponentType<T> register(String name, UnaryOperator<DataComponentType.Builder<T>> builder) {
+    public static <T> DataComponentType<T> register(String name, UnaryOperator<DataComponentType.Builder<T>> builder) {
         DataComponentType<T> type = builder.apply(DataComponentType.builder()).build();
         DATA_COMPONENTS.register(name, () -> type);
         return type;

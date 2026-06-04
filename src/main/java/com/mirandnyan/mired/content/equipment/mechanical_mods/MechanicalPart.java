@@ -15,9 +15,14 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.component.Tool;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -29,6 +34,7 @@ import java.util.stream.Stream;
 
 import static com.mirandnyan.mired.CreateMechanicallyEnhanced.REGISTRATE;
 
+@EventBusSubscriber
 public class MechanicalPart {
     public static final ResourceKey<Registry<MechanicalPart>> REGISTRY =
             REGISTRATE.makeRegistry("mechanical_part", RegistryBuilder::new);
@@ -187,6 +193,21 @@ public class MechanicalPart {
 
         return REGISTRATE.object(name).simple(REGISTRY, () ->
                 new MechanicalPart(validSlot.getKey(), validItem.getKey(), data, CreateMechanicallyEnhanced.asResource("tool_part", name), name));
+    }
+
+
+    @SubscribeEvent
+    public static void entityTick(EntityTickEvent.Post event) {
+        if (!(event.getEntity() instanceof Player player))
+            return;
+        ItemStack stack = player.getMainHandItem();
+
+        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        for (var slot : slots) {
+            slot.getPart().ifPresent(p -> p.get().data.playerTick(
+                    player, stack
+            ));
+        }
     }
 
     @ApiStatus.Internal
