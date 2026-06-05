@@ -2,10 +2,10 @@
 	"format_version": "1.9.0",
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "create_mechanically_enhanced:block/small_mechanical_blaze",
+		"0": "create_mechanically_enhanced:block/small_mechanical_blaze/timid",
 		"1": "create_mechanically_enhanced:block/small_gearbox",
 		"3": "block/stripped_spruce_log_top",
-		"particle": "create_mechanically_enhanced:block/small_mechanical_blaze"
+		"particle": "create_mechanically_enhanced:block/small_mechanical_blaze/timid"
 	},
 	"elements": [
 		{
@@ -13,12 +13,12 @@
 			"from": [6, 5.25, 6],
 			"to": [10, 9.25, 10],
 			"faces": {
-				"north": {"uv": [0, 10, 2, 12], "texture": "#0"},
-				"east": {"uv": [0, 10, 2, 12], "texture": "#0"},
-				"south": {"uv": [2, 10, 4, 12], "texture": "#0"},
-				"west": {"uv": [0, 10, 2, 12], "texture": "#0"},
-				"up": {"uv": [0, 12, 2, 14], "texture": "#0"},
-				"down": {"uv": [2, 12, 4, 14], "texture": "#0"}
+				"north": {"uv": [0, 0, 4, 4], "texture": "#0"},
+				"east": {"uv": [0, 0, 4, 4], "texture": "#0"},
+				"south": {"uv": [4, 0, 8, 4], "texture": "#0"},
+				"west": {"uv": [0, 0, 4, 4], "texture": "#0"},
+				"up": {"uv": [0, 4, 4, 8], "texture": "#0"},
+				"down": {"uv": [4, 4, 8, 8], "texture": "#0"}
 			}
 		},
 		{

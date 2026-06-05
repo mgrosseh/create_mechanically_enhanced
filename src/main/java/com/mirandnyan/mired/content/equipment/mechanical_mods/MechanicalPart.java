@@ -122,15 +122,20 @@ public class MechanicalPart {
     );
 
 
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> WOODEN_COG = register("wooden_cog",
+            MechanicalToolSlot.COG_SLOT,
+            CMEItems.SMALL_WOODEN_COG,
+            new MechanicalCogPartData(0)
+    );
     public static final RegistryEntry<MechanicalPart, MechanicalPart> BRASS_COG = register("brass_cog",
             MechanicalToolSlot.COG_SLOT,
             CMEItems.SMALL_BRASS_COG,
             new MechanicalCogPartData(100)
     );
-    public static final RegistryEntry<MechanicalPart, MechanicalPart> WOODEN_COG = register("wooden_cog",
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> NETHERITE_COG = register("netherite_cog",
             MechanicalToolSlot.COG_SLOT,
-            CMEItems.SMALL_WOODEN_COG,
-            new MechanicalCogPartData(0)
+            CMEItems.SMALL_NETHERITE_COG,
+            new MechanicalCogPartData(160)
     );
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> DEFAULT_GRIP = register("default_grip",

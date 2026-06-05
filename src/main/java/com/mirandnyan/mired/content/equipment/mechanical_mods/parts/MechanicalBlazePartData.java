@@ -123,14 +123,8 @@ public class MechanicalBlazePartData extends MechanicalPartData {
     private static class ClientData {
         boolean mining = false;
         int mining_visual = 0;
-        PhysicalFloat smallRodPos = new PhysicalFloat(2)
-                .withDrag(0.5)
-                .withLimit(4)
-                .addForce(new Force.Zeroing(3.9f));
-        PhysicalFloat largeRodPos = new PhysicalFloat(2)
-                .withDrag(0.5)
-                .withLimit(4)
-                .addForce(new Force.Zeroing(4.1f));
+        float smallRodPos = 0;
+        float largeRodPos = 0;
         static WeakHashMap<String, ClientData> clientData = new WeakHashMap<>();
 
         static ClientData of(String name) {
@@ -145,14 +139,22 @@ public class MechanicalBlazePartData extends MechanicalPartData {
         data.mining = clevel.levelRenderer.destroyingBlocks.containsKey(player.getId());
         if (data.mining) {
             data.mining_visual = 20;
-            data.smallRodPos.bump(2.5);
-            data.largeRodPos.bump(1.5);
         }
-        if (data.mining_visual > 0)
+        if (data.mining_visual > 0) {
             data.mining_visual--;
+            data.smallRodPos += 0.95f;
+            data.largeRodPos += 0.7f;
+        }
 
-        data.smallRodPos.tick();
-        data.largeRodPos.tick();
+        if (data.smallRodPos > 0)
+            data.smallRodPos -= 0.25f;
+        if (data.largeRodPos > 0)
+            data.largeRodPos -= 0.2f;
+
+        if (data.smallRodPos > 5)
+            data.smallRodPos = 5f;
+        if (data.largeRodPos > 5)
+            data.largeRodPos = 5f;
     }
 
 
@@ -202,7 +204,7 @@ public class MechanicalBlazePartData extends MechanicalPartData {
         }
 
         // rods
-        var smallRodPos = rodPos(1, data.map(d -> d.smallRodPos), 40f, 13);
+        var smallRodPos = rodPos(-1, data.map(d -> d.smallRodPos).orElse(0f), 40f, 23);
         var smallRods = part.models[supercharged ? SMALL_RODS_SUPERHEATED : SMALL_RODS];
 
         ms.pushPose();
@@ -210,7 +212,7 @@ public class MechanicalBlazePartData extends MechanicalPartData {
         renderer.renderSolidGlowing(smallRods.get(), light);
         ms.popPose();
 
-        var largeRodPos = rodPos(0, data.map(d -> d.largeRodPos), 25f, 10);
+        var largeRodPos = rodPos(-1, data.map(d -> d.largeRodPos).orElse(0f), 25f, 10);
         var largeRods = part.models[supercharged ? LARGE_RODS_SUPERHEATED : LARGE_RODS];
 
         ms.pushPose();
@@ -221,12 +223,10 @@ public class MechanicalBlazePartData extends MechanicalPartData {
         ms.popPose();
     }
 
-    private float rodPos(float base, @SuppressWarnings("OptionalUsedAsFieldOrParameterType") Optional<PhysicalFloat> offset, float variance, float period) {
+    private float rodPos(float base, float offset, float variance, float period) {
         var jitterX = AnimationTickHolder.getTicks() % (2 * variance);
         var jitter = (jitterX < variance ? jitterX : (2 * variance) - jitterX) - (variance / 2f);
         jitter = jitter / period;
-        return base
-                - offset.map(f -> f.getValue(AnimationTickHolder.getPartialTicks())).orElse(0f)
-                + jitter;
+        return base - offset + jitter;
     }
 }

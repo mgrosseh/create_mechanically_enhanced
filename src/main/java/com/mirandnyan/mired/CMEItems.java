@@ -41,6 +41,7 @@ public class CMEItems {
     public static final ItemEntry<Item> SMALL_NETHERITE_TANK = part("small_netherite_tank");
     public static final ItemEntry<Item> SMALL_WOODEN_COG = part("small_wooden_cog");
     public static final ItemEntry<Item> SMALL_BRASS_COG = part("small_brass_cog");
+    public static final ItemEntry<Item> SMALL_NETHERITE_COG = part("small_netherite_cog");
     public static final ItemEntry<Item> DEFAULT_GRIP = part("part_default_grip");
     public static final ItemEntry<Item> IRON_DRILL_HEAD = part("part_iron_drill_head");
     public static final ItemEntry<Item> DIAMOND_DRILL_HEAD = part("part_diamond_drill_head");
