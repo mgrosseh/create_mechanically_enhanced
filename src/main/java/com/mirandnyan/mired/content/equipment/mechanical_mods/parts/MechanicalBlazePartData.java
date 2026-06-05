@@ -11,6 +11,8 @@ import com.simibubi.create.api.data.datamaps.BlazeBurnerFuel;
 import com.simibubi.create.api.registry.CreateDataMaps;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import net.createmod.catnip.animation.AnimationTickHolder;
+import net.createmod.catnip.animation.Force;
+import net.createmod.catnip.animation.PhysicalFloat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -27,6 +29,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 import java.util.WeakHashMap;
 
 public class MechanicalBlazePartData extends MechanicalPartData {
@@ -119,6 +122,15 @@ public class MechanicalBlazePartData extends MechanicalPartData {
 
     private static class ClientData {
         boolean mining = false;
+        int mining_visual = 0;
+        PhysicalFloat smallRodPos = new PhysicalFloat(2)
+                .withDrag(0.5)
+                .withLimit(4)
+                .addForce(new Force.Zeroing(3.9f));
+        PhysicalFloat largeRodPos = new PhysicalFloat(2)
+                .withDrag(0.5)
+                .withLimit(4)
+                .addForce(new Force.Zeroing(4.1f));
         static WeakHashMap<String, ClientData> clientData = new WeakHashMap<>();
 
         static ClientData of(String name) {
@@ -131,11 +143,24 @@ public class MechanicalBlazePartData extends MechanicalPartData {
             return;
         var data = ClientData.of(player.getName().getString());
         data.mining = clevel.levelRenderer.destroyingBlocks.containsKey(player.getId());
+        if (data.mining) {
+            data.mining_visual = 20;
+            data.smallRodPos.bump(2.5);
+            data.largeRodPos.bump(1.5);
+        }
+        if (data.mining_visual > 0)
+            data.mining_visual--;
+
+        data.smallRodPos.tick();
+        data.largeRodPos.tick();
     }
 
-    private boolean isMining(ItemStack stack) {
+
+    private Optional<ClientData> getData(ItemStack stack) {
         var name = stack.get(CMEDataComponents.LAST_TOOL_HOLDER_NAME);
-        return name != null && ClientData.of(name).mining;
+        if (name == null)
+            return Optional.empty();
+        return Optional.of(ClientData.of(name));
     }
 
 
@@ -145,6 +170,8 @@ public class MechanicalBlazePartData extends MechanicalPartData {
         if (stack.has(CMEDataComponents.BLAZE_BURNING_INFINITE))
             time = 1;
         var supercharged = stack.has(CMEDataComponents.BLAZE_BURNING_SUPER);
+
+        var data = getData(stack);
 
         ms.pushPose();
         ms.translate(0, 13 / 16f, -10 / 16f);
@@ -158,11 +185,8 @@ public class MechanicalBlazePartData extends MechanicalPartData {
         renderer.renderSolid(part.models[COG].get(), light);
         ms.popPose();
 
-        // rods
-
         // base
-        // working
-        var working = isMining(stack) && time != 0;
+        var working = data.map(d -> d.mining_visual).orElse(0) > 0 && time != 0;
         if (working && supercharged)
             renderer.renderSolid(part.models[BASE_WORKING_SUPERHEATED].get(), light);
         else if (working)
@@ -171,8 +195,38 @@ public class MechanicalBlazePartData extends MechanicalPartData {
             renderer.renderSolid(part.models[BASE_IDLE_SUPERHEATED].get(), light);
         else if (time != 0)
             renderer.renderSolid(part.models[BASE_IDLE].get(), light);
-        else
+        else {
             renderer.renderSolid(part.models[BASE_INERT].get(), light);
+            ms.popPose();
+            return;
+        }
+
+        // rods
+        var smallRodPos = rodPos(1, data.map(d -> d.smallRodPos), 40f, 13);
+        var smallRods = part.models[supercharged ? SMALL_RODS_SUPERHEATED : SMALL_RODS];
+
+        ms.pushPose();
+        ms.translate(0, smallRodPos / 16f, 0);
+        renderer.renderSolidGlowing(smallRods.get(), light);
         ms.popPose();
+
+        var largeRodPos = rodPos(0, data.map(d -> d.largeRodPos), 25f, 10);
+        var largeRods = part.models[supercharged ? LARGE_RODS_SUPERHEATED : LARGE_RODS];
+
+        ms.pushPose();
+        ms.translate(0, largeRodPos / 16f, 0);
+        renderer.renderSolidGlowing(largeRods.get(), light);
+        ms.popPose();
+
+        ms.popPose();
+    }
+
+    private float rodPos(float base, @SuppressWarnings("OptionalUsedAsFieldOrParameterType") Optional<PhysicalFloat> offset, float variance, float period) {
+        var jitterX = AnimationTickHolder.getTicks() % (2 * variance);
+        var jitter = (jitterX < variance ? jitterX : (2 * variance) - jitterX) - (variance / 2f);
+        jitter = jitter / period;
+        return base
+                - offset.map(f -> f.getValue(AnimationTickHolder.getPartialTicks())).orElse(0f)
+                + jitter;
     }
 }
