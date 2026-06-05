@@ -11,13 +11,11 @@ import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.Registry;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.Unit;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -30,6 +28,7 @@ import net.neoforged.neoforge.registries.RegistryBuilder;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -50,10 +49,7 @@ public class MechanicalPart {
     public final @NotNull ResourceKey<MechanicalToolSlot> validSlot;
 
     public final @NotNull String name;
-
     public final @NotNull PartialModel[] models;
-
-    protected CMETranslations.LangEntry lang;
 
     protected MechanicalPart(@NotNull ResourceKey<MechanicalToolSlot> validSlot,
                              @NotNull ResourceKey<Item> validItem,
@@ -64,10 +60,9 @@ public class MechanicalPart {
         this.validSlot = validSlot;
         this.validItem = validItem;
         this.data = data;
-        this.models = new PartialModel[models.length];
-        for (int i = 0; i < models.length; i++) {
-            this.models[i] = PartialModel.of(models[i]);
-        }
+        this.models = Arrays.stream(models)
+                .map(PartialModel::of)
+                .toArray(PartialModel[]::new);
     }
 
     public boolean isItem(Item item) {
@@ -77,6 +72,7 @@ public class MechanicalPart {
     public RegistryEntry<Item, Item> getItem() {
         return REGISTRATE.get(validItem.location().getPath(), validItem.registryKey());
     }
+
     public RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> getSlot() {
         return REGISTRATE.get(validSlot.location().getPath(), validSlot.registryKey());
     }
@@ -219,9 +215,11 @@ public class MechanicalPart {
     public static Stream<RegistryEntry<MechanicalPart, MechanicalPart>> getAll(Predicate<? super RegistryEntry<MechanicalPart, MechanicalPart>> filter) {
         return REGISTRATE.getAll(REGISTRY).stream().filter(filter);
     }
+
     public static Optional<RegistryEntry<MechanicalPart, MechanicalPart>> getOfItem(Item item) {
         return MechanicalPart.getAll(part -> part.get().isItem(item)).findAny();
     }
+
     public static RegistryEntry<MechanicalPart, MechanicalPart> get(ResourceKey<MechanicalPart> part) {
         return REGISTRATE.get(part.location().getPath(), part.registryKey());
     }
@@ -234,6 +232,7 @@ public class MechanicalPart {
         return REGISTRATE.object(name).simple(REGISTRY, () ->
                 new MechanicalPart(validSlot.getKey(), validItem.getKey(), data, name, CreateMechanicallyEnhanced.asResource("tool_part", name)));
     }
+
     protected static RegistryEntry<MechanicalPart, MechanicalPart> register(
             String name,
             RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> validSlot,

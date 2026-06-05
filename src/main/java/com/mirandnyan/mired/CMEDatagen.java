@@ -16,7 +16,7 @@ public class CMEDatagen {
     private static void addExtraRegistrateData() {
         CMETags.addGenerators();
 
-        CreateMechanicallyEnhanced.getRegistrate().addDataGenerator(ProviderType.LANG, provider -> {
+        CreateMechanicallyEnhanced.REGISTRATE.addDataGenerator(ProviderType.LANG, provider -> {
             // Register this since FMLClientSetupEvent does not run during datagen
             PonderIndex.addPlugin(new CVAPonderPlugin());
 

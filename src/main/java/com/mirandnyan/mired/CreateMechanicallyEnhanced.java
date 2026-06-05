@@ -7,7 +7,6 @@ import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;
 import com.simibubi.create.foundation.item.TooltipModifier;
 import net.createmod.catnip.lang.FontHelper;
-import net.createmod.catnip.lang.LangBuilder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
@@ -49,16 +48,6 @@ public class CreateMechanicallyEnhanced {
         MechanicalToolSlot.register();
 
         modEventBus.addListener(EventPriority.HIGHEST, CMEDatagen::gatherDataHighPriority);
-    }
-
-    @Deprecated
-    public static CreateRegistrate getRegistrate() {
-        return REGISTRATE;
-    }
-
-
-    public static LangBuilder lang() {
-        return new LangBuilder(MOD_ID);
     }
 
     public static ResourceLocation path(final String path) {
