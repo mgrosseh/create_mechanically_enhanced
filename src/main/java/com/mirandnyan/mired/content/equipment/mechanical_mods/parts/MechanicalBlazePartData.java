@@ -1,25 +1,30 @@
 package com.mirandnyan.mired.content.equipment.mechanical_mods.parts;
 
+import com.google.common.base.Suppliers;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import com.mirandnyan.mired.CMEDataComponents;
+import com.mirandnyan.mired.content.equipment.mechanical_mods.FilledToolSlot;
 import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPart;
 import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPartData;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllTags;
 import com.simibubi.create.api.data.datamaps.BlazeBurnerFuel;
 import com.simibubi.create.api.registry.CreateDataMaps;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.animation.Force;
-import net.createmod.catnip.animation.PhysicalFloat;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Holder;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.SlotAccess;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
@@ -27,11 +32,18 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.WeakHashMap;
+import java.util.function.Supplier;
 
+@EventBusSubscriber
 public class MechanicalBlazePartData extends MechanicalPartData {
 
     private static int i = 0;
@@ -46,6 +58,22 @@ public class MechanicalBlazePartData extends MechanicalPartData {
     private static final int LARGE_RODS_SUPERHEATED = i++;
     private static final int COG = i++;
 
+
+    public static final String MECH_BLAZE_MARKER = "mechanicallyEnhancedBlaze";
+
+
+    public static final AttributeModifier superheatedBoostModifier =
+            new AttributeModifier(ResourceLocation.withDefaultNamespace("player.mining_efficiency"), 1.8,
+                    AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+    public static final AttributeModifier heatedBoostModifier =
+            new AttributeModifier(ResourceLocation.withDefaultNamespace("player.mining_efficiency"), 1.3,
+                    AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+
+
+    private static final Supplier<Multimap<Holder<Attribute>, AttributeModifier>> superheatedBoost = Suppliers.memoize(() ->
+            ImmutableMultimap.of(Attributes.MINING_EFFICIENCY, superheatedBoostModifier));
+    private static final Supplier<Multimap<Holder<Attribute>, AttributeModifier>> heatedBoost = Suppliers.memoize(() ->
+            ImmutableMultimap.of(Attributes.MINING_EFFICIENCY, heatedBoostModifier));
 
     @Override
     public boolean tryHandlingStackedOnMe(@NotNull ItemStack stack, @NotNull ItemStack other, @NotNull Slot slot,
@@ -135,6 +163,7 @@ public class MechanicalBlazePartData extends MechanicalPartData {
     public void playerTick(Player player, ItemStack stack) {
         if (!(player.level() instanceof ClientLevel clevel))
             return;
+        // animation
         var data = ClientData.of(player.getName().getString());
         data.mining = clevel.levelRenderer.destroyingBlocks.containsKey(player.getId());
         if (data.mining) {
@@ -155,6 +184,47 @@ public class MechanicalBlazePartData extends MechanicalPartData {
             data.smallRodPos = 5f;
         if (data.largeRodPos > 5)
             data.largeRodPos = 5f;
+    }
+
+    private static void updateHeatAttribute(Player player, ItemStack stack) {
+
+    }
+
+    @SubscribeEvent
+    public static void stopHoldingMechanicalTool(EntityTickEvent.Post event) {
+        if (!(event.getEntity() instanceof Player player))
+            return;
+        boolean has = false;
+        ItemStack stack = player.getMainHandItem();
+        @Nullable MechanicalBlazePartData data = null;
+        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        for (var slot : slots) {
+            if (slot.part() == null || slot.part().compareTo(MechanicalPart.SMALL_MECHANICAL_BLAZE.getKey()) == 0)
+                continue;
+            has = true;
+            //noinspection OptionalGetWithoutIsPresent // isPresent === slot.part() != null
+            data = (MechanicalBlazePartData) slot.getPart().get().get().data;
+        }
+
+        // TODO:
+        // effect
+        CompoundTag persistentData = player.getPersistentData();
+        var had = persistentData.contains(MECH_BLAZE_MARKER);
+
+        if (has != had) {
+            if (has) {
+                updateHeatAttribute(player, stack);
+                persistentData.putBoolean(MECH_BLAZE_MARKER, true);
+            }
+            else {
+                player.getAttributes()
+                        .removeAttributeModifiers(superheatedBoost.get());
+                player.getAttributes()
+                        .removeAttributeModifiers(heatedBoost.get());
+                persistentData.remove(MECH_BLAZE_MARKER);
+            }
+        }
+
     }
 
 

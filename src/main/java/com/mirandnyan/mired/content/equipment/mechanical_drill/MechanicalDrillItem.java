@@ -34,6 +34,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,6 +48,8 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
     public static final int DEFAULT_TRANSFER_RATIO = 2;
     public static final int INTERNAL_AIR_COLOR = 0x9090F0;
 
+    // TODO: attributes
+    // TODO: pose when extendo grip is weird (crossing)
     // TODO: no enchant, no anvil
     // TODO: has slot: tag + if part has slot then this has that slot
     // TODO: parts: incompatible with tag
@@ -281,6 +284,7 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
         super.appendHoverText(stack, context, tooltip, flagIn);
     }
 
+    // TODO: remove (use other system inside of cog part using attributes)
     // -- Cog --
     @Override
     public float getDestroySpeed(ItemStack stack, BlockState state) {

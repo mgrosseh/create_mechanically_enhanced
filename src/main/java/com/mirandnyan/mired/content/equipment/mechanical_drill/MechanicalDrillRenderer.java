@@ -18,6 +18,9 @@ public class MechanicalDrillRenderer extends CustomRenderedItemModelRenderer {
     protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer, ItemDisplayContext transformType,
                           PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
         boolean renderedAnything = false;
+        ms.pushPose();
+        ms.translate(0, 0.5 / 15f, -2 / 16f);
+        // TODO: hand drawing
 
         List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
@@ -31,5 +34,6 @@ public class MechanicalDrillRenderer extends CustomRenderedItemModelRenderer {
         if (!renderedAnything)
             renderer.renderSolid(model.getOriginalModel(), light);
 
+        ms.popPose();
     }
 }

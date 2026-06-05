@@ -245,6 +245,7 @@ public class MechanicalPart {
     }
 
 
+    // TODO: unify where to put this (probably in mechanical tool over this? or all other stuff here ig)
     @SubscribeEvent
     public static void entityTick(EntityTickEvent.Post event) {
         if (!(event.getEntity() instanceof Player player))
@@ -258,6 +259,16 @@ public class MechanicalPart {
             ));
         }
     }
+
+
+    // TODO: different system
+//    @SubscribeEvent
+//    public static void stopHoldingMechanicalTool(EntityTickEvent.Pre event) {
+//        if (!(event.getEntity() instanceof Player player))
+//            return;
+//        ItemStack stack = player.getMainHandItem(); // TODO offhand too with boolean
+//
+//    }
 
     @ApiStatus.Internal
     public static void register() {
