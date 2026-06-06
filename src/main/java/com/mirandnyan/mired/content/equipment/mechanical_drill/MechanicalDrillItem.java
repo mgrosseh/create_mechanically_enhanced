@@ -48,9 +48,11 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
     public static final int DEFAULT_TRANSFER_RATIO = 2;
     public static final int INTERNAL_AIR_COLOR = 0x9090F0;
 
-    // TODO: attributes
-    // TODO: pose when extendo grip is weird (crossing)
-    // TODO: no enchant, no anvil
+    // TODO: insta mining Deepslate Requires mining_efficiency of ~80 or more, make possible
+    // TODO: more attributes
+    // TODO: pose is weird (crossing) when in offhand: extendo grip, crossbow, other mechanical tool
+    // TODO: enchants: unbreaking (for when no air)
+    // TODO: no anvil
     // TODO: has slot: tag + if part has slot then this has that slot
     // TODO: parts: incompatible with tag
     // TODO: add right click (as opposed to right hold = refill) as an action parts can access
@@ -58,16 +60,38 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
 
     // TODO: head: explosion generator, saw
 
+
+    /*
+    TODO: reworking Slots / Parts / FilledSlots etc
+    Tool has a slot for Grip:
+    Tag defines two slots on grip: cog + gearbox
+    Each slot stores position offset on tool
+
+    In render we find grip, render; then find attached parts, offset to their slots offset, render;
+    then find their attached parts etc
+
+    On trying to rightClick, for each part try inserting a valid part onto it recursively, the tool facilitates figuring
+    out if it is a MechanicalPart and then calls tryInsertingTool on gripPart.data.
+    It sees if one of its slots fits the Part, if not for each part it calls part.data.tryInsertingTool.
+
+    it may still be best to store all parts linearly and use a map for structure of where it is
+     */
+
     public static ItemStack defaultItemStack() {
-        var stack = CMEItems.MECHANICAL_DRILL.asStack();
-        RegistryEntry<MechanicalPart, MechanicalPart>[] defaultParts = new RegistryEntry[]{
+        return newStackWithParts(
                 MechanicalPart.DEFAULT_GRIP,
                 MechanicalPart.WOODEN_COG,
                 MechanicalPart.ANDESITE_GEARBOX,
                 MechanicalPart.COPPER_TANK,
-                MechanicalPart.IRON_DRILL_HEAD,
-        };
-        for (var part : defaultParts) {
+                MechanicalPart.IRON_DRILL_HEAD
+        );
+    }
+
+    @SafeVarargs
+    public static ItemStack newStackWithParts(RegistryEntry<MechanicalPart, MechanicalPart>... parts) {
+        var stack = CMEItems.MECHANICAL_DRILL.asStack();
+
+        for (var part : parts) {
             var slot = new FilledToolSlot(part.get().validSlot, part.getKey());
             insertFilledToolSlot(stack, slot);
         }
@@ -79,11 +103,12 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
     public MechanicalDrillItem(Properties properties) {
         super(properties
                 .rarity(Rarity.UNCOMMON)
-                .durability(DEFAULT_DURABILITY)
+                .durability(DEFAULT_DURABILITY) // TODO: durability maybe should be in the handle
                 .attributes(createAttributes())
         );
     }
     public static ItemAttributeModifiers createAttributes() {
+        // TODO: this should be in the head part
         float attackDamage = 1.0f;
         float attackSpeed = -2.8f;
         return ItemAttributeModifiers.builder()
@@ -115,11 +140,23 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void consumeDurabilityOnBlockBreak(BlockEvent.BreakEvent event) {
         findAndDamageItem(event.getPlayer());
+        notifyPartsOfBlockBreak(event);
     }
 
-    protected static void findAndDamageItem(Player player) {
-        if (player == null)
+    protected static void notifyPartsOfBlockBreak(BlockEvent.BreakEvent event) {
+        var player = event.getPlayer();
+        var client = player.level().isClientSide;
+        var item = player.getMainHandItem();
+        if (!CMEItems.MECHANICAL_DRILL.isIn(item))
             return;
+
+        List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        for (var slot : slots) {
+            slot.getPart().ifPresent(p -> p.get().data.brokeBlock(client, player, item, event));
+        }
+    }
+
+    protected static void findAndDamageItem(@NotNull Player player) {
         if (player.level().isClientSide)
             return;
         EquipmentSlot equipmentSlot = EquipmentSlot.MAINHAND;
@@ -142,7 +179,6 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
     }
 
     // -- Parts --
-
     protected void setLastToolHolder(ItemStack stack, Entity entity, boolean isSelected) {
         if (!(entity instanceof Player player) || !isSelected)
             return;
@@ -164,6 +200,7 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
     }
 
     // Change parts
+    @Override
     public boolean overrideOtherStackedOnMe(ItemStack stack, @NotNull ItemStack other, @NotNull Slot slot,
                                             @NotNull ClickAction action, @NotNull Player player, @NotNull SlotAccess access) {
         if (tryMechanicalPartsHandlingStackOnMe(stack, other, slot, action, player, access))
@@ -282,14 +319,6 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
             );
         }
         super.appendHoverText(stack, context, tooltip, flagIn);
-    }
-
-    // TODO: remove (use other system inside of cog part using attributes)
-    // -- Cog --
-    @Override
-    public float getDestroySpeed(ItemStack stack, BlockState state) {
-        int multiplier = Math.max(100 + stack.getOrDefault(CMEDataComponents.SPEED_MODIFIER, 0), 0);
-        return super.getDestroySpeed(stack, state) * (multiplier / 100f);
     }
 
     // -- Air Storage --

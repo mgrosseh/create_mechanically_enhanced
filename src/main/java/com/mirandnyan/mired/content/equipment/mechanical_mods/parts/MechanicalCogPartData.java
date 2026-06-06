@@ -1,5 +1,6 @@
 package com.mirandnyan.mired.content.equipment.mechanical_mods.parts;
 
+import com.mirandnyan.mired.CreateMechanicallyEnhanced;
 import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPart;
 import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPartData;
 import com.mirandnyan.mired.util.ItemAttributeModifiersRebuilder;
@@ -26,7 +27,7 @@ public class MechanicalCogPartData extends MechanicalPartData {
     public MechanicalCogPartData(int speedModifier) {
         this.speedModifier = speedModifier;
         cogBoostModifier =
-                new AttributeModifier(ResourceLocation.withDefaultNamespace("player.mining_efficiency"),
+                new AttributeModifier(CreateMechanicallyEnhanced.asResource("cog_mining_boost"),
                         speedModifier, AttributeModifier.Operation.ADD_VALUE);
         cogBoost = new ItemAttributeModifiers.Entry(
                 Attributes.MINING_EFFICIENCY,
@@ -55,7 +56,7 @@ public class MechanicalCogPartData extends MechanicalPartData {
 
     @Override
     public void render(ItemStack stack, MechanicalPart part, PartialItemModelRenderer renderer, ItemDisplayContext transformType, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-        float angle = AnimationTickHolder.getRenderTime() * -1 * 2.5f * (speedModifier / 5f);
+        float angle = AnimationTickHolder.getRenderTime() * -1 * 2.5f * (float) (speedModifier * SharedConstants.MINING_EFFICIENCY_TO_COG_SPEED);
 
         angle %= 360;
 

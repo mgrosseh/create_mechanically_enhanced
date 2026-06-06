@@ -11,6 +11,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -42,4 +43,6 @@ public abstract class MechanicalPartData {
                                        @NotNull ClickAction action, @NotNull Player player, @NotNull SlotAccess access) {
         return false;
     }
+
+    public void brokeBlock(boolean client, Player player, ItemStack item, BlockEvent.BreakEvent event) { }
 }

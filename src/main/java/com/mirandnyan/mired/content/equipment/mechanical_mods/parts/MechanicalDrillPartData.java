@@ -19,7 +19,9 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.event.level.BlockEvent;
 
+import java.util.Optional;
 import java.util.WeakHashMap;
 
 
@@ -32,6 +34,16 @@ public class MechanicalDrillPartData extends MechanicalPartData {
 
         static ClientData of(String name) {
             return clientData.computeIfAbsent(name, s -> new ClientData());
+        }
+
+        static ClientData of(Player player) {
+            return of(player.getName().getString());
+        }
+        static Optional<ClientData> of(ItemStack stack) {
+            var name = stack.get(CMEDataComponents.LAST_TOOL_HOLDER_NAME);
+            if (name == null)
+                return Optional.empty();
+            return Optional.of(of(name));
         }
     }
 
@@ -57,13 +69,21 @@ public class MechanicalDrillPartData extends MechanicalPartData {
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
     }
 
+    // TODO this wont work only ever server
+    @Override
+    public void brokeBlock(boolean client, Player player, ItemStack item, BlockEvent.BreakEvent event) {
+        if (!client)
+            return;
+        var data = ClientData.of(player);
+        data.pAngle.bump(5.5);
+    }
 
     @Override
     public void playerTick(Player player, ItemStack stack) {
         if (!(player.level() instanceof ClientLevel clevel))
             return;
 
-        var data = ClientData.of(player.getName().getString());
+        var data = ClientData.of(player);
         if (clevel.levelRenderer.destroyingBlocks.containsKey(player.getId()))
             data.pAngle.bump(5.5);
 

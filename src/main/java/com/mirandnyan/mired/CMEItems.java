@@ -1,6 +1,7 @@
 package com.mirandnyan.mired;
 
 import com.mirandnyan.mired.content.equipment.mechanical_drill.MechanicalDrillItem;
+import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPart;
 import com.simibubi.create.AllCreativeModeTabs;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateItemModelProvider;
@@ -70,6 +71,14 @@ public class CMEItems {
                             .icon(SMALL_BRASS_VERTICAL_GEARBOX::asStack)
                             .displayItems((parameters, output) -> {
                                 output.accept(MechanicalDrillItem.defaultItemStack());
+                                output.accept(MechanicalDrillItem.newStackWithParts(
+                                        MechanicalPart.DEFAULT_GRIP,
+                                        MechanicalPart.NETHERITE_COG,
+                                        MechanicalPart.BRASS_GEARBOX,
+                                        MechanicalPart.NETHERITE_TANK,
+                                        MechanicalPart.NETHERITE_DRILL_HEAD,
+                                        MechanicalPart.SMALL_MECHANICAL_BLAZE
+                                ));
                                 output.accept(CMEBlocks.FOOD_REPLICATOR);
                                 for (var x : creativeModeItem) {
                                     output.accept(x);
