@@ -12,6 +12,6 @@ as well as enhanced food that can be imbued with potion effects.
 # Additions
 
 # About
-Made by Mirandnyan.
+Made by Mirandnyan and Frizi.
 
 No AI used to make this mod.

@@ -60,6 +60,7 @@ public class MechanicalPart {
         this.validSlot = validSlot;
         this.validItem = validItem;
         this.data = data;
+        data.setParent(this);
         this.models = Arrays.stream(models)
                 .map(PartialModel::of)
                 .toArray(PartialModel[]::new);
@@ -121,17 +122,17 @@ public class MechanicalPart {
     public static final RegistryEntry<MechanicalPart, MechanicalPart> WOODEN_COG = register("wooden_cog",
             MechanicalToolSlot.COG_SLOT,
             CMEItems.SMALL_WOODEN_COG,
-            new MechanicalCogPartData(0)
+            new MechanicalCogPartData(4)
     );
     public static final RegistryEntry<MechanicalPart, MechanicalPart> BRASS_COG = register("brass_cog",
             MechanicalToolSlot.COG_SLOT,
             CMEItems.SMALL_BRASS_COG,
-            new MechanicalCogPartData(100)
+            new MechanicalCogPartData(8)
     );
     public static final RegistryEntry<MechanicalPart, MechanicalPart> NETHERITE_COG = register("netherite_cog",
             MechanicalToolSlot.COG_SLOT,
             CMEItems.SMALL_NETHERITE_COG,
-            new MechanicalCogPartData(160)
+            new MechanicalCogPartData(14)
     );
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> DEFAULT_GRIP = register("default_grip",
@@ -259,15 +260,27 @@ public class MechanicalPart {
         }
     }
 
+    public boolean isIn(ItemStack stack) {
+        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        for (var slot : slots) {
+            var part = slot.getPart();
+            if ( part.isEmpty() || part.get().get() != this)
+                continue;
+            return true;
+        }
+        return false;
 
-    // TODO: different system
-//    @SubscribeEvent
-//    public static void stopHoldingMechanicalTool(EntityTickEvent.Pre event) {
-//        if (!(event.getEntity() instanceof Player player))
-//            return;
-//        ItemStack stack = player.getMainHandItem(); // TODO offhand too with boolean
-//
-//    }
+    }
+
+    public static boolean isIn(ResourceKey<MechanicalPart> part, ItemStack stack) {
+        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        for (var slot : slots) {
+            if (slot.part() == null || slot.part().compareTo(part) != 0)
+                continue;
+            return true;
+        }
+        return false;
+    }
 
     @ApiStatus.Internal
     public static void register() {

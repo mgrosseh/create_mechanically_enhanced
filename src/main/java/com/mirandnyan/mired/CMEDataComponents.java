@@ -40,7 +40,7 @@ builder -> builder.persistent(FilledToolSlot.CODEC.listOf()).networkSynchronized
     public static final DataComponentType<Integer> SPEED_MODIFIER = register(
             "mechanical_tool_speed_modifier",
             builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
-    );
+    ); // TODO: remove
 
     public static final DataComponentType<Long> BLAZE_BURNING_TIME = register(
             "mechanical_blaze_remaining_burning_time",

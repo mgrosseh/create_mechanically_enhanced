@@ -15,6 +15,11 @@ import org.jetbrains.annotations.NotNull;
 
 
 public abstract class MechanicalPartData {
+    protected MechanicalPart parent;
+
+    void setParent(MechanicalPart parent) {
+        this.parent = parent;
+    }
 
     // TODO: make data component
     public int getTransferRatio() {

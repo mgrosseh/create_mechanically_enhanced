@@ -7,6 +7,7 @@ import com.mirandnyan.mired.CMEDataComponents;
 import com.mirandnyan.mired.content.equipment.mechanical_mods.FilledToolSlot;
 import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPart;
 import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPartData;
+import com.mirandnyan.mired.util.ItemAttributeModifiersRebuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllItems;
@@ -17,6 +18,7 @@ import net.createmod.catnip.animation.AnimationTickHolder;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;
@@ -31,12 +33,12 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -59,14 +61,14 @@ public class MechanicalBlazePartData extends MechanicalPartData {
     private static final int COG = i++;
 
 
-    public static final String MECH_BLAZE_MARKER = "mechanicallyEnhancedBlaze";
+    private static final String MECH_BLAZE_MARKER = "mechanicallyEnhancedBlaze";
 
 
-    public static final AttributeModifier superheatedBoostModifier =
-            new AttributeModifier(ResourceLocation.withDefaultNamespace("player.mining_efficiency"), 1.8,
+    private static final AttributeModifier superheatedBoostModifier =
+            new AttributeModifier(ResourceLocation.withDefaultNamespace("player.mining_efficiency"), 2.3,
                     AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-    public static final AttributeModifier heatedBoostModifier =
-            new AttributeModifier(ResourceLocation.withDefaultNamespace("player.mining_efficiency"), 1.3,
+    private static final AttributeModifier heatedBoostModifier =
+            new AttributeModifier(ResourceLocation.withDefaultNamespace("player.mining_efficiency"), 1.5,
                     AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
 
@@ -86,14 +88,15 @@ public class MechanicalBlazePartData extends MechanicalPartData {
             if (infinite && superheated) {
                 stack.remove(CMEDataComponents.BLAZE_BURNING_INFINITE);
                 stack.remove(CMEDataComponents.BLAZE_BURNING_SUPER);
-                return true;
             }
-            if (!infinite) {
+            else if (!infinite) {
                 stack.remove(CMEDataComponents.BLAZE_BURNING_SUPER);
                 stack.set(CMEDataComponents.BLAZE_BURNING_INFINITE, Unit.INSTANCE);
-                return true;
             }
-            stack.set(CMEDataComponents.BLAZE_BURNING_SUPER, Unit.INSTANCE);
+            else
+                stack.set(CMEDataComponents.BLAZE_BURNING_SUPER, Unit.INSTANCE);
+
+            updateHeatAttribute(player, stack);
             return true;
         }
         if (stack.has(CMEDataComponents.BLAZE_BURNING_INFINITE))
@@ -109,6 +112,8 @@ public class MechanicalBlazePartData extends MechanicalPartData {
 
             if (!player.isCreative())
                 other.shrink(1);
+
+            updateHeatAttribute(player, stack);
             return true;
         }
         if (stack.has(CMEDataComponents.BLAZE_BURNING_SUPER))
@@ -128,6 +133,7 @@ public class MechanicalBlazePartData extends MechanicalPartData {
 
             if (!player.isCreative())
                 other.shrink(1);
+            updateHeatAttribute(player, stack);
             return true;
         }
         return false;
@@ -145,6 +151,8 @@ public class MechanicalBlazePartData extends MechanicalPartData {
             if (superheated)
                 stack.remove(CMEDataComponents.BLAZE_BURNING_SUPER);
             stack.remove(CMEDataComponents.BLAZE_BURNING_TIME);
+            if (entity instanceof Player player)
+                updateHeatAttribute(player, stack);
         }
     }
 
@@ -187,27 +195,38 @@ public class MechanicalBlazePartData extends MechanicalPartData {
     }
 
     private static void updateHeatAttribute(Player player, ItemStack stack) {
-
+        long time = stack.getOrDefault(CMEDataComponents.BLAZE_BURNING_TIME, 0L);
+        var infinite = stack.has(CMEDataComponents.BLAZE_BURNING_INFINITE);
+        var superheated = stack.has(CMEDataComponents.BLAZE_BURNING_SUPER);
+        var active = infinite
+                || time >= player.level().getGameTime()
+                || player.getMainHandItem() != stack;
+        if (!active) {
+//            stack.set(DataComponents.ATTRIBUTE_MODIFIERS, new ItemAttributeModifiersRebuilder(stack.getAttributeModifiers())
+//                    .takeAll()
+//                    .build()
+//            );
+            player.getAttributes()
+                    .removeAttributeModifiers(superheatedBoost.get());
+            player.getAttributes()
+                    .removeAttributeModifiers(heatedBoost.get());
+            return;
+        }
+        if (superheated)
+            player.getAttributes()
+                    .addTransientAttributeModifiers(superheatedBoost.get());
+        else
+            player.getAttributes()
+                    .addTransientAttributeModifiers(heatedBoost.get());
     }
 
     @SubscribeEvent
-    public static void stopHoldingMechanicalTool(EntityTickEvent.Post event) {
+    public static void checkHoldingMechanicalBlaze(EntityTickEvent.Post event) {
         if (!(event.getEntity() instanceof Player player))
             return;
-        boolean has = false;
         ItemStack stack = player.getMainHandItem();
-        @Nullable MechanicalBlazePartData data = null;
-        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
-        for (var slot : slots) {
-            if (slot.part() == null || slot.part().compareTo(MechanicalPart.SMALL_MECHANICAL_BLAZE.getKey()) == 0)
-                continue;
-            has = true;
-            //noinspection OptionalGetWithoutIsPresent // isPresent === slot.part() != null
-            data = (MechanicalBlazePartData) slot.getPart().get().get().data;
-        }
+        boolean has = MechanicalPart.isIn(MechanicalPart.SMALL_MECHANICAL_BLAZE.getKey(), stack);
 
-        // TODO:
-        // effect
         CompoundTag persistentData = player.getPersistentData();
         var had = persistentData.contains(MECH_BLAZE_MARKER);
 
@@ -224,9 +243,7 @@ public class MechanicalBlazePartData extends MechanicalPartData {
                 persistentData.remove(MECH_BLAZE_MARKER);
             }
         }
-
     }
-
 
     private Optional<ClientData> getData(ItemStack stack) {
         var name = stack.get(CMEDataComponents.LAST_TOOL_HOLDER_NAME);
