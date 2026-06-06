@@ -1,8 +1,27 @@
 package com.mirandnyan.mired.content.equipment.mechanical_mods.parts;
 
 import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPartData;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.ItemStack;
 
 public class MechanicalGripPartData extends MechanicalPartData {
 
+    private final int maxDamage;
 
+    public MechanicalGripPartData(int maxDamage) {
+        super(0.7f);
+        this.maxDamage = maxDamage;
+    }
+
+    @Override
+    public void onInserted(ItemStack tool) {
+        tool.set(DataComponents.MAX_DAMAGE, maxDamage);
+        tool.set(DataComponents.DAMAGE, 0);
+    }
+
+    @Override
+    public void onRemoved(ItemStack tool) {
+        tool.remove(DataComponents.MAX_DAMAGE);
+        tool.remove(DataComponents.DAMAGE);
+    }
 }

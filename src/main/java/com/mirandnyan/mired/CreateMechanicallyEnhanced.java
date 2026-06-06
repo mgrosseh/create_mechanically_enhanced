@@ -21,6 +21,11 @@ import net.neoforged.fml.ModContainer;
 
 @Mod(CreateMechanicallyEnhanced.MOD_ID)
 public class CreateMechanicallyEnhanced {
+    /*
+    TODO:
+    Maybe: Add way to load model with groups / parts into PartialModels each representing a group / part,
+           to be able to have a single that can be rendered individually.
+     */
 
     public static final String MOD_ID = "create_mechanically_enhanced";
     public static final String MOD_NAME = "Create: Mechanically Enhanced";

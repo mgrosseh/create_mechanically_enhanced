@@ -18,13 +18,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
@@ -34,7 +31,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.event.level.BlockEvent;
-import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,7 +40,6 @@ import java.util.function.Consumer;
 @EventBusSubscriber
 public class MechanicalDrillItem extends MechanicalTool implements CustomArmPoseItem {
 
-    public static final int DEFAULT_DURABILITY = 600;
     public static final int DEFAULT_TRANSFER_RATIO = 2;
     public static final int INTERNAL_AIR_COLOR = 0x9090F0;
 
@@ -95,6 +90,7 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
             var slot = new FilledToolSlot(part.get().validSlot, part.getKey());
             insertFilledToolSlot(stack, slot);
         }
+        recalculateTotalWeight(stack);
         var capacity = stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR_CAPACITY, 0);
         stack.set(CMEDataComponents.PRESSURIZED_AIR, capacity);
         return stack;
@@ -103,26 +99,8 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
     public MechanicalDrillItem(Properties properties) {
         super(properties
                 .rarity(Rarity.UNCOMMON)
-                .durability(DEFAULT_DURABILITY) // TODO: durability maybe should be in the handle
-                .attributes(createAttributes())
+                .stacksTo(1)
         );
-    }
-    public static ItemAttributeModifiers createAttributes() {
-        // TODO: this should be in the head part
-        float attackDamage = 1.0f;
-        float attackSpeed = -2.8f;
-        return ItemAttributeModifiers.builder()
-                .add(
-                        Attributes.ATTACK_DAMAGE,
-                        new AttributeModifier(BASE_ATTACK_DAMAGE_ID, (attackDamage + Tiers.DIAMOND.getAttackDamageBonus()), AttributeModifier.Operation.ADD_VALUE),
-                        EquipmentSlotGroup.MAINHAND
-                )
-                .add(
-                        Attributes.ATTACK_SPEED,
-                        new AttributeModifier(BASE_ATTACK_SPEED_ID, attackSpeed, AttributeModifier.Operation.ADD_VALUE),
-                        EquipmentSlotGroup.MAINHAND
-                )
-                .build();
     }
 
     // -- Breaking Blocks with Item --
@@ -143,16 +121,16 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
         notifyPartsOfBlockBreak(event);
     }
 
+    /* always server side */
     protected static void notifyPartsOfBlockBreak(BlockEvent.BreakEvent event) {
         var player = event.getPlayer();
-        var client = player.level().isClientSide;
         var item = player.getMainHandItem();
         if (!CMEItems.MECHANICAL_DRILL.isIn(item))
             return;
 
         List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
-            slot.getPart().ifPresent(p -> p.get().data.brokeBlock(client, player, item, event));
+            slot.getPart().ifPresent(p -> p.get().data.brokeBlock(player, item, event));
         }
     }
 
@@ -246,6 +224,7 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
         var filledSlot = new FilledToolSlot(partSlot, part.getKey());
 
         var old = insertFilledToolSlot(stack, filledSlot);
+        recalculateTotalWeight(stack);
         other.shrink(1);
         if (old == null || old.part() == null)
             return true;

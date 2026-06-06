@@ -16,7 +16,12 @@ import org.jetbrains.annotations.NotNull;
 
 
 public abstract class MechanicalPartData {
+    public final float weight;
     protected MechanicalPart parent;
+
+    protected MechanicalPartData(float weight) {
+        this.weight = weight;
+    }
 
     void setParent(MechanicalPart parent) {
         this.parent = parent;
@@ -44,5 +49,5 @@ public abstract class MechanicalPartData {
         return false;
     }
 
-    public void brokeBlock(boolean client, Player player, ItemStack item, BlockEvent.BreakEvent event) { }
+    public void brokeBlock(Player player, ItemStack item, BlockEvent.BreakEvent event) { }
 }

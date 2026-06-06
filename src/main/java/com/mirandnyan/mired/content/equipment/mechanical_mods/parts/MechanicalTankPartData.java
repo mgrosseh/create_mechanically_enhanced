@@ -7,6 +7,7 @@ import net.minecraft.world.item.ItemStack;
 public class MechanicalTankPartData extends MechanicalPartData {
     int capacity;
     public MechanicalTankPartData(int capacity) {
+        super(0.4f);
         this.capacity = capacity;
     }
 

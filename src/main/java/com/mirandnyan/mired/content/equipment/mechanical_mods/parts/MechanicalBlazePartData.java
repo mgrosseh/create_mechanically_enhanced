@@ -40,7 +40,6 @@ import java.util.Optional;
 import java.util.WeakHashMap;
 
 public class MechanicalBlazePartData extends MechanicalPartData {
-
     private static int i = 0;
     private static final int BASE_INERT = i++;
     private static final int BASE_IDLE = i++;
@@ -70,6 +69,10 @@ public class MechanicalBlazePartData extends MechanicalPartData {
             heatedBoostModifier,
             EquipmentSlotGroup.MAINHAND
     );
+
+    public MechanicalBlazePartData() {
+        super(0.3f);
+    }
 
     @Override
     public boolean tryHandlingStackedOnMe(@NotNull ItemStack stack, @NotNull ItemStack other, @NotNull Slot slot,
@@ -152,7 +155,8 @@ public class MechanicalBlazePartData extends MechanicalPartData {
     }
 
     private static class ClientData {
-        boolean mining = false;
+        int lastAir = 0;
+        int lastDamage = 0;
         int mining_visual = 0;
         float smallRodPos = 0;
         float largeRodPos = 0;
@@ -170,16 +174,22 @@ public class MechanicalBlazePartData extends MechanicalPartData {
                 return Optional.empty();
             return Optional.of(ClientData.of(name));
         }
-
     }
     @Override
     public void playerTick(Player player, ItemStack stack) {
+        //noinspection DuplicatedCode
         if (!(player.level() instanceof ClientLevel clevel))
             return;
         // animation
         var data = ClientData.of(player);
-        data.mining = clevel.levelRenderer.destroyingBlocks.containsKey(player.getId());
-        if (data.mining) {
+        var air = stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR, 0);
+        var damage = stack.getOrDefault(DataComponents.DAMAGE, 0);
+        var mining = clevel.levelRenderer.destroyingBlocks.containsKey(player.getId())
+                || air < data.lastAir
+                || damage > data.lastDamage;
+        data.lastAir = air;
+        data.lastDamage = damage;
+        if (mining) {
             data.mining_visual = 20;
         }
         if (data.mining_visual > 0) {
@@ -197,16 +207,6 @@ public class MechanicalBlazePartData extends MechanicalPartData {
             data.smallRodPos = 5f;
         if (data.largeRodPos > 5)
             data.largeRodPos = 5f;
-    }
-
-
-    @Override
-    public void brokeBlock(boolean client, Player player, ItemStack item, BlockEvent.BreakEvent event) {
-        if (!client)
-            return;
-        var data = ClientData.of(player);
-        data.mining = true;
-        data.mining_visual = 20;
     }
 
     @Override

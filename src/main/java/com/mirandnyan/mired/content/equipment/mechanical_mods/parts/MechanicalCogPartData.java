@@ -25,6 +25,7 @@ public class MechanicalCogPartData extends MechanicalPartData {
 
     int speedModifier;
     public MechanicalCogPartData(int speedModifier) {
+        super(0.2f);
         this.speedModifier = speedModifier;
         cogBoostModifier =
                 new AttributeModifier(CreateMechanicallyEnhanced.asResource("cog_mining_boost"),

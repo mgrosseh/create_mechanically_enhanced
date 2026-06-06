@@ -1,13 +1,17 @@
 package com.mirandnyan.mired.util;
 
+import net.minecraft.core.Holder;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 
 import java.util.Arrays;
 import java.util.function.Predicate;
 
 public class ItemAttributeModifiersRebuilder {
-    ItemAttributeModifiers original;
-    ItemAttributeModifiers.Builder builder;
+    private final ItemAttributeModifiers original;
+    private final ItemAttributeModifiers.Builder builder;
     public ItemAttributeModifiersRebuilder(ItemAttributeModifiers from) {
         this.original = from;
         builder = ItemAttributeModifiers.builder();
@@ -26,7 +30,11 @@ public class ItemAttributeModifiersRebuilder {
         return this.filter(e -> Arrays.stream(entries).noneMatch(e2 -> e2.equals(e)));
     }
     public ItemAttributeModifiersRebuilder add(ItemAttributeModifiers.Entry entry) {
-        builder.add(entry.attribute(), entry.modifier(), entry.slot());
+        return this.add(entry.attribute(), entry.modifier(), entry.slot());
+    }
+
+    public ItemAttributeModifiersRebuilder add(Holder<Attribute> attribute, AttributeModifier modifier, EquipmentSlotGroup slot) {
+        builder.add(attribute, modifier, slot);
         return this;
     }
 

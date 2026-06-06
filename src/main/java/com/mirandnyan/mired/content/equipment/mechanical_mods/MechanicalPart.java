@@ -2,10 +2,7 @@ package com.mirandnyan.mired.content.equipment.mechanical_mods;
 
 import com.mirandnyan.mired.*;
 import com.mirandnyan.mired.content.equipment.mechanical_drill.MechanicalDrillItem;
-import com.mirandnyan.mired.content.equipment.mechanical_mods.parts.MechanicalBlazePartData;
-import com.mirandnyan.mired.content.equipment.mechanical_mods.parts.MechanicalCogPartData;
-import com.mirandnyan.mired.content.equipment.mechanical_mods.parts.MechanicalDrillPartData;
-import com.mirandnyan.mired.content.equipment.mechanical_mods.parts.MechanicalTankPartData;
+import com.mirandnyan.mired.content.equipment.mechanical_mods.parts.*;
 import com.mojang.serialization.Codec;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
@@ -100,7 +97,7 @@ public class MechanicalPart {
     public static final RegistryEntry<MechanicalPart, MechanicalPart> ANDESITE_GEARBOX = register("andesite_gearbox",
             MechanicalToolSlot.GEARBOX_SLOT,
             CMEItems.SMALL_ANDESITE_VERTICAL_GEARBOX,
-            new MechanicalPartData() {
+            new MechanicalPartData(0.2f) {
                 @Override
                 public int getTransferRatio() {
                     return MechanicalDrillItem.DEFAULT_TRANSFER_RATIO;
@@ -110,7 +107,7 @@ public class MechanicalPart {
     public static final RegistryEntry<MechanicalPart, MechanicalPart> BRASS_GEARBOX = register("brass_gearbox",
             MechanicalToolSlot.GEARBOX_SLOT,
             CMEItems.SMALL_BRASS_VERTICAL_GEARBOX,
-            new MechanicalPartData() {
+            new MechanicalPartData(0.2f) {
                 @Override
                 public int getTransferRatio() {
                     return MechanicalDrillItem.DEFAULT_TRANSFER_RATIO / 2;
@@ -138,7 +135,7 @@ public class MechanicalPart {
     public static final RegistryEntry<MechanicalPart, MechanicalPart> DEFAULT_GRIP = register("default_grip",
             MechanicalToolSlot.GRIP_SLOT,
             CMEItems.DEFAULT_GRIP,
-            new MechanicalPartData() {} // TODO
+            new MechanicalGripPartData(600)
     );
 
 //    public static final RegistryEntry<MechanicalPart, MechanicalPart> NETHERITE_GRIP = register("netherite_grip",
@@ -161,7 +158,7 @@ public class MechanicalPart {
     public static final RegistryEntry<MechanicalPart, MechanicalPart> IRON_DRILL_HEAD = register("iron_drill_head",
             MechanicalToolSlot.TIP_SLOT,
             CMEItems.IRON_DRILL_HEAD,
-            new MechanicalDrillPartData(
+            new MechanicalDrillPartData(1 + Tiers.IRON.getAttackDamageBonus(),
                     new Tool(List.of(
                             Tool.Rule.deniesDrops(BlockTags.INCORRECT_FOR_IRON_TOOL),
                             Tool.Rule.minesAndDrops(CMETags.Blocks.MINEABLE_WITH_MECHANICAL_DRILL, Tiers.IRON.getSpeed())),
@@ -173,7 +170,7 @@ public class MechanicalPart {
     public static final RegistryEntry<MechanicalPart, MechanicalPart> DIAMOND_DRILL_HEAD = register("diamond_drill_head",
             MechanicalToolSlot.TIP_SLOT,
             CMEItems.DIAMOND_DRILL_HEAD,
-            new MechanicalDrillPartData(
+            new MechanicalDrillPartData(1 + Tiers.DIAMOND.getAttackDamageBonus(),
                     new Tool(List.of(
                             Tool.Rule.deniesDrops(BlockTags.INCORRECT_FOR_DIAMOND_TOOL),
                             Tool.Rule.minesAndDrops(CMETags.Blocks.MINEABLE_WITH_MECHANICAL_DRILL, Tiers.DIAMOND.getSpeed())),
@@ -185,7 +182,7 @@ public class MechanicalPart {
     public static final RegistryEntry<MechanicalPart, MechanicalPart> NETHERITE_DRILL_HEAD = register("netherite_drill_head",
             MechanicalToolSlot.TIP_SLOT,
             CMEItems.NETHERITE_DRILL_HEAD,
-            new MechanicalDrillPartData(
+            new MechanicalDrillPartData(1 + Tiers.NETHERITE.getAttackDamageBonus(),
                     new Tool(List.of(
                             Tool.Rule.deniesDrops(BlockTags.INCORRECT_FOR_NETHERITE_TOOL),
                             Tool.Rule.minesAndDrops(CMETags.Blocks.MINEABLE_WITH_MECHANICAL_DRILL, Tiers.NETHERITE.getSpeed())),
