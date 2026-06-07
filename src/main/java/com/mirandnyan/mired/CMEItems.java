@@ -23,6 +23,28 @@ import static com.mirandnyan.mired.CreateMechanicallyEnhanced.REGISTRATE;
 public class CMEItems {
     public static final List<ItemEntry<?>> creativeModeItem = new ArrayList<>();
 
+    public static final ItemEntry<MechanicalDrillItem> MECHANICAL_DRILL = REGISTRATE.item("mechanical_drill", MechanicalDrillItem::new)
+            .model(getExisting("default"))
+            .register();
+
+    public static final ItemEntry<Item> DEFAULT_GRIP = part("part_default_grip");
+    public static final ItemEntry<Item> NETHERITE_GRIP = part("part_netherite_grip");
+    public static final ItemEntry<Item> SMALL_BRASS_VERTICAL_GEARBOX = part("small_vertical_brass_gearbox");
+    public static final ItemEntry<Item> SMALL_ANDESITE_VERTICAL_GEARBOX = part("small_vertical_andesite_gearbox");
+    public static final ItemEntry<Item> SMALL_COPPER_TANK = part("small_copper_tank");
+    public static final ItemEntry<Item> SMALL_NETHERITE_TANK = part("small_netherite_tank");
+    public static final ItemEntry<Item> SMALL_WOODEN_COG = part("small_wooden_cog");
+    public static final ItemEntry<Item> SMALL_BRASS_COG = part("small_brass_cog");
+    public static final ItemEntry<Item> SMALL_NETHERITE_COG = part("small_netherite_cog");
+    public static final ItemEntry<Item> IRON_DRILL_HEAD = part("part_iron_drill_head");
+    public static final ItemEntry<Item> DIAMOND_DRILL_HEAD = part("part_diamond_drill_head");
+    public static final ItemEntry<Item> NETHERITE_DRILL_HEAD = part("part_netherite_drill_head");
+
+    public static final ItemEntry<Item> SMALL_MECHANICAL_BLAZE = part("small_mechanical_blaze");
+    public static final ItemEntry<Item> SMALL_MECHANICAL_CAT = part("small_mechanical_cat");
+    public static final ItemEntry<Item> SMALL_MECHANICAL_PUMPKIN = part("small_mechanical_pumpkin");
+
+
     protected static ItemEntry<Item> part(String name) {
         var item = REGISTRATE.item(name, Item::new)
                 .properties(p -> p.stacksTo(1))
@@ -31,25 +53,6 @@ public class CMEItems {
         creativeModeItem.add(item);
         return item;
     }
-
-    public static final ItemEntry<MechanicalDrillItem> MECHANICAL_DRILL = REGISTRATE.item("mechanical_drill", MechanicalDrillItem::new)
-            .model(getExisting("default"))
-            .register();
-
-    public static final ItemEntry<Item> SMALL_BRASS_VERTICAL_GEARBOX = part("small_vertical_brass_gearbox");
-    public static final ItemEntry<Item> SMALL_ANDESITE_VERTICAL_GEARBOX = part("small_vertical_andesite_gearbox");
-    public static final ItemEntry<Item> SMALL_COPPER_TANK = part("small_copper_tank");
-    public static final ItemEntry<Item> SMALL_NETHERITE_TANK = part("small_netherite_tank");
-    public static final ItemEntry<Item> SMALL_WOODEN_COG = part("small_wooden_cog");
-    public static final ItemEntry<Item> SMALL_BRASS_COG = part("small_brass_cog");
-    public static final ItemEntry<Item> SMALL_NETHERITE_COG = part("small_netherite_cog");
-    public static final ItemEntry<Item> DEFAULT_GRIP = part("part_default_grip");
-    public static final ItemEntry<Item> IRON_DRILL_HEAD = part("part_iron_drill_head");
-    public static final ItemEntry<Item> DIAMOND_DRILL_HEAD = part("part_diamond_drill_head");
-    public static final ItemEntry<Item> NETHERITE_DRILL_HEAD = part("part_netherite_drill_head");
-
-    public static final ItemEntry<Item> SMALL_MECHANICAL_BLAZE = part("small_mechanical_blaze");
-
 
     protected static <T extends Item> ModelFile getExisting(DataGenContext<Item, T> ctx, RegistrateItemModelProvider prov) {
         return prov.getExistingFile(CreateMechanicallyEnhanced.asResource("item/" + ctx.getName()));
@@ -70,6 +73,12 @@ public class CMEItems {
                             .withTabsBefore(AllCreativeModeTabs.BASE_CREATIVE_TAB.getId())
                             .icon(SMALL_BRASS_VERTICAL_GEARBOX::asStack)
                             .displayItems((parameters, output) -> {
+                                output.accept(MechanicalDrillItem.newStackWithParts(
+                                        MechanicalPart.DEFAULT_GRIP,
+                                        MechanicalPart.WOODEN_COG,
+                                        MechanicalPart.ANDESITE_GEARBOX,
+                                        MechanicalPart.IRON_DRILL_HEAD
+                                ));
                                 output.accept(MechanicalDrillItem.defaultItemStack());
                                 output.accept(MechanicalDrillItem.newStackWithParts(
                                         MechanicalPart.DEFAULT_GRIP,

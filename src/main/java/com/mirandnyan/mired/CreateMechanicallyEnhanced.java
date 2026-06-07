@@ -25,6 +25,8 @@ public class CreateMechanicallyEnhanced {
     TODO:
     Maybe: Add way to load model with groups / parts into PartialModels each representing a group / part,
            to be able to have a single that can be rendered individually.
+
+    Scanner: Scan mobs to be able to create mechanic versions of them
      */
 
     public static final String MOD_ID = "create_mechanically_enhanced";

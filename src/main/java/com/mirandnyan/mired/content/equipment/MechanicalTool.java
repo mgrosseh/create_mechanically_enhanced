@@ -62,7 +62,6 @@ public class MechanicalTool extends Item {
             weight += part.get().get().data.weight;
         }
 
-        //float attackSpeed = -2.8f;
         stack.set(DataComponents.ATTRIBUTE_MODIFIERS, new ItemAttributeModifiersRebuilder(stack.getAttributeModifiers())
                 .filter(e -> !e.attribute().equals(Attributes.ATTACK_SPEED)).add(
                         Attributes.ATTACK_SPEED,

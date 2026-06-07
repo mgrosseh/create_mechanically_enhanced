@@ -22,7 +22,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.SlotAccess;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -33,7 +32,6 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -265,7 +263,7 @@ public class MechanicalBlazePartData extends MechanicalPartData {
         ms.pushPose();
         float speedModifier = (float) (
                 AttributeHelpers.calculateAttributeValue(stack, Attributes.MINING_EFFICIENCY, EquipmentSlot.MAINHAND)
-                        * SharedConstants.MINING_EFFICIENCY_TO_COG_SPEED
+                        * MechanicalPartUtil.MINING_EFFICIENCY_TO_COG_SPEED
         );
 
         float angle = AnimationTickHolder.getRenderTime() * -1 * 2.5f * speedModifier;

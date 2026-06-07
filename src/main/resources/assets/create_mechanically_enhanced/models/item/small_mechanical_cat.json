@@ -1,0 +1,46 @@
+{
+  "loader": "neoforge:composite",
+  "children": {
+    "cog": {
+      "parent": "create_mechanically_enhanced:tool_part/small_mechanical_blaze/cog"
+    },
+    "head": {
+      "parent": "create_mechanically_enhanced:tool_part/small_mechanical_cat"
+    }
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "translation": [0, 4, 1],
+      "scale": [0.6, 0.6, 0.6]
+    },
+    "thirdperson_lefthand": {
+      "translation": [0, 4, 1],
+      "scale": [0.6, 0.6, 0.6]
+    },
+    "firstperson_righthand": {
+      "rotation": [-15, 135, 0],
+      "translation": [0, 2.25, 0],
+      "scale": [0.6, 0.6, 0.6]
+    },
+    "firstperson_lefthand": {
+      "rotation": [-15, 135, 0],
+      "translation": [0, 2.25, 0],
+      "scale": [0.6, 0.6, 0.6]
+    },
+    "ground": {
+      "translation": [0, 2.5, 0],
+      "scale": [0.6, 0.6, 0.6]
+    },
+    "gui": {
+      "rotation": [30, -135, 0],
+      "translation": [0, 1.75, 0],
+      "scale": [0.8, 0.8, 0.8]
+    },
+    "head": {
+      "translation": [0, 12.75, 0]
+    },
+    "fixed": {
+      "translation": [0, 3, -2.5]
+    }
+  }
+}

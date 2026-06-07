@@ -383,22 +383,22 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
     }
 
     // -- Other Functions --
-    // TODO: false if durability 1
+    //
     @Override
-    public boolean canAttackBlock(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player) {
-        return super.canAttackBlock(state, worldIn, pos, player);
-    }
-
-    @Override
-    public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
-        return super.isCorrectToolForDrops(stack, state);
+    public float getDestroySpeed(ItemStack stack, BlockState state) {
+        var air = getAir(stack);
+        if (air > 0 || stack.getDamageValue() < stack.getMaxDamage() - 1)
+            return super.getDestroySpeed(stack, state);
+        return 0.00001f;
     }
 
     // DIGGER ITEM
+    // TODO: if it doesn't have durability, it takes damage, but if not still does damage but then takes no damage
 
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        return true;
+        var air = getAir(stack);
+        return air > 0 || stack.getDamageValue() < stack.getMaxDamage() - 1;
     }
 
     @Override

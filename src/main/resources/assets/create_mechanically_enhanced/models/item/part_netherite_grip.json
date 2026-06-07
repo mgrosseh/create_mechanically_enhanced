@@ -1,0 +1,7 @@
+{
+  "parent": "create_mechanically_enhanced:item/part_default_grip",
+  "textures": {
+    "mechanical_press_pole": "minecraft:block/raw_gold_block",
+    "extendo_grip": "block/netherite_block"
+  }
+}

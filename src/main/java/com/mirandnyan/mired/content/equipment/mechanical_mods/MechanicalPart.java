@@ -9,10 +9,12 @@ import com.tterrag.registrate.util.entry.RegistryEntry;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.Unit;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -138,22 +140,22 @@ public class MechanicalPart {
             new MechanicalGripPartData(600)
     );
 
-//    public static final RegistryEntry<MechanicalPart, MechanicalPart> NETHERITE_GRIP = register("netherite_grip",
-//            MechanicalToolSlot.GRIP_SLOT,
-//            CVAItems.NETHERITE_GRIP,
-//            new MechanicalPartData() {
-//                @Override
-//                public void onInserted(ItemStack tool) {
-//                    tool.set(DataComponents.FIRE_RESISTANT, Unit.INSTANCE);
-//                    super.onInserted(tool);
-//                }
-//                @Override
-//                public void onRemoved(ItemStack tool) {
-//                    tool.remove(DataComponents.FIRE_RESISTANT);
-//                    super.onInserted(tool);
-//                }
-//            }
-//    );
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> NETHERITE_GRIP = register("netherite_grip",
+            MechanicalToolSlot.GRIP_SLOT,
+            CMEItems.NETHERITE_GRIP,
+            new MechanicalGripPartData(1300) {
+                @Override
+                public void onInserted(ItemStack tool) {
+                    tool.set(DataComponents.FIRE_RESISTANT, Unit.INSTANCE);
+                    super.onInserted(tool);
+                }
+                @Override
+                public void onRemoved(ItemStack tool) {
+                    tool.remove(DataComponents.FIRE_RESISTANT);
+                    super.onInserted(tool);
+                }
+            }
+    );
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> IRON_DRILL_HEAD = register("iron_drill_head",
             MechanicalToolSlot.TIP_SLOT,
@@ -206,6 +208,20 @@ public class MechanicalPart {
             CreateMechanicallyEnhanced.asResource("tool_part", "small_mechanical_blaze", "large_rods"),
             CreateMechanicallyEnhanced.asResource("tool_part", "small_mechanical_blaze", "small_rods_superheated"),
             CreateMechanicallyEnhanced.asResource("tool_part", "small_mechanical_blaze", "large_rods_superheated"),
+            CreateMechanicallyEnhanced.asResource("tool_part", "small_mechanical_blaze", "cog")
+    );
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> SMALL_MECHANICAL_CAT = register("small_mechanical_cat",
+            MechanicalToolSlot.GEARED_TOP_SLOT,
+            CMEItems.SMALL_MECHANICAL_CAT,
+            new MechanicalCatPartData(),
+            CreateMechanicallyEnhanced.asResource("tool_part", "small_mechanical_cat"),
+            CreateMechanicallyEnhanced.asResource("tool_part", "small_mechanical_blaze", "cog")
+    );
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> SMALL_MECHANICAL_PUMPKIN = register("small_mechanical_pumpkin",
+            MechanicalToolSlot.GEARED_TOP_SLOT,
+            CMEItems.SMALL_MECHANICAL_PUMPKIN,
+            new MechanicalPumpkinPartData(),
+            CreateMechanicallyEnhanced.asResource("tool_part", "small_mechanical_pumpkin"),
             CreateMechanicallyEnhanced.asResource("tool_part", "small_mechanical_blaze", "cog")
     );
 

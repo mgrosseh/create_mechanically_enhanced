@@ -64,7 +64,7 @@ public class MechanicalDrillPartData extends MechanicalPartData {
     Tool tool;
 
     public MechanicalDrillPartData(float attackDamage, Tool toolProperties) {
-        super(1.4f);
+        super(1.3f);
         drillDamageModifier = new AttributeModifier(Item.BASE_ATTACK_DAMAGE_ID, attackDamage, AttributeModifier.Operation.ADD_VALUE);
         drillDamage = new ItemAttributeModifiers.Entry(Attributes.ATTACK_DAMAGE, drillDamageModifier, EquipmentSlotGroup.MAINHAND);
         this.tool = toolProperties;

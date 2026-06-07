@@ -10,7 +10,6 @@ import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -57,7 +56,7 @@ public class MechanicalCogPartData extends MechanicalPartData {
 
     @Override
     public void render(ItemStack stack, MechanicalPart part, PartialItemModelRenderer renderer, ItemDisplayContext transformType, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-        float angle = AnimationTickHolder.getRenderTime() * -1 * 2.5f * (float) (speedModifier * SharedConstants.MINING_EFFICIENCY_TO_COG_SPEED);
+        float angle = AnimationTickHolder.getRenderTime() * -1 * 2.5f * (float) (speedModifier * MechanicalPartUtil.MINING_EFFICIENCY_TO_COG_SPEED);
 
         angle %= 360;
 
