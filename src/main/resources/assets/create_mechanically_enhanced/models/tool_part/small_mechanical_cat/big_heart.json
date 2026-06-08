@@ -1,0 +1,24 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"textures": {
+		"4": "particle/goldheart_1",
+		"particle": "particle/goldheart_1"
+	},
+	"elements": [
+		{
+			"from": [6, 0, 8],
+			"to": [10, 4, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [6, 0, 8]},
+			"faces": {
+				"north": {"uv": [1, 2, 13, 14], "texture": "#4"},
+				"east": {"uv": [1, 0, 1, 4], "texture": "#4"},
+				"south": {"uv": [1, 2, 13, 14], "texture": "#4"},
+				"west": {"uv": [0, 0, 0, 4], "texture": "#4"},
+				"up": {"uv": [0, 0, 4, 0], "texture": "#4"},
+				"down": {"uv": [0, 1, 4, 1], "texture": "#4"}
+			},
+			"visibility": true
+		}
+	]
+}
