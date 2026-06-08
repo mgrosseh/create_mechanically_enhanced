@@ -2,6 +2,7 @@ package com.mirandnyan.mired;
 
 import com.mirandnyan.mired.content.equipment.mechanical_mods.FilledToolSlot;
 import com.mirandnyan.mired.content.equipment.mechanical_mods.parts.MechanicalDrillPartData;
+import com.mirandnyan.mired.content.equipment.mechanical_mods.parts.mechanical_cat.MechanicalCatBonusType;
 import com.mojang.serialization.Codec;
 import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
 import net.minecraft.core.component.DataComponentType;
@@ -48,6 +49,18 @@ builder -> builder.persistent(FilledToolSlot.CODEC.listOf()).networkSynchronized
     public static final DataComponentType<Unit> BLAZE_BURNING_INFINITE = register(
             "mechanical_blaze_burning_infinite",
             builder -> builder.persistent(Unit.CODEC).networkSynchronized(StreamCodec.unit(Unit.INSTANCE))
+    );
+
+
+    public static final DataComponentType<Long> MECHANICAL_CAT_BONUS_BLOCKED = register(
+            "mechanical_cat_bonus_blocked",
+            builder -> builder.persistent(Codec.LONG).networkSynchronized(ByteBufCodecs.VAR_LONG)
+    );
+    public static final DataComponentType<MechanicalCatBonusType> MECHANICAL_CAT_BONUS = register(
+            "mechanical_cat_bonus",
+            builder -> builder
+                    .persistent(MechanicalCatBonusType.CODEC)
+                    .networkSynchronized(MechanicalCatBonusType.STREAM_CODEC)
     );
 
     public static final DataComponentType<String> LAST_TOOL_HOLDER_NAME = register(

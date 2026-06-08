@@ -12,7 +12,6 @@ import org.jetbrains.annotations.ApiStatus;
 
 import static com.mirandnyan.mired.CreateMechanicallyEnhanced.REGISTRATE;
 
-// TODO name
 public record MechanicalToolSlot(CMETranslations.LangEntry lang) {
 
     public static final ResourceKey<Registry<MechanicalToolSlot>> REGISTRY =
@@ -32,7 +31,7 @@ public record MechanicalToolSlot(CMETranslations.LangEntry lang) {
     public static final RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> GRIP_SLOT = register("grip",
             CMETranslations.GRIP_TOOL_SLOT);
     public static final RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> GEARED_TOP_SLOT = register("geared_top",
-            CMETranslations.GEARED_TOP_TOOL_SLOT); // TODO: should provide left / right slots of it ; name
+            CMETranslations.GEARED_TOP_TOOL_SLOT); // TODO name
 
     public static RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> register(String name, CMETranslations.LangEntry lang) {
         return REGISTRATE.object(name).simple(REGISTRY, () -> new MechanicalToolSlot(lang));

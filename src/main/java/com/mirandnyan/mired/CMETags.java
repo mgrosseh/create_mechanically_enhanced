@@ -10,7 +10,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 
 
 public class CMETags {
@@ -24,6 +26,10 @@ public class CMETags {
     public static class Items {
         public static final TagKey<Item> STONES = common("stones");
 
+        public static final TagKey<Item> LOW_LIKED_MECHANICAL_CAT_FOOD = custom("low_liked_mechanical_cat_food");
+        public static final TagKey<Item> MID_LIKED_MECHANICAL_CAT_FOOD = custom("mid_liked_mechanical_cat_food");
+        public static final TagKey<Item> HIGH_LIKED_MECHANICAL_CAT_FOOD = custom("high_liked_mechanical_cat_food");
+
         public static TagKey<Item> common(String name) {
             return tag(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath("c", name));
         }
@@ -31,7 +37,14 @@ public class CMETags {
             return tag(BuiltInRegistries.ITEM, CreateMechanicallyEnhanced.asResource(name));
         }
 
-        public static void genTags(RegistrateItemTagsProvider registrateItemTagsProvider) {}
+        public static void genTags(RegistrateItemTagsProvider prov) {
+            prov.addTag(LOW_LIKED_MECHANICAL_CAT_FOOD)
+                    .add(net.minecraft.world.item.Items.IRON_NUGGET);
+            prov.addTag(MID_LIKED_MECHANICAL_CAT_FOOD)
+                    .add(net.minecraft.world.item.Items.GOLD_NUGGET);
+            prov.addTag(HIGH_LIKED_MECHANICAL_CAT_FOOD)
+                    .add(net.minecraft.world.item.Items.DIAMOND);
+        }
     }
 
     public static class Blocks {

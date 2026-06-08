@@ -53,6 +53,7 @@ public class CreateMechanicallyEnhanced {
         CMETranslations.register();
         MechanicalPart.register();
         MechanicalToolSlot.register();
+        CMEMobEffects.register(eventBus);
 
         modEventBus.addListener(EventPriority.HIGHEST, CMEDatagen::gatherDataHighPriority);
     }
