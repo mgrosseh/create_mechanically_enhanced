@@ -297,6 +297,15 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
                     .append(CMETranslations.MECHANICAL_TOOL_AIR_LEVEL_POST.resolveComponent())
             );
         }
+
+        tooltip.add(Component.empty());
+        for (FilledToolSlot slot : slots) {
+            var part = slot.getPart();
+            if (part.isEmpty())
+                continue;
+            part.get().get().data.appendHoverText(stack, context, tooltip, flagIn);
+        }
+        tooltip.add(Component.empty());
         super.appendHoverText(stack, context, tooltip, flagIn);
     }
 

@@ -35,9 +35,22 @@ public class CMETranslations {
     public static final LangEntry MECHANICAL_TOOL_AIR_LEVEL_IN = tooltip("mechanical_tool.air.infix", " / ");
     public static final LangEntry MECHANICAL_TOOL_AIR_LEVEL_POST = tooltip("mechanical_tool.air.postfix", "");
 
+    // TODO: separate "Active Bonus" from bonus
+    public static final LangEntry MECHANICAL_CAT_BONUS_FORTUNE = affixTooltip("mechanical_cat.bonus.fortune", "Active Bonus: Fortune");
+    public static final LangEntry MECHANICAL_CAT_BONUS_GIFTS = affixTooltip("mechanical_cat.bonus.gifts", "Active Bonus: Random Gifts");
+    public static final LangEntry MECHANICAL_CAT_BONUS_GLOWING = affixTooltip("mechanical_cat.bonus.glowing", "Active Bonus: Glowing!");
+    public static final LangEntry MECHANICAL_CAT_BONUS_HASTE = affixTooltip("mechanical_cat.bonus.haste", "Active Bonus: Haste");
+    public static final LangEntry MECHANICAL_CAT_BONUS_HUNGER_REGEN = affixTooltip("mechanical_cat.bonus.hunger_regen", "Active Bonus: Hunger Regen");
+    public static final LangEntry MECHANICAL_CAT_BONUS_INTERACTION_RANGE = affixTooltip("mechanical_cat.bonus.interaction_range", "Active Bonus: Extra Range");
+
     protected static LangEntry toolSlot(String key, String textEnglish) {
         return new StyledLangEntry(CreateMechanicallyEnhanced.MOD_ID + ".tool_slot", key, textEnglish,
                 component -> component.withStyle(ChatFormatting.BLUE));
+    }
+
+    protected static LangEntry affixTooltip(String key, String textEnglish) {
+        return new StyledLangEntry(CreateMechanicallyEnhanced.MOD_ID + ".tooltip", key, textEnglish,
+                component -> component.withStyle(ChatFormatting.DARK_PURPLE));
     }
 
     protected static LangEntry tooltip(String key, String textEnglish) {

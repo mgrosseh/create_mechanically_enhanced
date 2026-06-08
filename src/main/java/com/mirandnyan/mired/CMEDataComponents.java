@@ -62,6 +62,10 @@ builder -> builder.persistent(FilledToolSlot.CODEC.listOf()).networkSynchronized
                     .persistent(MechanicalCatBonusType.CODEC)
                     .networkSynchronized(MechanicalCatBonusType.STREAM_CODEC)
     );
+    public static final DataComponentType<Unit> MECHANICAL_CAT_APPLY_BONUS = register(
+            "mechanical_cat_apply_bonus",
+            builder -> builder.persistent(Unit.CODEC).networkSynchronized(StreamCodec.unit(Unit.INSTANCE))
+    );
 
     public static final DataComponentType<String> LAST_TOOL_HOLDER_NAME = register(
             "last_tool_holder_name",

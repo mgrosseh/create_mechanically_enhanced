@@ -2,6 +2,7 @@ package com.mirandnyan.mired.content.equipment.mechanical_mods.parts;
 
 import com.mirandnyan.mired.CMEDataComponents;
 import com.mirandnyan.mired.CMETags;
+import com.mirandnyan.mired.CMETranslations;
 import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPart;
 import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPartData;
 import com.mirandnyan.mired.content.equipment.mechanical_mods.parts.mechanical_cat.MechanicalCatBonusType;
@@ -11,6 +12,7 @@ import com.mojang.math.Axis;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -24,8 +26,10 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.event.level.BlockEvent;
@@ -81,28 +85,31 @@ public class MechanicalCatPartData extends MechanicalPartData {
             // TODO play sound
             return true;
         }
+        // TODO: play sound
         if (!player.isCreative())
             stack.shrink(1);
         var bonus = getRandomBonus(player.level().getRandom(), valueSkew);
-        grantBonus(stack, player, bonus);
+        stack.set(CMEDataComponents.MECHANICAL_CAT_BONUS, bonus);
+        stack.set(CMEDataComponents.MECHANICAL_CAT_APPLY_BONUS, Unit.INSTANCE);
 
-        // TODO: play sound
         return true;
     }
 
-    protected void grantBonus(ItemStack tool, Player player, MechanicalCatBonusType bonus) {
-        var newTime = player.level().getGameTime() + bonus.duration;
+    protected void grantBonus(Level level, ItemStack tool, LivingEntity entity, MechanicalCatBonusType bonus) {
+        var newTime = level.getGameTime() + bonus.duration;
         switch (bonus) {
             case FORTUNE -> {
-                //MechanicalPartUtil.removeEnchantment(tool, Enchantments.FORTUNE); // TODO: test
-                MechanicalPartUtil.addEnchantment(tool, Enchantments.FORTUNE, bonus.amplitude);
+                if (level.isClientSide)
+                    return; // TODO why crash?
+                MechanicalPartUtil.removeEnchantment(tool, Enchantments.FORTUNE);
+                MechanicalPartUtil.addEnchantment(tool, MechanicalPartUtil.getHolder(Enchantments.FORTUNE, level), bonus.amplitude);
             }
             case GLOWING, BLOCK_INTERACTION_RANGE, HUNGER_REGEN, HASTE -> {
                 @SuppressWarnings("DataFlowIssue") // all these have a mob effect
                 MobEffectInstance instance = new MobEffectInstance(
                         bonus.mobEffect, bonus.duration
                 );
-                player.addEffect(instance);
+                entity.addEffect(instance);
             }
             case NONE, GIFTS -> {} // handled elsewhere
             default -> throw new RuntimeException("Unknown MechanicalCatBonusType Value");
@@ -122,6 +129,8 @@ public class MechanicalCatPartData extends MechanicalPartData {
             return;
         switch (bonus) {
             case FORTUNE -> {
+                if (entity == null || entity.level().isClientSide)
+                    return;
                 MechanicalPartUtil.removeEnchantment(tool, Enchantments.FORTUNE);
                 MechanicalPartUtil.addEnchantment(tool, Enchantments.FORTUNE, 2);
             }
@@ -159,7 +168,16 @@ public class MechanicalCatPartData extends MechanicalPartData {
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         var gameTime = level.getGameTime();
         var bonusTime = stack.get(CMEDataComponents.MECHANICAL_CAT_BONUS_BLOCKED);
-        if (bonusTime == null || bonusTime <= gameTime)
+
+        if (stack.has(CMEDataComponents.MECHANICAL_CAT_APPLY_BONUS)) {
+            var bonus = stack.get(CMEDataComponents.MECHANICAL_CAT_BONUS);
+            if (bonus != null && entity instanceof LivingEntity living) {
+                grantBonus(level, stack, living, bonus);
+                stack.remove(CMEDataComponents.MECHANICAL_CAT_APPLY_BONUS);
+            }
+        }
+
+        if (bonusTime == null || bonusTime > gameTime)
             return;
         removeBonus(stack, entity instanceof LivingEntity living ? living : null);
     }
@@ -171,6 +189,25 @@ public class MechanicalCatPartData extends MechanicalPartData {
             if (Mth.randomBetweenInclusive(event.getLevel().getRandom(), 0, 100) < bonus.amplitude) {
                 player.giveExperienceLevels(1); // TODO
             }
+        }
+    }
+
+    @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context,
+                                @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+
+        var bonus = stack.get(CMEDataComponents.MECHANICAL_CAT_BONUS);
+        if (bonus == null)
+            return;
+        switch (bonus) {
+            case NONE -> {} // skip
+            case FORTUNE -> tooltip.add(CMETranslations.MECHANICAL_CAT_BONUS_FORTUNE.resolveComponentMutable());
+            case GIFTS -> tooltip.add(CMETranslations.MECHANICAL_CAT_BONUS_GIFTS.resolveComponentMutable());
+            case GLOWING -> tooltip.add(CMETranslations.MECHANICAL_CAT_BONUS_GLOWING.resolveComponentMutable());
+            case HASTE -> tooltip.add(CMETranslations.MECHANICAL_CAT_BONUS_HASTE.resolveComponentMutable());
+            case HUNGER_REGEN -> tooltip.add(CMETranslations.MECHANICAL_CAT_BONUS_HUNGER_REGEN.resolveComponentMutable());
+            case BLOCK_INTERACTION_RANGE -> tooltip.add(CMETranslations.MECHANICAL_CAT_BONUS_INTERACTION_RANGE.resolveComponentMutable());
+            default -> throw new RuntimeException("Unknown MechanicalCatBonusType Value");
         }
     }
 
