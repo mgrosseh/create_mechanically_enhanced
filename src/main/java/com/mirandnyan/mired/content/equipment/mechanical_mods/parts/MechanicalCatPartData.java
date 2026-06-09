@@ -69,12 +69,12 @@ public class MechanicalCatPartData extends MechanicalPartData {
 
     @Override
     public void onInserted(ItemStack tool) {
-        MechanicalPartUtil.addEnchantment(tool, Enchantments.FORTUNE, 2);
+        MechanicalPartUtil.addEnchantment(tool, MechanicalPartUtil.getLocalHolder(Enchantments.FORTUNE), 2);
     }
 
     @Override
     public void onRemoved(ItemStack tool) {
-        MechanicalPartUtil.removeEnchantment(tool, Enchantments.FORTUNE);
+        MechanicalPartUtil.removeEnchantment(tool, MechanicalPartUtil.getLocalHolder(Enchantments.FORTUNE));
         removeBonus(tool, null);
     }
 
@@ -87,7 +87,7 @@ public class MechanicalCatPartData extends MechanicalPartData {
         }
         // TODO: play sound
         if (!player.isCreative())
-            stack.shrink(1);
+            food.shrink(1);
         var bonus = getRandomBonus(player.level().getRandom(), valueSkew);
         stack.set(CMEDataComponents.MECHANICAL_CAT_BONUS, bonus);
         stack.set(CMEDataComponents.MECHANICAL_CAT_APPLY_BONUS, Unit.INSTANCE);
@@ -100,8 +100,8 @@ public class MechanicalCatPartData extends MechanicalPartData {
         switch (bonus) {
             case FORTUNE -> {
                 if (level.isClientSide)
-                    return; // TODO why crash?
-                MechanicalPartUtil.removeEnchantment(tool, Enchantments.FORTUNE);
+                    return;
+                MechanicalPartUtil.removeEnchantment(tool, MechanicalPartUtil.getHolder(Enchantments.FORTUNE, level));
                 MechanicalPartUtil.addEnchantment(tool, MechanicalPartUtil.getHolder(Enchantments.FORTUNE, level), bonus.amplitude);
             }
             case GLOWING, BLOCK_INTERACTION_RANGE, HUNGER_REGEN, HASTE -> {
@@ -120,7 +120,7 @@ public class MechanicalCatPartData extends MechanicalPartData {
 
     protected boolean hasBonus(ItemStack stack, long gameTime) {
         var time = stack.get(CMEDataComponents.MECHANICAL_CAT_BONUS_BLOCKED);
-        return time != null && time <= gameTime;
+        return time != null && time > gameTime;
     }
 
     protected void removeBonus(ItemStack tool, @Nullable LivingEntity entity) {
@@ -131,8 +131,8 @@ public class MechanicalCatPartData extends MechanicalPartData {
             case FORTUNE -> {
                 if (entity == null || entity.level().isClientSide)
                     return;
-                MechanicalPartUtil.removeEnchantment(tool, Enchantments.FORTUNE);
-                MechanicalPartUtil.addEnchantment(tool, Enchantments.FORTUNE, 2);
+                MechanicalPartUtil.removeEnchantment(tool, MechanicalPartUtil.getHolder(Enchantments.FORTUNE, entity.level()));
+                MechanicalPartUtil.addEnchantment(tool, MechanicalPartUtil.getHolder(Enchantments.FORTUNE, entity.level()), 2);
             }
             case GLOWING, BLOCK_INTERACTION_RANGE, HUNGER_REGEN, HASTE -> {
                 if (entity == null)
@@ -150,6 +150,7 @@ public class MechanicalCatPartData extends MechanicalPartData {
 
     protected MechanicalCatBonusType getRandomBonus(RandomSource random, int valueSkew) {
         ArrayList<MechanicalCatBonusType> selection = new ArrayList<>(List.of(MechanicalCatBonusType.values()));
+        selection.remove(MechanicalCatBonusType.NONE);
         if (valueSkew == 0 || valueSkew == 2) {
             var length = selection.size();
             for (int i = 0; i < length; i++) {

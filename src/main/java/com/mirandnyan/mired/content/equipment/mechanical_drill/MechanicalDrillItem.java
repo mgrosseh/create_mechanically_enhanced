@@ -298,7 +298,6 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
             );
         }
 
-        tooltip.add(Component.empty());
         for (FilledToolSlot slot : slots) {
             var part = slot.getPart();
             if (part.isEmpty())

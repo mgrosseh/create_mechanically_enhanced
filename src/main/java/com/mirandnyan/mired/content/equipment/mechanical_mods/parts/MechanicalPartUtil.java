@@ -15,7 +15,7 @@ public class MechanicalPartUtil {
     public static final double MINING_EFFICIENCY_TO_COG_SPEED = 1d / 8d;
 
 
-    public static Holder<Enchantment> getHolder(ResourceKey<Enchantment> enchantment) {
+    public static Holder<Enchantment> getLocalHolder(ResourceKey<Enchantment> enchantment) {
         if (Minecraft.getInstance().level == null)
             return null;
         return getHolder(enchantment, Minecraft.getInstance().level);
@@ -25,9 +25,6 @@ public class MechanicalPartUtil {
         return level.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(enchantment);
     }
 
-    public static void addEnchantment(ItemStack stack, ResourceKey<Enchantment> enchantment, int level) {
-        addEnchantment(stack, getHolder(enchantment), level);
-    }
 
     public static void addEnchantment(ItemStack stack, Holder<Enchantment> enchantment, int level) {
         ItemEnchantments enchs = stack.get(DataComponents.ENCHANTMENTS);
@@ -40,9 +37,6 @@ public class MechanicalPartUtil {
         stack.set(DataComponents.ENCHANTMENTS, mutEnchs.toImmutable());
     }
 
-    public static void removeEnchantment(ItemStack stack, ResourceKey<Enchantment> enchantment) {
-        removeEnchantment(stack, getHolder(enchantment));
-    }
     public static void removeEnchantment(ItemStack stack, Holder<Enchantment> enchantment) {
         ItemEnchantments enchs = stack.get(DataComponents.ENCHANTMENTS);
         if (enchs == null)

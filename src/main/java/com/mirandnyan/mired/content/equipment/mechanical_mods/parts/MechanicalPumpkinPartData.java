@@ -9,12 +9,14 @@ import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.level.Level;
 
 public class MechanicalPumpkinPartData extends MechanicalPartData {
     private static int i = 0;
@@ -28,12 +30,17 @@ public class MechanicalPumpkinPartData extends MechanicalPartData {
 
     @Override
     public void onInserted(ItemStack tool) {
-        MechanicalPartUtil.addEnchantment(tool, Enchantments.SILK_TOUCH, 1);
+        MechanicalPartUtil.addEnchantment(tool, MechanicalPartUtil.getLocalHolder(Enchantments.SILK_TOUCH), 1);
     }
 
     @Override
     public void onRemoved(ItemStack tool) {
-        MechanicalPartUtil.removeEnchantment(tool, Enchantments.SILK_TOUCH);
+        MechanicalPartUtil.removeEnchantment(tool, MechanicalPartUtil.getLocalHolder(Enchantments.SILK_TOUCH));
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        //level.findSupportingBlock(); // TODO: mixin
     }
 
     @Override
