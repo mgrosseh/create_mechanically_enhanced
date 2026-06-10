@@ -1,7 +1,7 @@
 package com.mirandnyan.mired;
 
-import com.mirandnyan.mired.content.equipment.mechanical_drill.MechanicalDrillItem;
-import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPart;
+import com.mirandnyan.mired.content.equipment.mechanical_tool.MechanicalToolItem;
+import com.mirandnyan.mired.content.equipment.mechanical_parts.MechanicalPart;
 import com.simibubi.create.AllCreativeModeTabs;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateItemModelProvider;
@@ -23,7 +23,7 @@ import static com.mirandnyan.mired.CreateMechanicallyEnhanced.REGISTRATE;
 public class CMEItems {
     public static final List<ItemEntry<?>> creativeModeItem = new ArrayList<>();
 
-    public static final ItemEntry<MechanicalDrillItem> MECHANICAL_DRILL = REGISTRATE.item("mechanical_drill", MechanicalDrillItem::new)
+    public static final ItemEntry<MechanicalToolItem> MECHANICAL_TOOL = REGISTRATE.item("mechanical_tool", MechanicalToolItem::new)
             .model(getExisting("default"))
             .register();
 
@@ -73,14 +73,14 @@ public class CMEItems {
                             .withTabsBefore(AllCreativeModeTabs.BASE_CREATIVE_TAB.getId())
                             .icon(SMALL_BRASS_VERTICAL_GEARBOX::asStack)
                             .displayItems((parameters, output) -> {
-                                output.accept(MechanicalDrillItem.newStackWithParts(
+                                output.accept(MechanicalToolItem.newStackWithParts(
                                         MechanicalPart.DEFAULT_GRIP,
                                         MechanicalPart.WOODEN_COG,
                                         MechanicalPart.ANDESITE_GEARBOX,
                                         MechanicalPart.IRON_DRILL_HEAD
                                 ));
-                                output.accept(MechanicalDrillItem.defaultItemStack());
-                                output.accept(MechanicalDrillItem.newStackWithParts(
+                                output.accept(MechanicalToolItem.defaultItemStack());
+                                output.accept(MechanicalToolItem.newStackWithParts(
                                         MechanicalPart.DEFAULT_GRIP,
                                         MechanicalPart.NETHERITE_COG,
                                         MechanicalPart.BRASS_GEARBOX,

@@ -1,10 +1,13 @@
-package com.mirandnyan.mired.content.equipment.mechanical_mods;
+package com.mirandnyan.mired.content.equipment.mechanical_parts;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
@@ -13,6 +16,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.NotNull;
@@ -60,4 +64,20 @@ public abstract class MechanicalPartData {
     }
 
     public void brokeBlock(Player player, ItemStack item, BlockEvent.BreakEvent event) { }
+
+    public InteractionResult useOn(UseOnContext context) {
+        return InteractionResult.PASS;
+    }
+
+    public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity interactionTarget, InteractionHand usedHand) {
+        return InteractionResult.PASS;
+    }
+
+    public boolean onDroppedByPlayer(ItemStack item, Player player) {
+        return true;
+    }
+
+    public Component getHighlightTip(@NotNull ItemStack item, @NotNull Component displayName) {
+        return displayName;
+    }
 }

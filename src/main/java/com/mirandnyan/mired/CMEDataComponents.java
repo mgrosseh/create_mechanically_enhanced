@@ -1,12 +1,10 @@
 package com.mirandnyan.mired;
 
-import com.mirandnyan.mired.content.equipment.mechanical_mods.FilledToolSlot;
-import com.mirandnyan.mired.content.equipment.mechanical_mods.parts.MechanicalDrillPartData;
-import com.mirandnyan.mired.content.equipment.mechanical_mods.parts.mechanical_cat.MechanicalCatBonusType;
+import com.mirandnyan.mired.content.equipment.mechanical_parts.FilledToolSlot;
+import com.mirandnyan.mired.content.equipment.mechanical_parts.parts.mechanical_cat.MechanicalCatBonusType;
 import com.mojang.serialization.Codec;
 import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;

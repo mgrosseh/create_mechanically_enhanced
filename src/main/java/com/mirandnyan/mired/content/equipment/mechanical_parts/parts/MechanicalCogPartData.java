@@ -1,8 +1,8 @@
-package com.mirandnyan.mired.content.equipment.mechanical_mods.parts;
+package com.mirandnyan.mired.content.equipment.mechanical_parts.parts;
 
 import com.mirandnyan.mired.CreateMechanicallyEnhanced;
-import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPart;
-import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPartData;
+import com.mirandnyan.mired.content.equipment.mechanical_parts.MechanicalPart;
+import com.mirandnyan.mired.content.equipment.mechanical_parts.MechanicalPartData;
 import com.mirandnyan.mired.util.ItemAttributeModifiersRebuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;

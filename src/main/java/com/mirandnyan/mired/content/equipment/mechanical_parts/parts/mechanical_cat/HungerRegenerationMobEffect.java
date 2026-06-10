@@ -1,4 +1,4 @@
-package com.mirandnyan.mired.content.equipment.mechanical_mods.parts.mechanical_cat;
+package com.mirandnyan.mired.content.equipment.mechanical_parts.parts.mechanical_cat;
 
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;

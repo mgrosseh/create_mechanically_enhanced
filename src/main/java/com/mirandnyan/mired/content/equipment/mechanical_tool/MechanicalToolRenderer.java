@@ -1,7 +1,7 @@
-package com.mirandnyan.mired.content.equipment.mechanical_drill;
+package com.mirandnyan.mired.content.equipment.mechanical_tool;
 
 import com.mirandnyan.mired.CMEDataComponents;
-import com.mirandnyan.mired.content.equipment.mechanical_mods.FilledToolSlot;
+import com.mirandnyan.mired.content.equipment.mechanical_parts.FilledToolSlot;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-public class MechanicalDrillRenderer extends CustomRenderedItemModelRenderer {
+public class MechanicalToolRenderer extends CustomRenderedItemModelRenderer {
 
     @Override
     protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer, ItemDisplayContext transformType,

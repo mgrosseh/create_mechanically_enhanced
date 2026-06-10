@@ -1,8 +1,8 @@
 package com.mirandnyan.mired.content.equipment;
 
 import com.mirandnyan.mired.CMEDataComponents;
-import com.mirandnyan.mired.content.equipment.mechanical_mods.FilledToolSlot;
-import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalToolSlot;
+import com.mirandnyan.mired.content.equipment.mechanical_parts.FilledToolSlot;
+import com.mirandnyan.mired.content.equipment.mechanical_parts.MechanicalToolSlot;
 import com.mirandnyan.mired.util.ItemAttributeModifiersRebuilder;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.core.component.DataComponents;
@@ -16,9 +16,9 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MechanicalTool extends Item {
+public class MechanicalItem extends Item {
 
-    public MechanicalTool(Properties properties) {
+    public MechanicalItem(Properties properties) {
         super(properties);
     }
 

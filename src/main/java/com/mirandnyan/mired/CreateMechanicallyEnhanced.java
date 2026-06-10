@@ -1,7 +1,7 @@
 package com.mirandnyan.mired;
 
-import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPart;
-import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalToolSlot;
+import com.mirandnyan.mired.content.equipment.mechanical_parts.MechanicalPart;
+import com.mirandnyan.mired.content.equipment.mechanical_parts.MechanicalToolSlot;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;

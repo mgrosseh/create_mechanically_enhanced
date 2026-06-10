@@ -1,6 +1,6 @@
-package com.mirandnyan.mired.content.equipment.mechanical_mods.parts;
+package com.mirandnyan.mired.content.equipment.mechanical_parts.parts;
 
-import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPartData;
+import com.mirandnyan.mired.content.equipment.mechanical_parts.MechanicalPartData;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 

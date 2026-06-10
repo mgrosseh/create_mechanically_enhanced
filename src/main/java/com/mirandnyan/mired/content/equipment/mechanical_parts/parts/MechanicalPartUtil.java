@@ -1,4 +1,4 @@
-package com.mirandnyan.mired.content.equipment.mechanical_mods.parts;
+package com.mirandnyan.mired.content.equipment.mechanical_parts.parts;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;

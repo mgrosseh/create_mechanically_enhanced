@@ -1,11 +1,11 @@
-package com.mirandnyan.mired.content.equipment.mechanical_mods.parts;
+package com.mirandnyan.mired.content.equipment.mechanical_parts.parts;
 
 import com.mirandnyan.mired.CMEDataComponents;
 import com.mirandnyan.mired.CMETags;
 import com.mirandnyan.mired.CMETranslations;
-import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPart;
-import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPartData;
-import com.mirandnyan.mired.content.equipment.mechanical_mods.parts.mechanical_cat.MechanicalCatBonusType;
+import com.mirandnyan.mired.content.equipment.mechanical_parts.MechanicalPart;
+import com.mirandnyan.mired.content.equipment.mechanical_parts.MechanicalPartData;
+import com.mirandnyan.mired.content.equipment.mechanical_parts.parts.mechanical_cat.MechanicalCatBonusType;
 import com.mirandnyan.mired.util.AttributeHelpers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -13,7 +13,6 @@ import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.Unit;
@@ -68,11 +67,6 @@ public class MechanicalCatPartData extends MechanicalPartData {
     }
 
     @Override
-    public void onInserted(ItemStack tool) {
-        MechanicalPartUtil.addEnchantment(tool, MechanicalPartUtil.getLocalHolder(Enchantments.FORTUNE), 2);
-    }
-
-    @Override
     public void onRemoved(ItemStack tool) {
         MechanicalPartUtil.removeEnchantment(tool, MechanicalPartUtil.getLocalHolder(Enchantments.FORTUNE));
         removeBonus(tool, null);
@@ -101,7 +95,6 @@ public class MechanicalCatPartData extends MechanicalPartData {
             case FORTUNE -> {
                 if (level.isClientSide)
                     return;
-                MechanicalPartUtil.removeEnchantment(tool, MechanicalPartUtil.getHolder(Enchantments.FORTUNE, level));
                 MechanicalPartUtil.addEnchantment(tool, MechanicalPartUtil.getHolder(Enchantments.FORTUNE, level), bonus.amplitude);
             }
             case GLOWING, BLOCK_INTERACTION_RANGE, HUNGER_REGEN, HASTE -> {
@@ -116,6 +109,9 @@ public class MechanicalCatPartData extends MechanicalPartData {
         }
         tool.set(CMEDataComponents.MECHANICAL_CAT_BONUS, bonus);
         tool.set(CMEDataComponents.MECHANICAL_CAT_BONUS_BLOCKED, newTime);
+        if (bonus == MechanicalCatBonusType.FORTUNE || level.isClientSide)
+            return;
+        MechanicalPartUtil.addEnchantment(tool, MechanicalPartUtil.getHolder(Enchantments.FORTUNE, level), bonus.value + 1);
     }
 
     protected boolean hasBonus(ItemStack stack, long gameTime) {
@@ -129,10 +125,7 @@ public class MechanicalCatPartData extends MechanicalPartData {
             return;
         switch (bonus) {
             case FORTUNE -> {
-                if (entity == null || entity.level().isClientSide)
-                    return;
-                MechanicalPartUtil.removeEnchantment(tool, MechanicalPartUtil.getHolder(Enchantments.FORTUNE, entity.level()));
-                MechanicalPartUtil.addEnchantment(tool, MechanicalPartUtil.getHolder(Enchantments.FORTUNE, entity.level()), 2);
+                // now handled by general remove
             }
             case GLOWING, BLOCK_INTERACTION_RANGE, HUNGER_REGEN, HASTE -> {
                 if (entity == null)
@@ -146,6 +139,9 @@ public class MechanicalCatPartData extends MechanicalPartData {
         }
         tool.remove(CMEDataComponents.MECHANICAL_CAT_BONUS);
         tool.remove(CMEDataComponents.MECHANICAL_CAT_BONUS_BLOCKED);
+        if (entity == null || entity.level().isClientSide)
+            return;
+        MechanicalPartUtil.removeEnchantment(tool, MechanicalPartUtil.getHolder(Enchantments.FORTUNE, entity.level()));
     }
 
     protected MechanicalCatBonusType getRandomBonus(RandomSource random, int valueSkew) {
@@ -189,6 +185,10 @@ public class MechanicalCatPartData extends MechanicalPartData {
         if (bonus == MechanicalCatBonusType.GIFTS) {
             if (Mth.randomBetweenInclusive(event.getLevel().getRandom(), 0, 100) < bonus.amplitude) {
                 player.giveExperienceLevels(1); // TODO
+                /*
+                Ideas:
+                - Double block drops
+                 */
             }
         }
     }
@@ -200,16 +200,16 @@ public class MechanicalCatPartData extends MechanicalPartData {
         var bonus = stack.get(CMEDataComponents.MECHANICAL_CAT_BONUS);
         if (bonus == null)
             return;
-        switch (bonus) {
-            case NONE -> {} // skip
-            case FORTUNE -> tooltip.add(CMETranslations.MECHANICAL_CAT_BONUS_FORTUNE.resolveComponentMutable());
-            case GIFTS -> tooltip.add(CMETranslations.MECHANICAL_CAT_BONUS_GIFTS.resolveComponentMutable());
-            case GLOWING -> tooltip.add(CMETranslations.MECHANICAL_CAT_BONUS_GLOWING.resolveComponentMutable());
-            case HASTE -> tooltip.add(CMETranslations.MECHANICAL_CAT_BONUS_HASTE.resolveComponentMutable());
-            case HUNGER_REGEN -> tooltip.add(CMETranslations.MECHANICAL_CAT_BONUS_HUNGER_REGEN.resolveComponentMutable());
-            case BLOCK_INTERACTION_RANGE -> tooltip.add(CMETranslations.MECHANICAL_CAT_BONUS_INTERACTION_RANGE.resolveComponentMutable());
-            default -> throw new RuntimeException("Unknown MechanicalCatBonusType Value");
-        }
+        var component = switch (bonus) {
+            case NONE -> Component.empty(); // skip
+            case FORTUNE -> CMETranslations.MECHANICAL_CAT_BONUS_FORTUNE.resolveComponentMutable();
+            case GIFTS -> CMETranslations.MECHANICAL_CAT_BONUS_GIFTS.resolveComponentMutable();
+            case GLOWING -> CMETranslations.MECHANICAL_CAT_BONUS_GLOWING.resolveComponentMutable();
+            case HASTE -> CMETranslations.MECHANICAL_CAT_BONUS_HASTE.resolveComponentMutable();
+            case HUNGER_REGEN -> CMETranslations.MECHANICAL_CAT_BONUS_HUNGER_REGEN.resolveComponentMutable();
+            case BLOCK_INTERACTION_RANGE -> CMETranslations.MECHANICAL_CAT_BONUS_INTERACTION_RANGE.resolveComponentMutable();
+        };
+        tooltip.add(CMETranslations.MECHANICAL_CAT_ACTIVE_BONUS.resolveComponentMutable().append(component));
     }
 
     @Override

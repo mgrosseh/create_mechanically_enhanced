@@ -1,21 +1,19 @@
-package com.mirandnyan.mired.content.equipment.mechanical_mods.parts;
+package com.mirandnyan.mired.content.equipment.mechanical_parts.parts;
 
-import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPart;
-import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPartData;
+import com.mirandnyan.mired.content.equipment.mechanical_parts.MechanicalPart;
+import com.mirandnyan.mired.content.equipment.mechanical_parts.MechanicalPartData;
 import com.mirandnyan.mired.util.AttributeHelpers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 
 public class MechanicalPumpkinPartData extends MechanicalPartData {

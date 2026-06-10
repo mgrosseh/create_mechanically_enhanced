@@ -1,8 +1,8 @@
-package com.mirandnyan.mired.content.equipment.mechanical_mods;
+package com.mirandnyan.mired.content.equipment.mechanical_parts;
 
 import com.mirandnyan.mired.*;
-import com.mirandnyan.mired.content.equipment.mechanical_drill.MechanicalDrillItem;
-import com.mirandnyan.mired.content.equipment.mechanical_mods.parts.*;
+import com.mirandnyan.mired.content.equipment.mechanical_tool.MechanicalToolItem;
+import com.mirandnyan.mired.content.equipment.mechanical_parts.parts.*;
 import com.mojang.serialization.Codec;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
@@ -102,7 +102,7 @@ public class MechanicalPart {
             new MechanicalPartData(0.2f) {
                 @Override
                 public int getTransferRatio() {
-                    return MechanicalDrillItem.DEFAULT_TRANSFER_RATIO;
+                    return MechanicalToolItem.DEFAULT_TRANSFER_RATIO;
                 }
             }
     );
@@ -112,7 +112,7 @@ public class MechanicalPart {
             new MechanicalPartData(0.2f) {
                 @Override
                 public int getTransferRatio() {
-                    return MechanicalDrillItem.DEFAULT_TRANSFER_RATIO / 2;
+                    return MechanicalToolItem.DEFAULT_TRANSFER_RATIO / 2;
                 }
             }
     );

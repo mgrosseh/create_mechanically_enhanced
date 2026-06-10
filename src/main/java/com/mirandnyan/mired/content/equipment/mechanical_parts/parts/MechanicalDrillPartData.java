@@ -1,21 +1,19 @@
-package com.mirandnyan.mired.content.equipment.mechanical_mods.parts;
+package com.mirandnyan.mired.content.equipment.mechanical_parts.parts;
 
 import com.mirandnyan.mired.CMEDataComponents;
-import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPart;
-import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPartData;
-import com.mirandnyan.mired.util.AttributeHelpers;
+import com.mirandnyan.mired.CMETranslations;
+import com.mirandnyan.mired.content.equipment.mechanical_parts.MechanicalPart;
+import com.mirandnyan.mired.content.equipment.mechanical_parts.MechanicalPartData;
 import com.mirandnyan.mired.util.ItemAttributeModifiersRebuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.animation.PhysicalFloat;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -23,11 +21,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
-import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.event.level.BlockEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.WeakHashMap;
@@ -109,6 +105,12 @@ public class MechanicalDrillPartData extends MechanicalPartData {
             data.pAngle.bump(5.5);
 
         data.pAngle.tick();
+    }
+
+    @Override
+    public Component getHighlightTip(@NotNull ItemStack item, @NotNull Component displayName) {
+        var out = Component.empty().append(displayName).append(CMETranslations.MECHANICAL_TOOL_DRILL_TYPE.resolveComponent());
+        return out;
     }
 
     private float getAngle(ItemStack stack) {

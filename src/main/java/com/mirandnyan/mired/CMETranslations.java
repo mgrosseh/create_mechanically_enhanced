@@ -16,10 +16,10 @@ public class CMETranslations {
 
     public static final LangEntry ANALOG_SCROLL_VALUE = new LangEntry("scroll_value_behaviour.analog_scoll_value", "Analog Value");
 
-    public static final LangEntry TOOL_SLOTS_TITLE = new StyledLangEntry("tool_slots.title", "Slots",
+    public static final LangEntry TOOL_SLOTS_TITLE = new StyledLangEntry("tool_slots.title", "Parts",
             component -> component.withStyle(ChatFormatting.BOLD, ChatFormatting.UNDERLINE)
     );
-    public static final LangEntry TOOL_SLOTS_NONE = new StyledLangEntry("tool_slots.none", "No slots",
+    public static final LangEntry TOOL_SLOTS_NONE = new StyledLangEntry("tool_slots.none", "No parts",
             component -> component.withStyle(ChatFormatting.ITALIC)
     );
     public static final LangEntry TOOL_SLOTS_EMPTY = new LangEntry("tool_slots.empty_slot", "Empty");
@@ -36,12 +36,17 @@ public class CMETranslations {
     public static final LangEntry MECHANICAL_TOOL_AIR_LEVEL_POST = tooltip("mechanical_tool.air.postfix", "");
 
     // TODO: separate "Active Bonus" from bonus
-    public static final LangEntry MECHANICAL_CAT_BONUS_FORTUNE = affixTooltip("mechanical_cat.bonus.fortune", "Active Bonus: Fortune");
-    public static final LangEntry MECHANICAL_CAT_BONUS_GIFTS = affixTooltip("mechanical_cat.bonus.gifts", "Active Bonus: Random Gifts");
-    public static final LangEntry MECHANICAL_CAT_BONUS_GLOWING = affixTooltip("mechanical_cat.bonus.glowing", "Active Bonus: Glowing!");
-    public static final LangEntry MECHANICAL_CAT_BONUS_HASTE = affixTooltip("mechanical_cat.bonus.haste", "Active Bonus: Haste");
-    public static final LangEntry MECHANICAL_CAT_BONUS_HUNGER_REGEN = affixTooltip("mechanical_cat.bonus.hunger_regen", "Active Bonus: Hunger Regen");
-    public static final LangEntry MECHANICAL_CAT_BONUS_INTERACTION_RANGE = affixTooltip("mechanical_cat.bonus.interaction_range", "Active Bonus: Extra Range");
+
+    public static final LangEntry MECHANICAL_CAT_ACTIVE_BONUS = new StyledLangEntry("tooltip.mechanical_cat.bonus", "Active Bonus: ",
+            component -> component.withStyle(ChatFormatting.DARK_PURPLE));
+    public static final LangEntry MECHANICAL_CAT_BONUS_FORTUNE = affixTooltip("mechanical_cat.bonus.fortune", "Fortune");
+    public static final LangEntry MECHANICAL_CAT_BONUS_GIFTS = affixTooltip("mechanical_cat.bonus.gifts", "Random Gifts");
+    public static final LangEntry MECHANICAL_CAT_BONUS_GLOWING = affixTooltip("mechanical_cat.bonus.glowing", "Glowing!");
+    public static final LangEntry MECHANICAL_CAT_BONUS_HASTE = affixTooltip("mechanical_cat.bonus.haste", "Haste");
+    public static final LangEntry MECHANICAL_CAT_BONUS_HUNGER_REGEN = affixTooltip("mechanical_cat.bonus.hunger_regen", "Hunger Regen");
+    public static final LangEntry MECHANICAL_CAT_BONUS_INTERACTION_RANGE = affixTooltip("mechanical_cat.bonus.interaction_range", "Extra Range");
+
+    public static final LangEntry MECHANICAL_TOOL_DRILL_TYPE = new LangEntry("mechanical_tool.type.drill", " (Drill)");
 
     protected static LangEntry toolSlot(String key, String textEnglish) {
         return new StyledLangEntry(CreateMechanicallyEnhanced.MOD_ID + ".tool_slot", key, textEnglish,

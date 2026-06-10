@@ -1,6 +1,6 @@
 package com.mirandnyan.mired;
 
-import com.mirandnyan.mired.content.equipment.mechanical_mods.parts.mechanical_cat.HungerRegenerationMobEffect;
+import com.mirandnyan.mired.content.equipment.mechanical_parts.parts.mechanical_cat.HungerRegenerationMobEffect;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffect;

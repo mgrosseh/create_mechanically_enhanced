@@ -1,4 +1,4 @@
-package com.mirandnyan.mired.content.equipment.mechanical_mods.parts.mechanical_cat;
+package com.mirandnyan.mired.content.equipment.mechanical_parts.parts.mechanical_cat;
 
 import com.mirandnyan.mired.CMEMobEffects;
 import com.mojang.serialization.Codec;
@@ -18,10 +18,10 @@ import java.util.function.IntFunction;
 public enum MechanicalCatBonusType implements StringRepresentable {
     NONE(-1, 0),
     FORTUNE(2, 60 * 20, 4),
-    GIFTS(1, 60 * 20, 10),
+    GIFTS(2, 60 * 20, 10),
     GLOWING(0, 8 * 20, MobEffects.GLOWING, 0),
-    HASTE(2, 30 * 20, MobEffects.DIG_SPEED, 0),
-    HUNGER_REGEN(1, 10 * 20, CMEMobEffects.HUNGER_REGENERATION, 1),
+    HASTE(1, 30 * 20, MobEffects.DIG_SPEED, 0),
+    HUNGER_REGEN(1, 10 * 20, CMEMobEffects.HUNGER_REGENERATION, 3),
     BLOCK_INTERACTION_RANGE(1, 30 * 20, CMEMobEffects.RANGE_BLESSING, 0);
 
     public static final Codec<MechanicalCatBonusType> CODEC = StringRepresentable.fromValues(MechanicalCatBonusType::values);

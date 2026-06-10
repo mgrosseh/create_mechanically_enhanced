@@ -1,27 +1,28 @@
-package com.mirandnyan.mired.content.equipment.mechanical_drill;
+package com.mirandnyan.mired.content.equipment.mechanical_tool;
 
 import com.mirandnyan.mired.CMEDataComponents;
 import com.mirandnyan.mired.CMEItems;
 import com.mirandnyan.mired.CMETranslations;
-import com.mirandnyan.mired.content.equipment.MechanicalTool;
-import com.mirandnyan.mired.content.equipment.mechanical_mods.FilledToolSlot;
-import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalPart;
-import com.mirandnyan.mired.content.equipment.mechanical_mods.MechanicalToolSlot;
+import com.mirandnyan.mired.content.equipment.MechanicalItem;
+import com.mirandnyan.mired.content.equipment.mechanical_parts.FilledToolSlot;
+import com.mirandnyan.mired.content.equipment.mechanical_parts.MechanicalPart;
+import com.mirandnyan.mired.content.equipment.mechanical_parts.MechanicalToolSlot;
 import com.simibubi.create.content.equipment.armor.BacktankUtil;
 import com.simibubi.create.foundation.item.CustomArmPoseItem;
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
@@ -38,7 +39,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @EventBusSubscriber
-public class MechanicalDrillItem extends MechanicalTool implements CustomArmPoseItem {
+public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseItem {
 
     public static final int DEFAULT_TRANSFER_RATIO = 2;
     public static final int INTERNAL_AIR_COLOR = 0x9090F0;
@@ -84,7 +85,7 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
 
     @SafeVarargs
     public static ItemStack newStackWithParts(RegistryEntry<MechanicalPart, MechanicalPart>... parts) {
-        var stack = CMEItems.MECHANICAL_DRILL.asStack();
+        var stack = CMEItems.MECHANICAL_TOOL.asStack();
 
         for (var part : parts) {
             var slot = new FilledToolSlot(part.get().validSlot, part.getKey());
@@ -96,7 +97,7 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
         return stack;
     }
 
-    public MechanicalDrillItem(Properties properties) {
+    public MechanicalToolItem(Properties properties) {
         super(properties
                 .rarity(Rarity.UNCOMMON)
                 .stacksTo(1)
@@ -121,29 +122,16 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
         notifyPartsOfBlockBreak(event);
     }
 
-    /* always server side */
-    protected static void notifyPartsOfBlockBreak(BlockEvent.BreakEvent event) {
-        var player = event.getPlayer();
-        var item = player.getMainHandItem();
-        if (!CMEItems.MECHANICAL_DRILL.isIn(item))
-            return;
-
-        List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
-        for (var slot : slots) {
-            slot.getPart().ifPresent(p -> p.get().data.brokeBlock(player, item, event));
-        }
-    }
-
     protected static void findAndDamageItem(@NotNull Player player) {
         if (player.level().isClientSide)
             return;
         EquipmentSlot equipmentSlot = EquipmentSlot.MAINHAND;
         ItemStack item = player.getMainHandItem();
-        if (!CMEItems.MECHANICAL_DRILL.isIn(item)) {
+        if (!CMEItems.MECHANICAL_TOOL.isIn(item)) {
             item = player.getOffhandItem();
             equipmentSlot = EquipmentSlot.OFFHAND;
         }
-        if (!CMEItems.MECHANICAL_DRILL.isIn(item))
+        if (!CMEItems.MECHANICAL_TOOL.isIn(item))
             return;
         useAirOrHurtAndBreak(player, equipmentSlot, item);
     }
@@ -154,6 +142,77 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
                 return;
             }
         stack.hurtAndBreak(1, player, slot);
+    }
+
+
+    /* always server side */
+    protected static void notifyPartsOfBlockBreak(BlockEvent.BreakEvent event) {
+        var player = event.getPlayer();
+        var item = player.getMainHandItem();
+        if (!CMEItems.MECHANICAL_TOOL.isIn(item))
+            return;
+
+        List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        for (var slot : slots) {
+            slot.getPart().ifPresent(p -> p.get().data.brokeBlock(player, item, event));
+        }
+    }
+
+    @Override
+    public @NotNull InteractionResult useOn(UseOnContext context) {
+        var item = context.getItemInHand();
+        List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        for (var slot : slots) {
+            var part = slot.getPart();
+            if (part.isEmpty())
+                continue;
+            var result = part.get().get().data.useOn(context);
+            if (result != InteractionResult.PASS)
+                return result;
+        }
+        return super.useOn(context);
+    }
+
+    @Override
+    public @NotNull InteractionResult interactLivingEntity(
+            ItemStack stack, @NotNull Player player,
+            @NotNull LivingEntity interactionTarget, @NotNull InteractionHand usedHand) {
+        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        for (var slot : slots) {
+            var part = slot.getPart();
+            if (part.isEmpty())
+                continue;
+            var result = part.get().get().data.interactLivingEntity(stack, player, interactionTarget, usedHand);
+            if (result != InteractionResult.PASS)
+                return result;
+        }
+        return super.interactLivingEntity(stack, player, interactionTarget, usedHand);
+    }
+
+    @Override
+    public boolean onDroppedByPlayer(ItemStack item, @NotNull Player player) {
+        List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        var result = true;
+        for (var slot : slots) {
+            var part = slot.getPart();
+            if (part.isEmpty())
+                continue;
+            result = result && part.get().get().data.onDroppedByPlayer(item, player);
+        }
+        return result && super.onDroppedByPlayer(item, player);
+    }
+
+    @Override
+    public @NotNull Component getHighlightTip(@NotNull ItemStack item, @NotNull Component displayName) {
+        List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        var result = super.getHighlightTip(item, displayName);
+        for (var slot : slots) {
+            var part = slot.getPart();
+            if (part.isEmpty())
+                continue;
+            result = part.get().get().data.getHighlightTip(item, result);
+        }
+        return result;
     }
 
     // -- Parts --
@@ -241,7 +300,7 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
     @Override
     @OnlyIn(Dist.CLIENT)
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(SimpleCustomRenderer.create(this, new MechanicalDrillRenderer()));
+        consumer.accept(SimpleCustomRenderer.create(this, new MechanicalToolRenderer()));
     }
 
     // prevent bobbing after mine
@@ -261,6 +320,11 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
         return true;
     }
 
+    @Override
+    @SuppressWarnings("removal")
+    public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
+        return true;
+    }
 
     // make look nice in third person
     @Override
@@ -375,7 +439,7 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
         var maxAir = getMaxAir(stack);
         var air = getAir(stack);
         if (maxAir > 0 && air > 0)
-            return Math.round((float) air * 13.0F / (float) maxAir);
+            return Math.round((float) air * MAX_BAR_WIDTH / (float) maxAir);
         return super.getBarWidth(stack);
     }
 
@@ -400,13 +464,20 @@ public class MechanicalDrillItem extends MechanicalTool implements CustomArmPose
         return 0.00001f;
     }
 
+    public boolean onLeftClickEntity(@NotNull ItemStack stack, @NotNull Player player, @NotNull Entity entity) {
+        var air = getAir(stack);
+        if (air > 0 || stack.getDamageValue() < stack.getMaxDamage() - 2)
+            return super.onLeftClickEntity(stack, player, entity);
+        return true;
+    }
+
     // DIGGER ITEM
     // TODO: if it doesn't have durability, it takes damage, but if not still does damage but then takes no damage
 
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         var air = getAir(stack);
-        return air > 0 || stack.getDamageValue() < stack.getMaxDamage() - 1;
+        return air > 0 || stack.getDamageValue() < stack.getMaxDamage() - 2;
     }
 
     @Override

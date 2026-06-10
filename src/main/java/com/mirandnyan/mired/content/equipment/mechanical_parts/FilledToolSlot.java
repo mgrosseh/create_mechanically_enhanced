@@ -1,4 +1,4 @@
-package com.mirandnyan.mired.content.equipment.mechanical_mods;
+package com.mirandnyan.mired.content.equipment.mechanical_parts;
 
 import com.mirandnyan.mired.CMETranslations;
 import com.mojang.serialization.Codec;
