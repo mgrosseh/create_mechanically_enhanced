@@ -109,8 +109,7 @@ public class MechanicalDrillPartData extends MechanicalPartData {
 
     @Override
     public Component getHighlightTip(@NotNull ItemStack item, @NotNull Component displayName) {
-        var out = Component.empty().append(displayName).append(CMETranslations.MECHANICAL_TOOL_DRILL_TYPE.resolveComponent());
-        return out;
+        return Component.empty().append(displayName).append(CMETranslations.MECHANICAL_TOOL_DRILL_TYPE.resolveComponent());
     }
 
     private float getAngle(ItemStack stack) {

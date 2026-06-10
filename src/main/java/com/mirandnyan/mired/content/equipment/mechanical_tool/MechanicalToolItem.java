@@ -14,6 +14,7 @@ import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -145,9 +146,9 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
     }
 
 
-    /* always server side */
+    @SubscribeEvent
     protected static void notifyPartsOfBlockBreak(BlockEvent.BreakEvent event) {
-        var player = event.getPlayer();
+        ServerPlayer player = (ServerPlayer) event.getPlayer();
         var item = player.getMainHandItem();
         if (!CMEItems.MECHANICAL_TOOL.isIn(item))
             return;

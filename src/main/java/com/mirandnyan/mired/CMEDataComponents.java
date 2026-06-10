@@ -2,6 +2,7 @@ package com.mirandnyan.mired;
 
 import com.mirandnyan.mired.content.equipment.mechanical_parts.FilledToolSlot;
 import com.mirandnyan.mired.content.equipment.mechanical_parts.parts.mechanical_cat.MechanicalCatBonusType;
+import com.mirandnyan.mired.content.equipment.mechanical_parts.parts.mechanical_cat.MechanicalCatGiftType;
 import com.mojang.serialization.Codec;
 import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
 import net.minecraft.core.component.DataComponentType;
@@ -63,6 +64,10 @@ builder -> builder.persistent(FilledToolSlot.CODEC.listOf()).networkSynchronized
     public static final DataComponentType<Unit> MECHANICAL_CAT_APPLY_BONUS = register(
             "mechanical_cat_apply_bonus",
             builder -> builder.persistent(Unit.CODEC).networkSynchronized(StreamCodec.unit(Unit.INSTANCE))
+    );
+    public static final DataComponentType<MechanicalCatGiftType> MECHANICAL_CAT_GIVE_GIFT = register(
+            "mechanical_cat_give_gift",
+            builder -> builder.persistent(MechanicalCatGiftType.CODEC).networkSynchronized(MechanicalCatGiftType.STREAM_CODEC)
     );
 
     public static final DataComponentType<String> LAST_TOOL_HOLDER_NAME = register(

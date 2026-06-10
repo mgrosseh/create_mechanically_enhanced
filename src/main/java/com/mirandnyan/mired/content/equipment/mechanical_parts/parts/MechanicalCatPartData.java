@@ -3,25 +3,27 @@ package com.mirandnyan.mired.content.equipment.mechanical_parts.parts;
 import com.mirandnyan.mired.CMEDataComponents;
 import com.mirandnyan.mired.CMETags;
 import com.mirandnyan.mired.CMETranslations;
+import com.mirandnyan.mired.content.equipment.mechanical_parts.FilledToolSlot;
 import com.mirandnyan.mired.content.equipment.mechanical_parts.MechanicalPart;
 import com.mirandnyan.mired.content.equipment.mechanical_parts.MechanicalPartData;
 import com.mirandnyan.mired.content.equipment.mechanical_parts.parts.mechanical_cat.MechanicalCatBonusType;
+import com.mirandnyan.mired.content.equipment.mechanical_parts.parts.mechanical_cat.MechanicalCatGiftType;
 import com.mirandnyan.mired.util.AttributeHelpers;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.datafixers.util.Either;
 import com.mojang.math.Axis;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.Unit;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.SlotAccess;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
@@ -31,6 +33,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.level.BlockDropsEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,6 +43,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+@EventBusSubscriber
 public class MechanicalCatPartData extends MechanicalPartData {
     private static int i = 0;
 
@@ -180,17 +186,85 @@ public class MechanicalCatPartData extends MechanicalPartData {
     }
 
     @Override
-    public void brokeBlock(Player player, ItemStack item, BlockEvent.BreakEvent event) {
+    public void brokeBlock(ServerPlayer player, ItemStack item, BlockEvent.BreakEvent event) {
         var bonus = item.get(CMEDataComponents.MECHANICAL_CAT_BONUS);
         if (bonus == MechanicalCatBonusType.GIFTS) {
             if (Mth.randomBetweenInclusive(event.getLevel().getRandom(), 0, 100) < bonus.amplitude) {
-                player.giveExperienceLevels(1); // TODO
+                // TODO
+                var gift = MechanicalCatGiftType.random(event.getLevel().getRandom());
+                item.set(CMEDataComponents.MECHANICAL_CAT_GIVE_GIFT, gift);
+                handleGifts(player, item, gift, Either.left(event));
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void modifyBlockDropsAfterBreak(BlockDropsEvent event) {
+        if (!(event.getBreaker() instanceof ServerPlayer player) || !player.getMainHandItem().has(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE))
+            return;
+        var item = player.getMainHandItem();
+
+        if (!item.has(CMEDataComponents.MECHANICAL_CAT_GIVE_GIFT))
+            return;
+
+        List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        for (FilledToolSlot slot : slots) {
+            var part = slot.getPart();
+            if (part.isEmpty() || part.get() != MechanicalPart.SMALL_MECHANICAL_CAT)
+                continue;
+            var data = (MechanicalCatPartData) part.get().get().data;
+            //noinspection DataFlowIssue // cant be null since item.has guard
+            data.handleGifts(player, item, item.get(CMEDataComponents.MECHANICAL_CAT_GIVE_GIFT), Either.right(event));
+        }
+    }
+
+    protected void handleGifts(@NotNull ServerPlayer player, @NotNull ItemStack item, @NotNull MechanicalCatGiftType gift,
+                               Either<BlockEvent.BreakEvent, BlockDropsEvent> eitherEvent) {
+        if (eitherEvent.left().isPresent()) {
+            var event = eitherEvent.left().get();
+
+            switch (gift) {
+                case EXPERIENCE, DOUBLE_DROPS -> {} // handled below
+            }
+             // TODO
                 /*
                 Ideas:
                 - Double block drops
                  */
+            return;
+        }
+
+        // (some server processing)
+        if (eitherEvent.right().isEmpty())
+            return; // impossible
+
+        var event = eitherEvent.right().get();
+
+        var level = event.getLevel();
+        switch (gift) {
+            case EXPERIENCE -> {
+                event.setDroppedExperience(2);
+            } // handled above
+            case DOUBLE_DROPS -> {
+                // TODO: tag to forbid certain duplications
+                var drops = event.getDrops();
+                var other_drops = new ArrayList<>(drops);
+                for (var drop : other_drops) {
+                    var copy = drop.copy();
+                    var pos = copy.position();
+
+                    double d0 = (double) EntityType.ITEM.getHeight() / 2.0;
+                    double d1 = pos.x() + Mth.nextDouble(level.getRandom(), -0.125, 0.125);
+                    double d2 = pos.y() + 0.3 + Mth.nextDouble(level.getRandom(), -0.25, 0.2) - d0;
+                    double d3 = pos.z() + Mth.nextDouble(level.getRandom(), -0.125, 0.125);
+                    copy.setPos(d1, d2, d3);
+
+                    drops.add(copy);
+                }
             }
         }
+
+        item.remove(CMEDataComponents.MECHANICAL_CAT_GIVE_GIFT); // always consume
     }
 
     @Override

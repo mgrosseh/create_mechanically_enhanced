@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -63,7 +64,7 @@ public abstract class MechanicalPartData {
 
     }
 
-    public void brokeBlock(Player player, ItemStack item, BlockEvent.BreakEvent event) { }
+    public void brokeBlock(ServerPlayer player, ItemStack item, BlockEvent.BreakEvent event) { }
 
     public InteractionResult useOn(UseOnContext context) {
         return InteractionResult.PASS;
