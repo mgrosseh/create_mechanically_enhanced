@@ -3,8 +3,11 @@ package com.mirandnyan.cme;
 import com.mirandnyan.cme.content.equipment.mechanical_tool.MechanicalToolItem;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
 import com.mirandnyan.cme.content.items.cat_coin_die.CatCoinDieItem;
+import com.mirandnyan.cme.recipes.CreateRecipeUtil;
 import com.simibubi.create.AllCreativeModeTabs;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.content.kinetics.deployer.DeployerApplicationRecipe;
+import com.simibubi.create.content.kinetics.press.PressingRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateItemModelProvider;
@@ -12,9 +15,6 @@ import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -64,13 +64,19 @@ public class CMEItems {
             // TODO: move recipe in here with a builder instead of create approach
             .register());
 
-    public static final ItemEntry<Item> UNMINTED_IRON_COIN = coin("iron_coin", "Unminted Iron Coin",
-            (c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
-                    .pattern("II")
-                    .pattern("II")
-                    .define('I', Items.IRON_NUGGET)
-                    .unlockedBy("has_ingredient", RegistrateRecipeProvider.has(Items.IRON_NUGGET))
-                    .save(p));
+    public static final ItemEntry<Item> UNMINTED_IRON_COIN = inTab(REGISTRATE.item("iron_coin", Item::new)
+            .properties(p -> p.rarity(Rarity.UNCOMMON))
+            .recipe((ctx, prov) ->
+                    CreateRecipeUtil.deployer(CreateMechanicallyEnhanced.asResource(ctx.getName()))
+                            .require(AllItems.IRON_SHEET)
+                            .require(CAT_COIN_DIE)
+                            .toolNotConsumed()
+                            .output(ctx.getEntry())
+                            .build(prov))
+            .model(generated("cat_coins"))
+            .lang("Unminted Iron Coin")
+            .register());
+
     public static final ItemEntry<Item> MINTED_IRON_COIN = coin("iron_coin_minted", "Minted Iron Coin",
             coin_recipe(UNMINTED_IRON_COIN));
     public static final ItemEntry<Item> MINTED_IRON_COIN_AMETHYST = coin("iron_coin_minted_amethyst", "Minted Iron Coin (Amethyst)",
@@ -82,13 +88,19 @@ public class CMEItems {
     public static final ItemEntry<Item> MINTED_IRON_COIN_EXPERIENCE = coin("iron_coin_minted_experience", "Minted Iron Coin (Experience)",
             coin_recipe(UNMINTED_IRON_COIN, AllItems.EXP_NUGGET));
 
-    public static final ItemEntry<Item> UNMINTED_BRASS_COIN = coin("brass_coin", "Unminted Brass Coin",
-            (c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
-                    .pattern("BB")
-                    .pattern("BB")
-                    .define('B', AllItems.BRASS_NUGGET)
-                    .unlockedBy("has_ingredient", RegistrateRecipeProvider.has(AllItems.BRASS_NUGGET))
-            .save(p));
+    public static final ItemEntry<Item> UNMINTED_BRASS_COIN = inTab(REGISTRATE.item("brass_coin", Item::new)
+            .properties(p -> p.rarity(Rarity.UNCOMMON))
+            .model(generated("cat_coins"))
+            .recipe((ctx, prov) ->
+                    CreateRecipeUtil.deployer(CreateMechanicallyEnhanced.asResource(ctx.getName()))
+                            .require(AllItems.BRASS_SHEET)
+                            .require(CAT_COIN_DIE)
+                            .toolNotConsumed()
+                            .output(ctx.getEntry())
+                            .build(prov))
+            .lang("Unminted Brass Coin")
+            .register());
+
     public static final ItemEntry<Item> MINTED_BRASS_COIN = coin("brass_coin_minted", "Minted Brass Coin",
             coin_recipe(UNMINTED_BRASS_COIN));
     public static final ItemEntry<Item> MINTED_BRASS_COIN_AMETHYST = coin("brass_coin_minted_amethyst", "Minted Brass Coin (Amethyst)",
@@ -100,29 +112,26 @@ public class CMEItems {
     public static final ItemEntry<Item> MINTED_BRASS_COIN_EXPERIENCE = coin("brass_coin_minted_experience", "Minted Brass Coin (Experience)",
             coin_recipe(UNMINTED_BRASS_COIN, AllItems.EXP_NUGGET));
 
-    private static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateRecipeProvider> coin_recipe(ItemEntry<Item> coin) {
-        return (ctx, prov) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 1)
-                .requires(CAT_COIN_DIE)
-                .requires(coin) // TODO: make deployer with die on coin -- automatic recipe
-                .unlockedBy("has_ingredient", RegistrateRecipeProvider.has(coin))
-                .save(prov);
-    }
-
-    private static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateRecipeProvider> coin_sequenced_recipe(ItemEntry<Item> coin, ItemLike mint) {
+    private static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateRecipeProvider> coin_recipe(ItemLike unminted) {
         return (ctx, prov) ->
-                new SequencedAssemblyRecipeBuilder(CreateMechanicallyEnhanced.asResource("coin_minting", ctx.getName()))
-                        // TODO: finish
+                CreateRecipeUtil.pressing(CreateMechanicallyEnhanced.asResource("coin_minting", ctx.getName()))
+                        .require(unminted)
+                        .output(ctx.getEntry())
                         .build(prov);
+        // TODO advancements
     }
 
     private static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateRecipeProvider> coin_recipe(ItemEntry<Item> coin, ItemLike mint) {
-        return (ctx, prov) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 1)
-                .requires(CAT_COIN_DIE)
-                .requires(coin)
-                .requires(mint) // TODO: make first mint on coin deployer, then deployer with die on coin-mint combi
-                // TODO: optionally a minting-press that uses no durability
-                .unlockedBy("has_ingredient", RegistrateRecipeProvider.has(coin))
-                .save(prov);
+        return (ctx, prov) ->
+                new SequencedAssemblyRecipeBuilder(CreateMechanicallyEnhanced.asResource("coin_minting", ctx.getName()))
+                        .require(coin)
+                        .transitionTo(coin)
+                        .addStep(DeployerApplicationRecipe::new, rb -> rb.require(mint))
+                        .addStep(PressingRecipe::new, rb -> rb)
+                        .loops(1)
+                        .addOutput(ctx.getEntry(), 1)
+                        .build(prov);
+        // TODO advancements
     }
 
     private static ItemEntry<Item> coin(String name, String lang, NonNullBiConsumer<DataGenContext<Item, Item>, RegistrateRecipeProvider> cons) {

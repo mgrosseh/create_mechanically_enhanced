@@ -1,0 +1,17 @@
+{
+  "type": "create:deploying",
+  "ingredients": [
+    {
+      "item": "create:iron_sheet"
+    },
+    {
+      "item": "create_mechanically_enhanced:cat_coin_die"
+    }
+  ],
+  "keep_held_item": true,
+  "results": [
+    {
+      "id": "create_mechanically_enhanced:iron_coin"
+    }
+  ]
+}

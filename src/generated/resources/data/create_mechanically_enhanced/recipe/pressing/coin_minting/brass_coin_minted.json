@@ -1,0 +1,13 @@
+{
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "item": "create_mechanically_enhanced:brass_coin"
+    }
+  ],
+  "results": [
+    {
+      "id": "create_mechanically_enhanced:brass_coin_minted"
+    }
+  ]
+}

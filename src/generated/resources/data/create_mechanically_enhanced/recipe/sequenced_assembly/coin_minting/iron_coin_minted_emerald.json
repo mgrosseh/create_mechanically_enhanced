@@ -1,0 +1,45 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "create_mechanically_enhanced:iron_coin"
+  },
+  "results": [
+    {
+      "id": "create_mechanically_enhanced:iron_coin_minted_emerald"
+    }
+  ],
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create_mechanically_enhanced:iron_coin"
+        },
+        {
+          "item": "minecraft:emerald"
+        }
+      ],
+      "results": [
+        {
+          "id": "create_mechanically_enhanced:iron_coin"
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "create_mechanically_enhanced:iron_coin"
+        }
+      ],
+      "results": [
+        {
+          "id": "create_mechanically_enhanced:iron_coin"
+        }
+      ]
+    }
+  ],
+  "transitional_item": {
+    "id": "create_mechanically_enhanced:iron_coin"
+  }
+}

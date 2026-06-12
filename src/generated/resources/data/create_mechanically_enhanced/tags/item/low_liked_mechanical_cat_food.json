@@ -1,5 +1,6 @@
 {
   "values": [
+    "create_mechanically_enhanced:copper_coin",
     "create_mechanically_enhanced:iron_coin_minted",
     "create_mechanically_enhanced:brass_coin_minted"
   ]

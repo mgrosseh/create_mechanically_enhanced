@@ -1,0 +1,13 @@
+{
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "item": "create_mechanically_enhanced:iron_coin"
+    }
+  ],
+  "results": [
+    {
+      "id": "create_mechanically_enhanced:iron_coin_minted"
+    }
+  ]
+}
