@@ -1,0 +1,200 @@
+package com.mirandnyan.cme;
+
+import com.mirandnyan.cme.content.equipment.mechanical_tool.MechanicalToolItem;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
+import com.mirandnyan.cme.content.items.cat_coin_die.CatCoinDieItem;
+import com.simibubi.create.AllCreativeModeTabs;
+import com.simibubi.create.AllItems;
+import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeBuilder;
+import com.tterrag.registrate.providers.DataGenContext;
+import com.tterrag.registrate.providers.RegistrateItemModelProvider;
+import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import com.tterrag.registrate.util.entry.ItemEntry;
+import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.ItemLike;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.mirandnyan.cme.CreateMechanicallyEnhanced.REGISTRATE;
+
+public class CMEItems {
+    public static final List<ItemEntry<?>> creativeModeItem = new ArrayList<>();
+
+    public static final ItemEntry<MechanicalToolItem> MECHANICAL_TOOL = REGISTRATE.item("mechanical_tool", MechanicalToolItem::new)
+            .model(getExisting("default"))
+            .register();
+
+    public static final ItemEntry<Item> DEFAULT_GRIP = part("part_default_grip");
+    public static final ItemEntry<Item> NETHERITE_GRIP = part("part_netherite_grip");
+    public static final ItemEntry<Item> SMALL_BRASS_VERTICAL_GEARBOX = part("small_vertical_brass_gearbox");
+    public static final ItemEntry<Item> SMALL_ANDESITE_VERTICAL_GEARBOX = part("small_vertical_andesite_gearbox");
+    public static final ItemEntry<Item> SMALL_COPPER_TANK = part("small_copper_tank");
+    public static final ItemEntry<Item> SMALL_NETHERITE_TANK = part("small_netherite_tank");
+    public static final ItemEntry<Item> SMALL_WOODEN_COG = part("small_wooden_cog");
+    public static final ItemEntry<Item> SMALL_BRASS_COG = part("small_brass_cog");
+    public static final ItemEntry<Item> SMALL_NETHERITE_COG = part("small_netherite_cog");
+    public static final ItemEntry<Item> IRON_DRILL_HEAD = part("part_iron_drill_head");
+    public static final ItemEntry<Item> DIAMOND_DRILL_HEAD = part("part_diamond_drill_head");
+    public static final ItemEntry<Item> NETHERITE_DRILL_HEAD = part("part_netherite_drill_head");
+
+    public static final ItemEntry<Item> SMALL_MECHANICAL_BLAZE = part("small_mechanical_blaze");
+    public static final ItemEntry<Item> SMALL_MECHANICAL_CAT = part("small_mechanical_cat");
+    public static final ItemEntry<Item> SMALL_MECHANICAL_PUMPKIN = part("small_mechanical_pumpkin");
+
+    public static final ItemEntry<CatCoinDieItem> CAT_COIN_DIE = inTab(REGISTRATE.item("cat_coin_die", CatCoinDieItem::new)
+            .defaultModel()
+            .register());
+    public static final ItemEntry<Item> MINTED_COPPER_COIN = inTab(REGISTRATE.item("copper_coin", Item::new)
+            .properties(p -> p.rarity(Rarity.UNCOMMON))
+            .model(generated("cat_coins"))
+            .lang("Copper Coin")
+            // TODO: move recipe in here with a builder instead of create approach
+            .register());
+
+    public static final ItemEntry<Item> UNMINTED_IRON_COIN = coin("iron_coin", "Unminted Iron Coin",
+            (c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
+                    .pattern("II")
+                    .pattern("II")
+                    .define('I', Items.IRON_NUGGET)
+                    .unlockedBy("has_ingredient", RegistrateRecipeProvider.has(Items.IRON_NUGGET))
+                    .save(p));
+    public static final ItemEntry<Item> MINTED_IRON_COIN = coin("iron_coin_minted", "Minted Iron Coin",
+            coin_recipe(UNMINTED_IRON_COIN));
+    public static final ItemEntry<Item> MINTED_IRON_COIN_AMETHYST = coin("iron_coin_minted_amethyst", "Minted Iron Coin (Amethyst)",
+            coin_recipe(UNMINTED_IRON_COIN, Items.AMETHYST_SHARD));
+    public static final ItemEntry<Item> MINTED_IRON_COIN_DIAMOND = coin("iron_coin_minted_diamond", "Minted Iron Coin (Diamond)",
+            coin_recipe(UNMINTED_IRON_COIN, Items.DIAMOND));
+    public static final ItemEntry<Item> MINTED_IRON_COIN_EMERALD = coin("iron_coin_minted_emerald", "Minted Iron Coin (Emerald)",
+            coin_recipe(UNMINTED_IRON_COIN, Items.EMERALD));
+    public static final ItemEntry<Item> MINTED_IRON_COIN_EXPERIENCE = coin("iron_coin_minted_experience", "Minted Iron Coin (Experience)",
+            coin_recipe(UNMINTED_IRON_COIN, AllItems.EXP_NUGGET));
+
+    public static final ItemEntry<Item> UNMINTED_BRASS_COIN = coin("brass_coin", "Unminted Brass Coin",
+            (c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
+                    .pattern("BB")
+                    .pattern("BB")
+                    .define('B', AllItems.BRASS_NUGGET)
+                    .unlockedBy("has_ingredient", RegistrateRecipeProvider.has(AllItems.BRASS_NUGGET))
+            .save(p));
+    public static final ItemEntry<Item> MINTED_BRASS_COIN = coin("brass_coin_minted", "Minted Brass Coin",
+            coin_recipe(UNMINTED_BRASS_COIN));
+    public static final ItemEntry<Item> MINTED_BRASS_COIN_AMETHYST = coin("brass_coin_minted_amethyst", "Minted Brass Coin (Amethyst)",
+            coin_recipe(UNMINTED_BRASS_COIN, Items.AMETHYST_SHARD));
+    public static final ItemEntry<Item> MINTED_BRASS_COIN_DIAMOND = coin("brass_coin_minted_diamond", "Minted Brass Coin (Diamond)",
+            coin_recipe(UNMINTED_BRASS_COIN, Items.DIAMOND));
+    public static final ItemEntry<Item> MINTED_BRASS_COIN_EMERALD = coin("brass_coin_minted_emerald", "Minted Brass Coin (Emerald)",
+            coin_recipe(UNMINTED_BRASS_COIN, Items.EMERALD));
+    public static final ItemEntry<Item> MINTED_BRASS_COIN_EXPERIENCE = coin("brass_coin_minted_experience", "Minted Brass Coin (Experience)",
+            coin_recipe(UNMINTED_BRASS_COIN, AllItems.EXP_NUGGET));
+
+    private static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateRecipeProvider> coin_recipe(ItemEntry<Item> coin) {
+        return (ctx, prov) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 1)
+                .requires(CAT_COIN_DIE)
+                .requires(coin) // TODO: make deployer with die on coin -- automatic recipe
+                .unlockedBy("has_ingredient", RegistrateRecipeProvider.has(coin))
+                .save(prov);
+    }
+
+    private static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateRecipeProvider> coin_sequenced_recipe(ItemEntry<Item> coin, ItemLike mint) {
+        return (ctx, prov) ->
+                new SequencedAssemblyRecipeBuilder(CreateMechanicallyEnhanced.asResource("coin_minting", ctx.getName()))
+                        // TODO: finish
+                        .build(prov);
+    }
+
+    private static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateRecipeProvider> coin_recipe(ItemEntry<Item> coin, ItemLike mint) {
+        return (ctx, prov) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 1)
+                .requires(CAT_COIN_DIE)
+                .requires(coin)
+                .requires(mint) // TODO: make first mint on coin deployer, then deployer with die on coin-mint combi
+                // TODO: optionally a minting-press that uses no durability
+                .unlockedBy("has_ingredient", RegistrateRecipeProvider.has(coin))
+                .save(prov);
+    }
+
+    private static ItemEntry<Item> coin(String name, String lang, NonNullBiConsumer<DataGenContext<Item, Item>, RegistrateRecipeProvider> cons) {
+        return inTab(REGISTRATE.item(name, Item::new)
+                .properties(p -> p.rarity(Rarity.UNCOMMON))
+                .model(generated("cat_coins"))
+                .recipe(cons)
+                .lang(lang)
+                .register());
+    }
+
+    private static ItemEntry<Item> part(String name) {
+        return inTab(REGISTRATE.item(name, Item::new)
+                .properties(p -> p.stacksTo(1))
+                .model(CMEItems::getExisting)
+                .register());
+    }
+
+    private static <T extends Item> ItemEntry<T> inTab(ItemEntry<T> entry) {
+        creativeModeItem.add(entry);
+        return entry;
+    }
+
+    private static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateItemModelProvider> generated(String sublocation) {
+        return (ctx, prov) ->
+                prov.generated(ctx::getEntry, prov.modLoc("item/" + sublocation + "/" + prov.name(ctx::getEntry)));
+    }
+
+    private static <T extends Item> ModelFile getExisting(DataGenContext<Item, T> ctx, RegistrateItemModelProvider prov) {
+        return prov.getExistingFile(CreateMechanicallyEnhanced.asResource("item/" + ctx.getName()));
+    }
+    private static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateItemModelProvider> getExisting(String sublocation) {
+        return (ctx, prov) ->
+                prov.withExistingParent("item/" + ctx.getName(), prov.modLoc("item/" + ctx.getName() + "/" + sublocation));
+    }
+
+    // -- Creative Mode Tab --
+
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
+            DeferredRegister.create(Registries.CREATIVE_MODE_TAB, CreateMechanicallyEnhanced.MOD_ID);
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MAIN =
+            CREATIVE_MODE_TABS.register("tab",
+                    () -> CreativeModeTab.builder()
+                            .title(CMETranslations.CREATIVE_MODE_TAB.resolveComponent())
+                            .withTabsBefore(AllCreativeModeTabs.BASE_CREATIVE_TAB.getId())
+                            .icon(SMALL_BRASS_VERTICAL_GEARBOX::asStack)
+                            .displayItems((parameters, output) -> {
+                                output.accept(MechanicalToolItem.newStackWithParts(
+                                        MechanicalPart.DEFAULT_GRIP,
+                                        MechanicalPart.WOODEN_COG,
+                                        MechanicalPart.ANDESITE_GEARBOX,
+                                        MechanicalPart.IRON_DRILL_HEAD
+                                ));
+                                output.accept(MechanicalToolItem.defaultItemStack());
+                                output.accept(MechanicalToolItem.newStackWithParts(
+                                        MechanicalPart.DEFAULT_GRIP,
+                                        MechanicalPart.NETHERITE_COG,
+                                        MechanicalPart.BRASS_GEARBOX,
+                                        MechanicalPart.NETHERITE_TANK,
+                                        MechanicalPart.NETHERITE_DRILL_HEAD,
+                                        MechanicalPart.SMALL_MECHANICAL_BLAZE
+                                ));
+                                output.accept(CMEBlocks.FOOD_REPLICATOR);
+                                for (var x : creativeModeItem) {
+                                    output.accept(x);
+                                }
+                            }).build()
+            );
+
+
+
+    public static void register(IEventBus modEventBus) {
+        CREATIVE_MODE_TABS.register(modEventBus);
+    }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "create_mechanically_enhanced:item/cat_coins/iron_coin_minted_emerald"
+  }
+}

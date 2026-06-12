@@ -1,0 +1,13 @@
+{
+  "type": "create_mechanically_enhanced:coin_minting",
+  "ingredients": [
+    {
+      "item": "minecraft:copper_ingot"
+    }
+  ],
+  "results": [
+    {
+      "id": "create_mechanically_enhanced:copper_coin"
+    }
+  ]
+}

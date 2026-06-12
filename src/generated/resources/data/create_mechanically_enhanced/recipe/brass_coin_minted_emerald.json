@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "create_mechanically_enhanced:cat_coin_die"
+    },
+    {
+      "item": "create_mechanically_enhanced:brass_coin"
+    },
+    {
+      "item": "minecraft:emerald"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "create_mechanically_enhanced:brass_coin_minted_emerald"
+  }
+}

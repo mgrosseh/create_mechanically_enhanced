@@ -1,5 +1,8 @@
 {
   "values": [
-    "minecraft:gold_nugget"
+    "create_mechanically_enhanced:iron_coin_minted_amethyst",
+    "create_mechanically_enhanced:iron_coin_minted_diamond",
+    "create_mechanically_enhanced:iron_coin_minted_emerald",
+    "create_mechanically_enhanced:iron_coin_minted_experience"
   ]
 }
