@@ -46,7 +46,18 @@ public class CMETranslations {
     public static final LangEntry MECHANICAL_CAT_BONUS_HUNGER_REGEN = affixTooltip("mechanical_cat.bonus.hunger_regen", "Hunger Regen");
     public static final LangEntry MECHANICAL_CAT_BONUS_INTERACTION_RANGE = affixTooltip("mechanical_cat.bonus.interaction_range", "Extra Range");
 
+    public static final LangEntry CAT_COIN_TIER_0 = new StyledLangEntry("cat_coin.tier_0", "For crafting only",
+            c -> c.withStyle(ChatFormatting.GRAY));
+    public static final LangEntry CAT_COIN_TIER_1 = new StyledLangEntry("cat_coin.tier_1", "Tier 1",
+            c -> c.withStyle(ChatFormatting.GRAY));
+    public static final LangEntry CAT_COIN_TIER_2 = new StyledLangEntry("cat_coin.tier_2", "Tier 2",
+            c -> c.withStyle(ChatFormatting.GRAY));
+    public static final LangEntry CAT_COIN_TIER_3 = new StyledLangEntry("cat_coin.tier_3", "Tier 3",
+            c -> c.withStyle(ChatFormatting.GRAY));
+
     public static final LangEntry MECHANICAL_TOOL_DRILL_TYPE = new LangEntry("mechanical_tool.type.drill", " (Drill)");
+
+
 
     protected static LangEntry toolSlot(String key, String textEnglish) {
         return new StyledLangEntry(CreateMechanicallyEnhanced.MOD_ID + ".tool_slot", key, textEnglish,

@@ -2,6 +2,7 @@ package com.mirandnyan.cme;
 
 import com.mirandnyan.cme.content.equipment.mechanical_tool.MechanicalToolItem;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
+import com.mirandnyan.cme.content.items.TooltipItem;
 import com.mirandnyan.cme.content.items.cat_coin_die.CatCoinDieItem;
 import com.mirandnyan.cme.recipes.CreateRecipeUtil;
 import com.simibubi.create.AllCreativeModeTabs;
@@ -57,60 +58,73 @@ public class CMEItems {
     public static final ItemEntry<CatCoinDieItem> CAT_COIN_DIE = inTab(REGISTRATE.item("cat_coin_die", CatCoinDieItem::new)
             .defaultModel()
             .register());
-    public static final ItemEntry<Item> MINTED_COPPER_COIN = inTab(REGISTRATE.item("copper_coin", Item::new)
-            .properties(p -> p.rarity(Rarity.UNCOMMON))
-            .model(generated("cat_coins"))
-            .lang("Copper Coin")
-            // TODO: move recipe in here with a builder instead of create approach
-            .register());
+    public static final ItemEntry<TooltipItem> MINTED_COPPER_COIN = inTab(
+            REGISTRATE.item("copper_coin", p -> new TooltipItem(p, CMETranslations.CAT_COIN_TIER_1::resolveComponent))
+                    .properties(p -> p.rarity(Rarity.UNCOMMON))
+                    .model(generated("cat_coins"))
+                    .lang("Copper Coin")
+                    // TODO: move recipe in here with a builder instead of create approach
+                    .register());
 
-    public static final ItemEntry<Item> UNMINTED_IRON_COIN = inTab(REGISTRATE.item("iron_coin", Item::new)
-            .properties(p -> p.rarity(Rarity.UNCOMMON))
-            .recipe((ctx, prov) ->
-                    CreateRecipeUtil.deployer(CreateMechanicallyEnhanced.asResource(ctx.getName()))
-                            .require(AllItems.IRON_SHEET)
-                            .require(CAT_COIN_DIE)
-                            .toolNotConsumed()
-                            .output(ctx.getEntry())
-                            .build(prov))
-            .model(generated("cat_coins"))
-            .lang("Unminted Iron Coin")
-            .register());
+    public static final ItemEntry<TooltipItem> UNMINTED_IRON_COIN = inTab(
+            REGISTRATE.item("iron_coin", p -> new TooltipItem(p, CMETranslations.CAT_COIN_TIER_0::resolveComponent))
+                    .properties(p -> p.rarity(Rarity.UNCOMMON))
+                    .recipe((ctx, prov) ->
+                            CreateRecipeUtil.deployer(CreateMechanicallyEnhanced.asResource(ctx.getName()))
+                                    .require(AllItems.IRON_SHEET)
+                                    .require(CAT_COIN_DIE)
+                                    .toolNotConsumed()
+                                    .output(ctx.getEntry())
+                                    .build(prov))
+                    .model(generated("cat_coins"))
+                    .lang("Unminted Iron Coin")
+                    .register());
 
-    public static final ItemEntry<Item> MINTED_IRON_COIN = coin("iron_coin_minted", "Minted Iron Coin",
-            coin_recipe(UNMINTED_IRON_COIN));
-    public static final ItemEntry<Item> MINTED_IRON_COIN_AMETHYST = coin("iron_coin_minted_amethyst", "Minted Iron Coin (Amethyst)",
-            coin_recipe(UNMINTED_IRON_COIN, Items.AMETHYST_SHARD));
-    public static final ItemEntry<Item> MINTED_IRON_COIN_DIAMOND = coin("iron_coin_minted_diamond", "Minted Iron Coin (Diamond)",
-            coin_recipe(UNMINTED_IRON_COIN, Items.DIAMOND));
-    public static final ItemEntry<Item> MINTED_IRON_COIN_EMERALD = coin("iron_coin_minted_emerald", "Minted Iron Coin (Emerald)",
-            coin_recipe(UNMINTED_IRON_COIN, Items.EMERALD));
-    public static final ItemEntry<Item> MINTED_IRON_COIN_EXPERIENCE = coin("iron_coin_minted_experience", "Minted Iron Coin (Experience)",
-            coin_recipe(UNMINTED_IRON_COIN, AllItems.EXP_NUGGET));
+    public static final ItemEntry<TooltipItem> MINTED_IRON_COIN =
+            coin("iron_coin_minted", "Minted Iron Coin", CMETranslations.CAT_COIN_TIER_1,
+                    coin_recipe(UNMINTED_IRON_COIN));
+    public static final ItemEntry<TooltipItem> MINTED_IRON_COIN_AMETHYST =
+            coin("iron_coin_minted_amethyst", "Minted Iron Coin (Amethyst)", CMETranslations.CAT_COIN_TIER_2,
+                    coin_recipe(UNMINTED_IRON_COIN, Items.AMETHYST_SHARD));
+    public static final ItemEntry<TooltipItem> MINTED_IRON_COIN_DIAMOND =
+            coin("iron_coin_minted_diamond", "Minted Iron Coin (Diamond)", CMETranslations.CAT_COIN_TIER_2,
+                    coin_recipe(UNMINTED_IRON_COIN, Items.DIAMOND));
+    public static final ItemEntry<TooltipItem> MINTED_IRON_COIN_EMERALD =
+            coin("iron_coin_minted_emerald", "Minted Iron Coin (Emerald)", CMETranslations.CAT_COIN_TIER_2,
+                    coin_recipe(UNMINTED_IRON_COIN, Items.EMERALD));
+    public static final ItemEntry<TooltipItem> MINTED_IRON_COIN_EXPERIENCE =
+            coin("iron_coin_minted_experience", "Minted Iron Coin (Experience)", CMETranslations.CAT_COIN_TIER_2,
+                    coin_recipe(UNMINTED_IRON_COIN, AllItems.EXP_NUGGET));
 
-    public static final ItemEntry<Item> UNMINTED_BRASS_COIN = inTab(REGISTRATE.item("brass_coin", Item::new)
-            .properties(p -> p.rarity(Rarity.UNCOMMON))
-            .model(generated("cat_coins"))
-            .recipe((ctx, prov) ->
-                    CreateRecipeUtil.deployer(CreateMechanicallyEnhanced.asResource(ctx.getName()))
-                            .require(AllItems.BRASS_SHEET)
-                            .require(CAT_COIN_DIE)
-                            .toolNotConsumed()
-                            .output(ctx.getEntry())
-                            .build(prov))
-            .lang("Unminted Brass Coin")
-            .register());
+    public static final ItemEntry<TooltipItem> UNMINTED_BRASS_COIN = inTab(
+            REGISTRATE.item("brass_coin", p -> new TooltipItem(p, CMETranslations.CAT_COIN_TIER_0::resolveComponent))
+                    .properties(p -> p.rarity(Rarity.UNCOMMON))
+                    .model(generated("cat_coins"))
+                    .recipe((ctx, prov) ->
+                            CreateRecipeUtil.deployer(CreateMechanicallyEnhanced.asResource(ctx.getName()))
+                                    .require(AllItems.BRASS_SHEET)
+                                    .require(CAT_COIN_DIE)
+                                    .toolNotConsumed()
+                                    .output(ctx.getEntry())
+                                    .build(prov))
+                    .lang("Unminted Brass Coin")
+                    .register());
 
-    public static final ItemEntry<Item> MINTED_BRASS_COIN = coin("brass_coin_minted", "Minted Brass Coin",
-            coin_recipe(UNMINTED_BRASS_COIN));
-    public static final ItemEntry<Item> MINTED_BRASS_COIN_AMETHYST = coin("brass_coin_minted_amethyst", "Minted Brass Coin (Amethyst)",
-            coin_recipe(UNMINTED_BRASS_COIN, Items.AMETHYST_SHARD));
-    public static final ItemEntry<Item> MINTED_BRASS_COIN_DIAMOND = coin("brass_coin_minted_diamond", "Minted Brass Coin (Diamond)",
-            coin_recipe(UNMINTED_BRASS_COIN, Items.DIAMOND));
-    public static final ItemEntry<Item> MINTED_BRASS_COIN_EMERALD = coin("brass_coin_minted_emerald", "Minted Brass Coin (Emerald)",
-            coin_recipe(UNMINTED_BRASS_COIN, Items.EMERALD));
-    public static final ItemEntry<Item> MINTED_BRASS_COIN_EXPERIENCE = coin("brass_coin_minted_experience", "Minted Brass Coin (Experience)",
-            coin_recipe(UNMINTED_BRASS_COIN, AllItems.EXP_NUGGET));
+    public static final ItemEntry<TooltipItem> MINTED_BRASS_COIN =
+            coin("brass_coin_minted", "Minted Brass Coin", CMETranslations.CAT_COIN_TIER_1,
+                    coin_recipe(UNMINTED_BRASS_COIN));
+    public static final ItemEntry<TooltipItem> MINTED_BRASS_COIN_AMETHYST =
+            coin("brass_coin_minted_amethyst", "Minted Brass Coin (Amethyst)", CMETranslations.CAT_COIN_TIER_3,
+                    coin_recipe(UNMINTED_BRASS_COIN, Items.AMETHYST_SHARD));
+    public static final ItemEntry<TooltipItem> MINTED_BRASS_COIN_DIAMOND =
+            coin("brass_coin_minted_diamond", "Minted Brass Coin (Diamond)", CMETranslations.CAT_COIN_TIER_3,
+                    coin_recipe(UNMINTED_BRASS_COIN, Items.DIAMOND));
+    public static final ItemEntry<TooltipItem> MINTED_BRASS_COIN_EMERALD =
+            coin("brass_coin_minted_emerald", "Minted Brass Coin (Emerald)", CMETranslations.CAT_COIN_TIER_3,
+                    coin_recipe(UNMINTED_BRASS_COIN, Items.EMERALD));
+    public static final ItemEntry<TooltipItem> MINTED_BRASS_COIN_EXPERIENCE =
+            coin("brass_coin_minted_experience", "Minted Brass Coin (Experience)", CMETranslations.CAT_COIN_TIER_3,
+                    coin_recipe(UNMINTED_BRASS_COIN, AllItems.EXP_NUGGET));
 
     private static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateRecipeProvider> coin_recipe(ItemLike unminted) {
         return (ctx, prov) ->
@@ -121,7 +135,7 @@ public class CMEItems {
         // TODO advancements
     }
 
-    private static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateRecipeProvider> coin_recipe(ItemEntry<Item> coin, ItemLike mint) {
+    private static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateRecipeProvider> coin_recipe(ItemLike coin, ItemLike mint) {
         return (ctx, prov) ->
                 new SequencedAssemblyRecipeBuilder(CreateMechanicallyEnhanced.asResource("coin_minting", ctx.getName()))
                         .require(coin)
@@ -134,8 +148,9 @@ public class CMEItems {
         // TODO advancements
     }
 
-    private static ItemEntry<Item> coin(String name, String lang, NonNullBiConsumer<DataGenContext<Item, Item>, RegistrateRecipeProvider> cons) {
-        return inTab(REGISTRATE.item(name, Item::new)
+    private static ItemEntry<TooltipItem> coin(String name, String lang, CMETranslations.LangEntry entry,
+                                               NonNullBiConsumer<DataGenContext<Item, TooltipItem>, RegistrateRecipeProvider> cons) {
+        return inTab(REGISTRATE.item(name, p -> new TooltipItem(p, entry::resolveComponent))
                 .properties(p -> p.rarity(Rarity.UNCOMMON))
                 .model(generated("cat_coins"))
                 .recipe(cons)

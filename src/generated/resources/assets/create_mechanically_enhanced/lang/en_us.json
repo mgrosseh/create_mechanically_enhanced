@@ -1,5 +1,9 @@
 {
   "block.create_mechanically_enhanced.food_replicator": "Food Replicator",
+  "create_mechanically_enhanced.cat_coin.tier_0": "For crafting only",
+  "create_mechanically_enhanced.cat_coin.tier_1": "Tier 1",
+  "create_mechanically_enhanced.cat_coin.tier_2": "Tier 2",
+  "create_mechanically_enhanced.cat_coin.tier_3": "Tier 3",
   "create_mechanically_enhanced.mechanical_tool.type.drill": " (Drill)",
   "create_mechanically_enhanced.scroll_value_behaviour.analog_scoll_value": "Analog Value",
   "create_mechanically_enhanced.tool_slot.cog": "Cog",
