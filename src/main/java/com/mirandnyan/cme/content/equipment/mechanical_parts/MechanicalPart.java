@@ -99,7 +99,7 @@ public class MechanicalPart {
     public static final RegistryEntry<MechanicalPart, MechanicalPart> ANDESITE_GEARBOX = register("andesite_gearbox",
             MechanicalToolSlot.GEARBOX_SLOT,
             CMEItems.SMALL_ANDESITE_VERTICAL_GEARBOX,
-            new MechanicalPartData(0.2f) {
+            new MechanicalPartData(0.15f) {
                 @Override
                 public int getTransferRatio() {
                     return MechanicalToolItem.DEFAULT_TRANSFER_RATIO;

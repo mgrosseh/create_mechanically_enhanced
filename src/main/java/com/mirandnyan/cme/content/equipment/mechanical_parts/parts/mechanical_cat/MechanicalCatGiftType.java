@@ -14,9 +14,9 @@ import java.util.function.IntFunction;
 
 public enum MechanicalCatGiftType implements StringRepresentable {
     DOUBLE_DROPS(0, 3),
-    EXPERIENCE(DOUBLE_DROPS.endWeight, 30),
-    CASHBACK(EXPERIENCE.endWeight, 8),
-    JACKPOT(CASHBACK.endWeight, 10);
+    EXPERIENCE(DOUBLE_DROPS.endWeight, 74),
+    CASHBACK(EXPERIENCE.endWeight, 18),
+    JACKPOT(CASHBACK.endWeight, 5);
 
     private final int startWeight;
     private final int endWeight;

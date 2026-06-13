@@ -10,6 +10,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.HashMap;
 import java.util.function.Supplier;
 
 public class CMEMobEffects {
@@ -17,8 +18,10 @@ public class CMEMobEffects {
             BuiltInRegistries.MOB_EFFECT, CreateMechanicallyEnhanced.MOD_ID
     );
 
+    public static HashMap<Holder<MobEffect>, CMETranslations.LangEntry> translations = new HashMap<>();
+
     public static final Holder<MobEffect> RANGE_BLESSING = register(
-            "range_blessing",
+            "range_blessing", "Range Blessing",
             () -> new MyMobEffect(MobEffectCategory.BENEFICIAL, 3402751) // TODO color
                     .addAttributeModifier(
                             Attributes.BLOCK_INTERACTION_RANGE, CreateMechanicallyEnhanced.asResource("effect.range_blessing"),
@@ -26,13 +29,18 @@ public class CMEMobEffects {
                     )
     );
     public static final Holder<MobEffect> HUNGER_REGENERATION = register(
-            "hunger_regeneration",
+            "hunger_regeneration", "Hunger Regeneration",
             () -> new HungerRegenerationMobEffect(MobEffectCategory.BENEFICIAL, 3402751) // TODO color
     );
 
 
-    private static Holder<MobEffect> register(String name, Supplier<MobEffect> effect) {
-        return REGISTRY.register(name, effect);
+    private static Holder<MobEffect> register(String name, String lang, Supplier<MobEffect> effect) {
+        var holder = REGISTRY.register(name, effect);
+        translations.put(
+                holder,
+                new CMETranslations.LangEntry("effect." + CreateMechanicallyEnhanced.MOD_ID, name, lang)
+        );
+        return holder;
     }
 
     public static void register(IEventBus modEventBus) {

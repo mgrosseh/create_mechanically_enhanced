@@ -1,6 +1,7 @@
 package com.mirandnyan.cme.content.equipment.mechanical_parts.parts;
 
 import com.mirandnyan.cme.CMEDataComponents;
+import com.mirandnyan.cme.CMEItems;
 import com.mirandnyan.cme.CMETags;
 import com.mirandnyan.cme.CMETranslations;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
@@ -26,6 +27,7 @@ import net.minecraft.util.Unit;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
@@ -49,6 +51,13 @@ import java.util.List;
 @EventBusSubscriber
 public class MechanicalCatPartData extends MechanicalPartData {
     private static int i = 0;
+
+    /*
+    TODO:
+    - BUG: effects overwrite other effects of same type
+    - Model fix-up
+    - Maybe make gifts effect probability depend on block strength of block
+     */
 
     private static final int CAT = i++;
     private static final int COG = i++;
@@ -83,7 +92,7 @@ public class MechanicalCatPartData extends MechanicalPartData {
 
     protected static void playCatSound(Level level, @Nullable Player player, Vec3 position, SoundEvent sound) {
         // TODO: local
-        level.playSound(player, position.x(), position.y() + 1, position.z(), sound, SoundSource.PLAYERS,
+        level.playSound(player, position.x() + 0.5, position.y() + 1, position.z() + 0.5, sound, SoundSource.PLAYERS,
                 .8f + level.random.nextFloat() * .125f, .75f - level.random.nextFloat() * .25f);
     }
 
@@ -98,6 +107,8 @@ public class MechanicalCatPartData extends MechanicalPartData {
         playCatSound(level, player, player.position(), SoundEvents.CAT_STRAY_AMBIENT);
         if (!player.isCreative())
             food.shrink(1);
+        if (level.isClientSide)
+            return true;
         var bonus = getRandomBonus(player.level().getRandom(), valueSkew);
         stack.set(CMEDataComponents.MECHANICAL_CAT_BONUS, bonus);
         stack.set(CMEDataComponents.MECHANICAL_CAT_APPLY_BONUS, Unit.INSTANCE);
@@ -200,10 +211,11 @@ public class MechanicalCatPartData extends MechanicalPartData {
     public void brokeBlock(ServerPlayer player, ItemStack item, BlockEvent.BreakEvent event) {
         var bonus = item.get(CMEDataComponents.MECHANICAL_CAT_BONUS);
         if (bonus == MechanicalCatBonusType.GIFTS) {
-            if (Mth.randomBetweenInclusive(event.getLevel().getRandom(), 0, 100) < bonus.amplitude) {
+            var speed = Math.clamp(event.getState().getDestroySpeed(event.getLevel(), event.getPos()), 0.5, 5);
+            var mul = (11 - speed * 2) / 4f;
+            if (Mth.randomBetweenInclusive(event.getLevel().getRandom(), 0, (int) (100 * mul)) < bonus.amplitude) {
                 var gift = MechanicalCatGiftType.random(event.getLevel().getRandom());
                 item.set(CMEDataComponents.MECHANICAL_CAT_GIVE_GIFT, gift);
-                handleGifts(player, item, gift, Either.left(event));
             }
         }
     }
@@ -224,28 +236,12 @@ public class MechanicalCatPartData extends MechanicalPartData {
                 continue;
             var data = (MechanicalCatPartData) part.get().get().data;
             //noinspection DataFlowIssue // cant be null since item.has guard
-            data.handleGifts(player, item, item.get(CMEDataComponents.MECHANICAL_CAT_GIVE_GIFT), Either.right(event));
+            data.handleGifts(player, item, item.get(CMEDataComponents.MECHANICAL_CAT_GIVE_GIFT), event);
         }
     }
 
     protected void handleGifts(@NotNull ServerPlayer player, @NotNull ItemStack item, @NotNull MechanicalCatGiftType gift,
-                               Either<BlockEvent.BreakEvent, BlockDropsEvent> eitherEvent) {
-        if (eitherEvent.left().isPresent()) {
-            var event = eitherEvent.left().get();
-
-            switch (gift) {
-                case EXPERIENCE, DOUBLE_DROPS -> {} // handled below
-            }
-             // TODO
-            return;
-        }
-
-        // (some server processing)
-        if (eitherEvent.right().isEmpty())
-            return; // impossible
-
-        var event = eitherEvent.right().get();
-
+                               BlockDropsEvent event) {
         var level = event.getLevel();
         switch (gift) {
             case EXPERIENCE -> {
@@ -254,6 +250,8 @@ public class MechanicalCatPartData extends MechanicalPartData {
             case DOUBLE_DROPS -> {
                 // TODO: tag to forbid certain duplications
                 var drops = event.getDrops();
+                if (drops.isEmpty())
+                    break;
                 var other_drops = new ArrayList<>(drops);
                 for (var drop : other_drops) {
                     var copy = drop.copy();
@@ -266,6 +264,39 @@ public class MechanicalCatPartData extends MechanicalPartData {
                     copy.setPos(d1, d2, d3);
 
                     drops.add(copy);
+                }
+                playCatSound(event.getLevel(), player, drops.getFirst().position(), SoundEvents.AMETHYST_CLUSTER_HIT);
+            }
+            case CASHBACK -> {
+                var drops = event.getDrops();
+                if (drops.isEmpty())
+                    break;
+                var pos = drops.getFirst().position();
+                double d1 = pos.x() + Mth.nextDouble(level.random, -0.25, 0.25);
+                double d3 = pos.z() + Mth.nextDouble(level.random, -0.25, 0.25);
+                var coin = new ItemEntity(event.getLevel(), d1, pos.y(), d3, CMEItems.MINTED_COPPER_COIN.asStack());
+                drops.add(coin);
+            }
+            case JACKPOT -> {
+                var drops = event.getDrops();
+                if (drops.isEmpty())
+                    break;
+                var pos = drops.getFirst().position();
+                var max = Mth.randomBetweenInclusive(level.getRandom(), 1, 5);
+                ItemStack[] coins = new ItemStack[]{
+                        CMEItems.MINTED_COPPER_COIN.asStack(),
+                        CMEItems.MINTED_BRASS_COIN.asStack(),
+                        CMEItems.MINTED_IRON_COIN.asStack(),
+                        CMEItems.MINTED_IRON_COIN_DIAMOND.asStack(),
+                        CMEItems.MINTED_IRON_COIN_AMETHYST.asStack(),
+                        CMEItems.MINTED_BRASS_COIN_AMETHYST.asStack(),
+                };
+                for (int i = 0; i < max; i++) {
+                    var coinStack = coins[Mth.randomBetweenInclusive(level.getRandom(), 0, coins.length - 1)];
+                    double d1 = pos.x() + Mth.nextDouble(level.getRandom(), -0.25, 0.25);
+                    double d3 = pos.z() + Mth.nextDouble(level.getRandom(), -0.25, 0.25);
+                    var coin = new ItemEntity(event.getLevel(), d1, pos.y(), d3, coinStack);
+                    drops.add(coin);
                 }
             }
         }

@@ -18,8 +18,8 @@ import java.util.function.IntFunction;
 public enum MechanicalCatBonusType implements StringRepresentable {
     NONE(-1, 0),
     FORTUNE(2, 60 * 20, 4),
-    GIFTS(2, 60 * 20, 10),
-    GLOWING(0, 8 * 20, MobEffects.GLOWING, 0),
+    GIFTS(2, 60 * 20, 15),
+    GLOWING(0, 6 * 20, MobEffects.GLOWING, 0),
     HASTE(1, 30 * 20, MobEffects.DIG_SPEED, 0),
     HUNGER_REGEN(1, 10 * 20, CMEMobEffects.HUNGER_REGENERATION, 3),
     BLOCK_INTERACTION_RANGE(1, 30 * 20, CMEMobEffects.RANGE_BLESSING, 0);
