@@ -10,14 +10,12 @@ import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.mechanical_cat.MechanicalCatBonusType;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.mechanical_cat.MechanicalCatGiftType;
 import com.mirandnyan.cme.util.AttributeHelpers;
+import com.mirandnyan.cme.util.SoundEventComponent;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.datafixers.util.Either;
 import com.mojang.math.Axis;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -92,10 +90,18 @@ public class MechanicalCatPartData extends MechanicalPartData {
         removeBonus(tool, null);
     }
 
-    protected static void playCatSound(Level level, @Nullable Player player, Vec3 position, SoundEvent sound) {
-        // TODO: local
-        level.playSound(player, position.x() + 0.5, position.y() + 1, position.z() + 0.5, sound, SoundSource.PLAYERS,
-                .8f + level.random.nextFloat() * .125f, .75f - level.random.nextFloat() * .25f);
+    protected static void playCatSound(Level level, @Nullable Player player, @Nullable ItemStack item, Vec3 position, SoundEvent sound) {
+        var newPos = position.add(0.5, 1, 0.5);
+        var volume = .5f + level.random.nextFloat() * .125f;
+        var pitch = .75f - level.random.nextFloat() * .25f;
+        if (level.isClientSide) {
+            level.playSound(player, newPos.x, newPos.y, newPos.z, sound, SoundSource.PLAYERS, volume, pitch);
+            return;
+        }
+        if (item == null)
+            return;// TODO log maybe
+
+        item.set(CMEDataComponents.MECHANICAL_CAT_PLAY_SOUND, new SoundEventComponent(sound, newPos, volume, pitch));
     }
 
     protected boolean tryEat(ItemStack stack, ItemStack food, Player player, int valueSkew) {
@@ -103,16 +109,15 @@ public class MechanicalCatPartData extends MechanicalPartData {
 
         var level = player.level();
         if (hasBonus(stack, gameTime)) {
-            playCatSound(level, player, player.position(), SoundEvents.CAT_HISS);
+            playCatSound(level, player, stack, player.position(), SoundEvents.CAT_HISS);
             return true;
         }
-        playCatSound(level, player, player.position(), SoundEvents.CAT_STRAY_AMBIENT);
+        playCatSound(level, player, stack, player.position(), SoundEvents.CAT_STRAY_AMBIENT);
         if (!player.isCreative())
             food.shrink(1);
         if (level.isClientSide)
             return true;
         var bonus = getRandomBonus(player.level().getRandom(), valueSkew);
-        bonus = MechanicalCatBonusType.GIFTS;
         stack.set(CMEDataComponents.MECHANICAL_CAT_BONUS, bonus);
         stack.set(CMEDataComponents.MECHANICAL_CAT_APPLY_BONUS, Unit.INSTANCE);
 
@@ -204,9 +209,21 @@ public class MechanicalCatPartData extends MechanicalPartData {
             }
         }
 
+        var maybe_player = entity instanceof Player player ? player : null;
+
+        if (stack.has(CMEDataComponents.MECHANICAL_CAT_PLAY_SOUND)) {
+            var event = stack.get(CMEDataComponents.MECHANICAL_CAT_PLAY_SOUND);
+            stack.remove(CMEDataComponents.MECHANICAL_CAT_PLAY_SOUND);
+            if (level.isClientSide) {
+                //noinspection DataFlowIssue // we are in a has block...
+                level.playSound(maybe_player, event.position().x, event.position().y, event.position().z,
+                        event.sound(), SoundSource.PLAYERS, event.volume(), event.pitch());
+            }
+        }
+
         if (bonusTime == null || bonusTime > gameTime)
             return;
-        playCatSound(level, entity instanceof Player player ? player : null, entity.position(), SoundEvents.CAT_BEG_FOR_FOOD);
+        playCatSound(level, maybe_player, stack, entity.position(), SoundEvents.CAT_BEG_FOR_FOOD);
         removeBonus(stack, entity instanceof LivingEntity living ? living : null);
     }
 
@@ -268,10 +285,7 @@ public class MechanicalCatPartData extends MechanicalPartData {
 
                     drops.add(copy);
                 }
-                var pos = drops.getFirst().position();
-                // TODO: add item component and play sound /partice in inv tick
-                event.getLevel().addParticle(ParticleTypes.FIREWORK, pos.x, pos.y, pos.z, 0, 0, 0);
-                playCatSound(event.getLevel(), player, drops.getFirst().position(), SoundEvents.NOTE_BLOCK_BIT.value());
+                playCatSound(event.getLevel(), player, item, drops.getFirst().position(), SoundEvents.NOTE_BLOCK_BIT.value());
             }
             case CASHBACK -> {
                 var drops = event.getDrops();
