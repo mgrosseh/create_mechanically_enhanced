@@ -90,18 +90,11 @@ public class MechanicalCatPartData extends MechanicalPartData {
         removeBonus(tool, null);
     }
 
-    protected static void playCatSound(Level level, @Nullable Player player, @Nullable ItemStack item, Vec3 position, SoundEvent sound) {
+    protected static void playCatSound(Level level, Vec3 position, SoundEvent sound) {
         var newPos = position.add(0.5, 1, 0.5);
-        var volume = .5f + level.random.nextFloat() * .125f;
+        var volume = .65f + level.random.nextFloat() * .125f;
         var pitch = .75f - level.random.nextFloat() * .25f;
-        if (level.isClientSide) {
-            level.playSound(player, newPos.x, newPos.y, newPos.z, sound, SoundSource.PLAYERS, volume, pitch);
-            return;
-        }
-        if (item == null)
-            return;// TODO log maybe
-
-        item.set(CMEDataComponents.MECHANICAL_CAT_PLAY_SOUND, new SoundEventComponent(sound, newPos, volume, pitch));
+        level.playSound(null, newPos.x, newPos.y, newPos.z, sound, SoundSource.PLAYERS, volume, pitch);
     }
 
     protected boolean tryEat(ItemStack stack, ItemStack food, Player player, int valueSkew) {
@@ -109,10 +102,10 @@ public class MechanicalCatPartData extends MechanicalPartData {
 
         var level = player.level();
         if (hasBonus(stack, gameTime)) {
-            playCatSound(level, player, stack, player.position(), SoundEvents.CAT_HISS);
+            playCatSound(level, player.position(), SoundEvents.CAT_HISS);
             return true;
         }
-        playCatSound(level, player, stack, player.position(), SoundEvents.CAT_STRAY_AMBIENT);
+        playCatSound(level, player.position(), SoundEvents.CAT_STRAY_AMBIENT);
         if (!player.isCreative())
             food.shrink(1);
         if (level.isClientSide)
@@ -209,21 +202,9 @@ public class MechanicalCatPartData extends MechanicalPartData {
             }
         }
 
-        var maybe_player = entity instanceof Player player ? player : null;
-
-        if (stack.has(CMEDataComponents.MECHANICAL_CAT_PLAY_SOUND)) {
-            var event = stack.get(CMEDataComponents.MECHANICAL_CAT_PLAY_SOUND);
-            stack.remove(CMEDataComponents.MECHANICAL_CAT_PLAY_SOUND);
-            if (level.isClientSide) {
-                //noinspection DataFlowIssue // we are in a has block...
-                level.playSound(maybe_player, event.position().x, event.position().y, event.position().z,
-                        event.sound(), SoundSource.PLAYERS, event.volume(), event.pitch());
-            }
-        }
-
         if (bonusTime == null || bonusTime > gameTime)
             return;
-        playCatSound(level, maybe_player, stack, entity.position(), SoundEvents.CAT_BEG_FOR_FOOD);
+        playCatSound(level, entity.position(), SoundEvents.CAT_BEG_FOR_FOOD);
         removeBonus(stack, entity instanceof LivingEntity living ? living : null);
     }
 
@@ -285,7 +266,7 @@ public class MechanicalCatPartData extends MechanicalPartData {
 
                     drops.add(copy);
                 }
-                playCatSound(event.getLevel(), player, item, drops.getFirst().position(), SoundEvents.NOTE_BLOCK_BIT.value());
+                playCatSound(event.getLevel(), drops.getFirst().position(), SoundEvents.NOTE_BLOCK_BIT.value());
             }
             case CASHBACK -> {
                 var drops = event.getDrops();

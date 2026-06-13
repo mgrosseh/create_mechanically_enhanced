@@ -17,6 +17,8 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -32,6 +34,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -70,6 +73,14 @@ public class MechanicalBlazePartData extends MechanicalPartData {
 
     public MechanicalBlazePartData() {
         super(0.3f);
+    }
+
+
+    protected static void playBlazeSound(Level level, Vec3 position, SoundEvent sound) {
+        var newPos = position.add(0.5, 0, 0.5);
+        var volume = .65f + level.random.nextFloat() * .125f;
+        var pitch = .75f - level.random.nextFloat() * .25f;
+        level.playSound(null, newPos.x, newPos.y, newPos.z, sound, SoundSource.PLAYERS, volume, pitch);
     }
 
     @Override
