@@ -16,6 +16,8 @@ import com.mojang.math.Axis;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -110,6 +112,7 @@ public class MechanicalCatPartData extends MechanicalPartData {
         if (level.isClientSide)
             return true;
         var bonus = getRandomBonus(player.level().getRandom(), valueSkew);
+        bonus = MechanicalCatBonusType.GIFTS;
         stack.set(CMEDataComponents.MECHANICAL_CAT_BONUS, bonus);
         stack.set(CMEDataComponents.MECHANICAL_CAT_APPLY_BONUS, Unit.INSTANCE);
 
@@ -265,7 +268,10 @@ public class MechanicalCatPartData extends MechanicalPartData {
 
                     drops.add(copy);
                 }
-                playCatSound(event.getLevel(), player, drops.getFirst().position(), SoundEvents.AMETHYST_CLUSTER_HIT);
+                var pos = drops.getFirst().position();
+                // TODO: add item component and play sound /partice in inv tick
+                event.getLevel().addParticle(ParticleTypes.FIREWORK, pos.x, pos.y, pos.z, 0, 0, 0);
+                playCatSound(event.getLevel(), player, drops.getFirst().position(), SoundEvents.NOTE_BLOCK_BIT.value());
             }
             case CASHBACK -> {
                 var drops = event.getDrops();

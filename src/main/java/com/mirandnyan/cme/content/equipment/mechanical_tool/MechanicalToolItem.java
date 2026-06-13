@@ -46,7 +46,6 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
     public static final int INTERNAL_AIR_COLOR = 0x9090F0;
 
     // TODO: insta mining Deepslate Requires mining_efficiency of ~80 or more, make possible
-    // TODO: more attributes
     // TODO: pose is weird (crossing) when in offhand: extendo grip, crossbow, other mechanical tool
     // TODO: enchants: unbreaking (for when no air)
     // TODO: no anvil
@@ -54,6 +53,7 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
     // TODO: parts: incompatible with tag
     // TODO: add right click (as opposed to right hold = refill) as an action parts can access
     // TODO: right / left click on drill in inventory
+    // TODO: sound when air empty
 
     // TODO: head: explosion generator, saw
 
