@@ -32,6 +32,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -93,6 +94,20 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         super(properties.rarity(Rarity.UNCOMMON).stacksTo(1));
     }
 
+
+    @SubscribeEvent
+    public static void entityTick(EntityTickEvent.Post event) {
+        if (!(event.getEntity() instanceof Player player))
+            return;
+        ItemStack stack = player.getMainHandItem(); // TODO offhand too with boolean
+
+        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        for (var slot : slots) {
+            slot.getPart().ifPresent(p -> p.get().data.playerTick(
+                    player, stack
+            ));
+        }
+    }
     // -- Breaking Blocks with Item --
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void consumeDurabilityOnBlockBreak(BlockEvent.BreakEvent event) {
