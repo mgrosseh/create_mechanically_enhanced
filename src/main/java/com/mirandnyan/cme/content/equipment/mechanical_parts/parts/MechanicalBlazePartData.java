@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.Entity;
@@ -76,11 +77,15 @@ public class MechanicalBlazePartData extends MechanicalPartData {
     }
 
 
-    protected static void playBlazeSound(Level level, Vec3 position, SoundEvent sound) {
-        var newPos = position.add(0.5, 0, 0.5);
-        var volume = .65f + level.random.nextFloat() * .125f;
-        var pitch = .75f - level.random.nextFloat() * .25f;
+    protected static void playBlazeSound(Level level, Vec3 position, SoundEvent sound, float base_volume, float base_pitch) {
+        var newPos = position.add(0.5, 1, 0.5);
+        var volume = base_volume + level.random.nextFloat() * .125f;
+        var pitch = base_pitch - level.random.nextFloat() * .25f;
         level.playSound(null, newPos.x, newPos.y, newPos.z, sound, SoundSource.PLAYERS, volume, pitch);
+        // TODO: make sound more robotic
+    }
+    protected static void playBlazeSound(Level level, Vec3 position, SoundEvent sound) {
+        playBlazeSound(level, position, sound, .125f, 1.55f);
     }
 
     @Override
@@ -95,13 +100,17 @@ public class MechanicalBlazePartData extends MechanicalPartData {
             if (infinite && superheated) {
                 stack.remove(CMEDataComponents.BLAZE_BURNING_INFINITE);
                 stack.remove(CMEDataComponents.BLAZE_BURNING_SUPER);
+                playBlazeSound(player.level(), player.position(), SoundEvents.FIRE_EXTINGUISH);
             }
             else if (!infinite) {
                 stack.remove(CMEDataComponents.BLAZE_BURNING_SUPER);
                 stack.set(CMEDataComponents.BLAZE_BURNING_INFINITE, Unit.INSTANCE);
+                playBlazeSound(player.level(), player.position(), SoundEvents.BLAZE_SHOOT);
             }
-            else
+            else {
                 stack.set(CMEDataComponents.BLAZE_BURNING_SUPER, Unit.INSTANCE);
+                playBlazeSound(player.level(), player.position(), SoundEvents.BLAZE_SHOOT);
+            }
 
             updateHeatAttribute(player, stack);
             return true;
@@ -116,6 +125,7 @@ public class MechanicalBlazePartData extends MechanicalPartData {
         if (superheatedFuel != null) {
             stack.set(CMEDataComponents.BLAZE_BURNING_TIME, gameTime + superheatedFuel.burnTime());
             stack.set(CMEDataComponents.BLAZE_BURNING_SUPER, Unit.INSTANCE);
+            playBlazeSound(player.level(), player.position(), SoundEvents.BLAZE_SHOOT);
 
             if (!player.isCreative())
                 other.shrink(1);
@@ -137,6 +147,7 @@ public class MechanicalBlazePartData extends MechanicalPartData {
         if (normalFuel != null) {
             long time = stack.getOrDefault(CMEDataComponents.BLAZE_BURNING_TIME, gameTime);
             stack.set(CMEDataComponents.BLAZE_BURNING_TIME, time + normalFuel.burnTime());
+            playBlazeSound(player.level(), player.position(), SoundEvents.BLAZE_SHOOT);
 
             if (!player.isCreative())
                 other.shrink(1);
@@ -160,6 +171,10 @@ public class MechanicalBlazePartData extends MechanicalPartData {
             stack.remove(CMEDataComponents.BLAZE_BURNING_TIME);
             if (entity instanceof Player player)
                 updateHeatAttribute(player, stack);
+        }
+
+        if ((time - level.getGameTime()) == 30 * 20) {
+            playBlazeSound(level, entity.position(), SoundEvents.BLAZE_AMBIENT);
         }
     }
 
