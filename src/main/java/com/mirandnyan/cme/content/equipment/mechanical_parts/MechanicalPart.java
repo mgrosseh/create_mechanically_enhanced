@@ -99,22 +99,12 @@ public class MechanicalPart {
     public static final RegistryEntry<MechanicalPart, MechanicalPart> ANDESITE_GEARBOX = register("andesite_gearbox",
             MechanicalToolSlot.GEARBOX_SLOT,
             CMEItems.SMALL_ANDESITE_VERTICAL_GEARBOX,
-            new MechanicalPartData(0.15f) {
-                @Override
-                public int getTransferRatio() {
-                    return MechanicalToolItem.DEFAULT_TRANSFER_RATIO;
-                }
-            }
+            new MechanicalGearboxPartData(MechanicalToolItem.DEFAULT_TRANSFER_RATIO)
     );
     public static final RegistryEntry<MechanicalPart, MechanicalPart> BRASS_GEARBOX = register("brass_gearbox",
             MechanicalToolSlot.GEARBOX_SLOT,
             CMEItems.SMALL_BRASS_VERTICAL_GEARBOX,
-            new MechanicalPartData(0.2f) {
-                @Override
-                public int getTransferRatio() {
-                    return MechanicalToolItem.DEFAULT_TRANSFER_RATIO / 2;
-                }
-            }
+            new MechanicalGearboxPartData(MechanicalToolItem.DEFAULT_TRANSFER_RATIO / 2)
     );
 
 

@@ -28,6 +28,12 @@ public class CMEDataComponents {
 builder -> builder.persistent(FilledToolSlot.CODEC.listOf()).networkSynchronized(CatnipStreamCodecBuilders.list(FilledToolSlot.STREAM_CODEC))
     );
 
+
+    public static final DataComponentType<Integer> AIR_TRANSFER_RATIO = register(
+            "air_transfer_ratio",
+            builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT)
+    );
+
     public static final DataComponentType<Integer> PRESSURIZED_AIR = register(
       "pressurized_air",
             builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT)
@@ -69,10 +75,6 @@ builder -> builder.persistent(FilledToolSlot.CODEC.listOf()).networkSynchronized
     public static final DataComponentType<MechanicalCatGiftType> MECHANICAL_CAT_GIVE_GIFT = register(
             "mechanical_cat_give_gift",
             builder -> builder.persistent(MechanicalCatGiftType.CODEC).networkSynchronized(MechanicalCatGiftType.STREAM_CODEC)
-    );
-    public static final DataComponentType<SoundEventComponent> MECHANICAL_CAT_PLAY_SOUND = register(
-            "mechanical_cat_play_sound",
-            builder -> builder.persistent(SoundEventComponent.CODEC).networkSynchronized(SoundEventComponent.STREAM_CODEC)
     );
 
     public static final DataComponentType<String> LAST_TOOL_HOLDER_NAME = register(

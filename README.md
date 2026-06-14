@@ -12,6 +12,8 @@ as well as enhanced food that can be imbued with potion effects.
 # Additions
 
 # About
-Made by Mirandnyan and Frizi.
+Made by Mirandnyan.
+
+Big thanks to Frizi for the BlockBench plugin and helpful debugging sessions and ideas.
 
 No AI used to make this mod.

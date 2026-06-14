@@ -10,7 +10,6 @@ import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.mechanical_cat.MechanicalCatBonusType;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.mechanical_cat.MechanicalCatGiftType;
 import com.mirandnyan.cme.util.AttributeHelpers;
-import com.mirandnyan.cme.util.SoundEventComponent;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
@@ -190,7 +189,7 @@ public class MechanicalCatPartData extends MechanicalPartData {
 
 
     @Override
-    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+    public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity, int slotId, boolean isSelected) {
         var gameTime = level.getGameTime();
         var bonusTime = stack.get(CMEDataComponents.MECHANICAL_CAT_BONUS_BLOCKED);
 

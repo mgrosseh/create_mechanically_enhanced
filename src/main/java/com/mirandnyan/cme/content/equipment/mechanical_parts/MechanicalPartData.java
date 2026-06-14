@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
@@ -19,8 +20,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -37,15 +40,10 @@ public abstract class MechanicalPartData {
         this.parent = parent;
     }
 
-    // TODO: make data component
-    public int getTransferRatio() {
-        return 0;
-    }
-
     public void onInserted(ItemStack tool) { }
     public void onRemoved(ItemStack tool) { }
 
-    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) { }
+    public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity, int slotId, boolean isSelected) { }
 
     public void render(ItemStack stack, MechanicalPart part, PartialItemModelRenderer renderer, ItemDisplayContext transformType,
                           PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
@@ -80,5 +78,25 @@ public abstract class MechanicalPartData {
 
     public Component getHighlightTip(@NotNull ItemStack item, @NotNull Component displayName) {
         return displayName;
+    }
+
+    public boolean tryAbsorbDamage(@NotNull Player player, @NotNull ItemStack item, EquipmentSlot equipmentSlot, int amount) {
+        return false;
+    }
+
+    public boolean canAbsorbDurability(@NotNull ItemStack stack, @NotNull BlockState state, int amount) {
+        return false;
+    }
+
+    public boolean canAbsorbDurability(@NotNull ItemStack stack, @NotNull LivingEntity attacker, @NotNull Entity target, int amount) {
+        return false;
+    }
+
+    public int getUseDuration(@NotNull ItemStack stack, @NotNull LivingEntity entity) {
+        return 0;
+    }
+
+    public void onUseTick(@NotNull Level level, @NotNull LivingEntity livingEntity, @NotNull ItemStack stack, int duration) {
+
     }
 }

@@ -6,7 +6,6 @@ import com.mirandnyan.cme.CMETranslations;
 import com.mirandnyan.cme.content.equipment.MechanicalItem;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
-import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalToolSlot;
 import com.simibubi.create.content.equipment.armor.BacktankUtil;
 import com.simibubi.create.foundation.item.CustomArmPoseItem;
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
@@ -44,6 +43,8 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
 
     public static final int DEFAULT_TRANSFER_RATIO = 2;
     public static final int INTERNAL_AIR_COLOR = 0x9090F0;
+    public static final int BLOCK_BREAK_DURABILITY_USE = 1;
+    public static final int ENTITY_ATTACK_DURABILITY_USE = 2;
 
     // TODO: insta mining Deepslate Requires mining_efficiency of ~80 or more, make possible
     // TODO: pose is weird (crossing) when in offhand: extendo grip, crossbow, other mechanical tool
@@ -74,16 +75,6 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
     it may still be best to store all parts linearly and use a map for structure of where it is
      */
 
-    public static ItemStack defaultItemStack() {
-        return newStackWithParts(
-                MechanicalPart.DEFAULT_GRIP,
-                MechanicalPart.WOODEN_COG,
-                MechanicalPart.ANDESITE_GEARBOX,
-                MechanicalPart.COPPER_TANK,
-                MechanicalPart.IRON_DRILL_HEAD
-        );
-    }
-
     @SafeVarargs
     public static ItemStack newStackWithParts(RegistryEntry<MechanicalPart, MechanicalPart>... parts) {
         var stack = CMEItems.MECHANICAL_TOOL.asStack();
@@ -99,24 +90,10 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
     }
 
     public MechanicalToolItem(Properties properties) {
-        super(properties
-                .rarity(Rarity.UNCOMMON)
-                .stacksTo(1)
-        );
+        super(properties.rarity(Rarity.UNCOMMON).stacksTo(1));
     }
 
     // -- Breaking Blocks with Item --
-
-    // TODO:
-    protected static int airTransferRatio(ItemStack stack) {
-        var slot = getToolSlot(stack, MechanicalToolSlot.GEARBOX_SLOT);
-        var maybe_part = FilledToolSlot.getPartOf(slot);
-        if (maybe_part.isEmpty())
-            return DEFAULT_TRANSFER_RATIO;
-        var part = maybe_part.get();
-        return part.get().data.getTransferRatio();
-    }
-
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void consumeDurabilityOnBlockBreak(BlockEvent.BreakEvent event) {
         findAndDamageItem(event.getPlayer());
@@ -134,15 +111,18 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         }
         if (!CMEItems.MECHANICAL_TOOL.isIn(item))
             return;
-        useAirOrHurtAndBreak(player, equipmentSlot, item);
-    }
 
-    protected static void useAirOrHurtAndBreak(Player player, EquipmentSlot slot, ItemStack stack) {
-            if (hasAir(stack)) {
-                drainInternalTank(stack, airTransferRatio(stack));
+        List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        for (var slot : slots) {
+            var part = slot.getPart();
+            if (part.isEmpty())
+                continue;
+            var data = part.get().get().data;
+            var absorbed = data.tryAbsorbDamage(player, item, equipmentSlot, BLOCK_BREAK_DURABILITY_USE);
+            if (absorbed)
                 return;
-            }
-        stack.hurtAndBreak(1, player, slot);
+        }
+        item.hurtAndBreak(BLOCK_BREAK_DURABILITY_USE, player, equipmentSlot);
     }
 
 
@@ -225,7 +205,7 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         stack.set(CMEDataComponents.LAST_TOOL_HOLDER_NAME, name);
     }
     @Override
-    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+    public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity, int slotId, boolean isSelected) {
         setLastToolHolder(stack, entity, isSelected);
 
         List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
@@ -239,7 +219,7 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
 
     // Change parts
     @Override
-    public boolean overrideOtherStackedOnMe(ItemStack stack, @NotNull ItemStack other, @NotNull Slot slot,
+    public boolean overrideOtherStackedOnMe(@NotNull ItemStack stack, @NotNull ItemStack other, @NotNull Slot slot,
                                             @NotNull ClickAction action, @NotNull Player player, @NotNull SlotAccess access) {
         if (tryMechanicalPartsHandlingStackOnMe(stack, other, slot, action, player, access))
             return true;
@@ -306,7 +286,7 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
 
     // prevent bobbing after mine
     @Override
-    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, @NotNull ItemStack newStack, boolean slotChanged) {
         return !oldStack.equals(newStack) && slotChanged;
     }
 
@@ -317,13 +297,13 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
 
     // disable swing animation
     @Override
-    public boolean onEntitySwing(ItemStack stack, LivingEntity entity, InteractionHand hand) {
+    public boolean onEntitySwing(@NotNull ItemStack stack, @NotNull LivingEntity entity, @NotNull InteractionHand hand) {
         return true;
     }
 
     @Override
     @SuppressWarnings("removal")
-    public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
+    public boolean onEntitySwing(@NotNull ItemStack stack, @NotNull LivingEntity entity) {
         return true;
     }
 
@@ -351,18 +331,6 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
             slot.appendHoverText(stack, context, tooltip, flagIn);
         }
 
-        var maxAir = getMaxAir(stack);
-        if (maxAir == 0)
-            tooltip.add(CMETranslations.MECHANICAL_TOOL_NO_AIR.resolveComponent());
-        else {
-            tooltip.add(Component.empty().append(CMETranslations.MECHANICAL_TOOL_AIR_LEVEL_PRE.resolveComponent())
-                    .append(CMETranslations.Components.number(getAir(stack)))
-                    .append(CMETranslations.MECHANICAL_TOOL_AIR_LEVEL_IN.resolveComponent())
-                    .append(CMETranslations.Components.number(maxAir))
-                    .append(CMETranslations.MECHANICAL_TOOL_AIR_LEVEL_POST.resolveComponent())
-            );
-        }
-
         for (FilledToolSlot slot : slots) {
             var part = slot.getPart();
             if (part.isEmpty())
@@ -373,30 +341,9 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         super.appendHoverText(stack, context, tooltip, flagIn);
     }
 
-    // -- Air Storage --
-    public static int getMaxAir(ItemStack stack) {
-        return stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR_CAPACITY, 0);
-    }
-    public static int getAir(ItemStack stack) {
-        return stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR, 0);
-    }
-    public static void setAir(ItemStack stack, int air) {
-        stack.set(CMEDataComponents.PRESSURIZED_AIR, air);
-    }
-    public static void drainInternalTank(ItemStack stack, int amount) {
-        setAir(stack, getAir(stack) - amount);
-    }
-    public static void fillInternalTank(ItemStack stack, int amount) {
-        setAir(stack, getAir(stack) + amount);
-    }
-    public static boolean hasAir(ItemStack stack) {
-        return getAir(stack) != 0;
-    }
-
     // Refilling
-    // TODO: rightClickAction on Backtank block should fill tank
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand usedHand) {
         var item = player.getItemInHand(usedHand);
         if (getUseDuration(item, player) > 0) {
             player.startUsingItem(usedHand);
@@ -407,38 +354,37 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
 
     @Override
     public int getUseDuration(@NotNull ItemStack stack, @NotNull LivingEntity entity) {
-        return getMaxAir(stack) - getAir(stack);
+        var duration = 0;
+        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        for (var slot : slots) {
+            var part = slot.getPart();
+            if (part.isEmpty())
+                continue;
+            duration = Math.max(duration, part.get().get().data.getUseDuration(stack, entity));
+        }
+        return duration;
     }
 
     @Override
-    public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
-        List<ItemStack> backtanks = BacktankUtil.getAllWithAir(livingEntity);
-
-        var remaining = getUseDuration(stack, livingEntity);
-        var transferRate = remaining / 100 + 5;
-        var maxTransfer = Math.min(transferRate, remaining);
-
-        var transferred = 0;
-        if (livingEntity instanceof Player player && player.isCreative())
-            transferred = maxTransfer;
-        else {
-            if (backtanks.isEmpty())
-                return;
-
-            for (var tank : backtanks) {
-                var canTransfer = Math.min(maxTransfer - transferred, BacktankUtil.getAir(tank));
-                transferred += canTransfer;
-                BacktankUtil.consumeAir(livingEntity, tank, canTransfer);
-            }
+    public void onUseTick(@NotNull Level level, @NotNull LivingEntity livingEntity, @NotNull ItemStack stack, int remainingUseDuration) {
+        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        for (var slot : slots) {
+            var part = slot.getPart();
+            if (part.isEmpty())
+                continue;
+            var data = part.get().get().data;
+            var duration = data.getUseDuration(stack, livingEntity);
+            if(duration == 0)
+                continue;
+            data.onUseTick(level, livingEntity, stack, duration);
         }
-        fillInternalTank(stack, transferred);
     }
 
     // Bar
     @Override
     public int getBarWidth(ItemStack stack) {
-        var maxAir = getMaxAir(stack);
-        var air = getAir(stack);
+        var maxAir = stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR_CAPACITY, 0);
+        var air = stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR, 0);
         if (maxAir > 0 && air > 0)
             return Math.round((float) air * MAX_BAR_WIDTH / (float) maxAir);
         return super.getBarWidth(stack);
@@ -446,7 +392,8 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
 
     @Override
     public int getBarColor(@NotNull ItemStack stack) {
-        if (getAir(stack) > 0)
+        var air = stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR, 0);
+        if (air > 0)
             return INTERNAL_AIR_COLOR;
         return super.getBarColor(stack);
     }
@@ -456,18 +403,44 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
     }
 
     // -- Other Functions --
-    //
     @Override
-    public float getDestroySpeed(ItemStack stack, BlockState state) {
-        var air = getAir(stack);
-        if (air > 0 || stack.getDamageValue() < stack.getMaxDamage() - 1)
+    public float getDestroySpeed(@NotNull ItemStack stack, @NotNull BlockState state) {
+        if (canAbsorbDurability(stack, state))
             return super.getDestroySpeed(stack, state);
         return 0.00001f;
     }
 
+    protected boolean canAbsorbDurability(@NotNull ItemStack stack, @NotNull BlockState state) {
+        return canAbsorbDurability(stack, BLOCK_BREAK_DURABILITY_USE, state, null, null);
+    }
+    protected boolean canAbsorbDurability(@NotNull ItemStack stack, @NotNull LivingEntity attacker, @NotNull Entity target) {
+        return canAbsorbDurability(stack, ENTITY_ATTACK_DURABILITY_USE, null, attacker, target);
+    }
+
+    protected static boolean canAbsorbDurability(@NotNull ItemStack stack, int amount, @Nullable BlockState state,
+                                                 @Nullable LivingEntity attacker, @Nullable Entity target) {
+        if (stack.getDamageValue() < stack.getMaxDamage() - amount)
+            return true;
+
+        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        for (var slot : slots) {
+            var part = slot.getPart();
+            if (part.isEmpty())
+                continue;
+            boolean result = false;
+            if (state != null)
+                result = part.get().get().data.canAbsorbDurability(stack, state, amount);
+            else if (attacker != null && target != null)
+                result = part.get().get().data.canAbsorbDurability(stack, attacker, target, amount);
+            if (result)
+                return true;
+        }
+        return false;
+    }
+
+    @Override
     public boolean onLeftClickEntity(@NotNull ItemStack stack, @NotNull Player player, @NotNull Entity entity) {
-        var air = getAir(stack);
-        if (air > 0 || stack.getDamageValue() < stack.getMaxDamage() - 2)
+        if (canAbsorbDurability(stack, player, entity))
             return super.onLeftClickEntity(stack, player, entity);
         return true;
     }
@@ -476,13 +449,12 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
     // TODO: if it doesn't have durability, it takes damage, but if not still does damage but then takes no damage
 
     @Override
-    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        var air = getAir(stack);
-        return air > 0 || stack.getDamageValue() < stack.getMaxDamage() - 2;
+    public boolean hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
+        return canAbsorbDurability(stack, target, attacker);
     }
 
     @Override
-    public void postHurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        stack.hurtAndBreak(2, attacker, EquipmentSlot.MAINHAND);
+    public void postHurtEnemy(ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
+        stack.hurtAndBreak(ENTITY_ATTACK_DURABILITY_USE, attacker, EquipmentSlot.MAINHAND);
     }
 }

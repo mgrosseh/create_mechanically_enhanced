@@ -26,6 +26,8 @@
   "create_mechanically_enhanced.tooltip.mechanical_tool.air.postfix": "",
   "create_mechanically_enhanced.tooltip.mechanical_tool.air.prefix": "Air: ",
   "create_mechanically_enhanced.tooltip.mechanical_tool.no_air": "No Tank",
+  "effect.create_mechanically_enhanced.hunger_regeneration": "Hunger Regeneration",
+  "effect.create_mechanically_enhanced.range_blessing": "Range Blessing",
   "item.create_mechanically_enhanced.brass_coin": "Unminted Brass Coin",
   "item.create_mechanically_enhanced.brass_coin_minted": "Minted Brass Coin",
   "item.create_mechanically_enhanced.brass_coin_minted_amethyst": "Minted Brass Coin (Amethyst)",

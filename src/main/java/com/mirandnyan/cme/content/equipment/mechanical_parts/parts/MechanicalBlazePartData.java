@@ -158,7 +158,7 @@ public class MechanicalBlazePartData extends MechanicalPartData {
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+    public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity, int slotId, boolean isSelected) {
         var infinite = stack.has(CMEDataComponents.BLAZE_BURNING_INFINITE);
         if (infinite)
             return;

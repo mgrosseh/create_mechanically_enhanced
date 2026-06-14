@@ -200,7 +200,13 @@ public class CMEItems {
                                         MechanicalPart.ANDESITE_GEARBOX,
                                         MechanicalPart.IRON_DRILL_HEAD
                                 ));
-                                output.accept(MechanicalToolItem.defaultItemStack());
+                                output.accept(MechanicalToolItem.newStackWithParts(
+                                        MechanicalPart.DEFAULT_GRIP,
+                                        MechanicalPart.WOODEN_COG,
+                                        MechanicalPart.ANDESITE_GEARBOX,
+                                        MechanicalPart.COPPER_TANK,
+                                        MechanicalPart.IRON_DRILL_HEAD
+                                ));
                                 output.accept(MechanicalToolItem.newStackWithParts(
                                         MechanicalPart.DEFAULT_GRIP,
                                         MechanicalPart.NETHERITE_COG,
