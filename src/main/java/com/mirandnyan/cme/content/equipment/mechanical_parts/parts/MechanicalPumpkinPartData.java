@@ -46,7 +46,7 @@ public class MechanicalPumpkinPartData extends MechanicalPartData {
     @Override
     public void render(ItemStack stack, MechanicalPart part, PartialItemModelRenderer renderer, ItemDisplayContext transformType, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
         ms.pushPose();
-        ms.translate(0, 13 / 16f, -10 / 16f);
+        //ms.translate(0, 13 / 16f, -10 / 16f); // TODO
 
         // Cog
         ms.pushPose();

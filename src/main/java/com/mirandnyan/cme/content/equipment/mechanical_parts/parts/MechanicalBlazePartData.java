@@ -283,7 +283,7 @@ public class MechanicalBlazePartData extends MechanicalPartData {
         var data = ClientData.of(stack);
 
         ms.pushPose();
-        ms.translate(0, 13 / 16f, -10 / 16f);
+        //ms.translate(0, 13 / 16f, -10 / 16f); // TODO
 
         // cog
         ms.pushPose();

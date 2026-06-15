@@ -1,8 +1,11 @@
 package com.mirandnyan.cme.util;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.engine_room.flywheel.lib.transform.Affine;
-import net.minecraft.world.phys.Vec3;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 import org.joml.Quaternionfc;
 import org.joml.Vector3f;
 
@@ -29,12 +32,14 @@ public class AffineTransform implements Affine<AffineTransform> {
     @Override
     public AffineTransform rotate(Quaternionfc quaternion) {
         matrix.rotate(quaternion);
+        translation.rotate(quaternion);
         return this;
     }
 
     @Override
     public AffineTransform scale(float factorX, float factorY, float factorZ) {
         matrix.scale(factorX, factorY, factorZ);
+        translation.mul(factorX, factorY, factorZ);
         return this;
     }
 
@@ -42,5 +47,13 @@ public class AffineTransform implements Affine<AffineTransform> {
     public AffineTransform translate(float x, float y, float z) {
         translation.add(x, y, z);
         return this;
+    }
+
+    public Matrix4f asPose() {
+        return new Matrix4f().set(matrix).translate(translation);
+    }
+
+    public void apply(PoseStack ms) {
+        ms.mulPose(asPose());
     }
 }

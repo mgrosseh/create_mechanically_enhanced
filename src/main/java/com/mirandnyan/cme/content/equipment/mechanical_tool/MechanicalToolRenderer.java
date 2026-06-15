@@ -2,6 +2,7 @@ package com.mirandnyan.cme.content.equipment.mechanical_tool;
 
 import com.mirandnyan.cme.CMEDataComponents;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
@@ -9,10 +10,34 @@ import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.List;
 
 public class MechanicalToolRenderer extends CustomRenderedItemModelRenderer {
+
+    private void renderSlot(FilledToolSlot filledToolSlot, List<FilledToolSlot> filledToolSlots,
+                            ItemStack stack, PartialItemModelRenderer renderer, ItemDisplayContext transformType,
+                            PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
+        var maybe_part = filledToolSlot.getPart().map(DeferredHolder::get);
+        if (maybe_part.isEmpty())
+            return;
+        var part = maybe_part.get();
+        var partTrans = part.slots().getTransform();
+        partTrans.apply(ms);
+        part.data.render(stack, part, renderer, transformType, ms, buffer, light, overlay);
+        for (var child : filledToolSlots) {
+            if (child.parent().isEmpty() || child.parent().get() != filledToolSlot.part())
+                continue;
+            ms.pushPose();
+            var childTrans = part.slots().getTransform(child.slot());
+            if (childTrans.isEmpty())
+                continue; // TODO log
+            childTrans.get().apply(ms);
+            renderSlot(child, filledToolSlots, stack, renderer, transformType, ms, buffer, light, overlay);
+            ms.popPose();
+        }
+    }
 
     @Override
     protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer, ItemDisplayContext transformType,
@@ -22,13 +47,30 @@ public class MechanicalToolRenderer extends CustomRenderedItemModelRenderer {
         ms.translate(0, 0.5 / 15f, -2 / 16f);
         // TODO: hand drawing
 
-        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
-        for (var slot : slots) {
-            if (slot.getPart().isEmpty())
+        List<FilledToolSlot> filledToolSlots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+
+
+        for (var filledToolSlot : filledToolSlots) {
+            if (filledToolSlot.getPart().isEmpty())
                 return;
             renderedAnything = true;
-            var part = slot.getPart().get().get();
-            part.data.render(stack, part, renderer, transformType, ms, buffer, light, overlay);
+            if (filledToolSlot.parent().isEmpty()) {
+                ms.pushPose();
+                renderSlot(filledToolSlot, filledToolSlots, stack, renderer, transformType, ms, buffer, light, overlay);
+                ms.popPose();
+            }
+
+//            if (filledToolSlot.parent().isPresent()) {
+//                var parent = filledToolSlot.parent().get();
+//                var parentTrans = MechanicalPart.get(parent).get().slots().getTransform(part.slots().getOrigin());
+//                if (parentTrans.isPresent()) { // TODO: logging?
+//                    var partTrans = part.slots().getTransform();
+//
+//                    partTrans.apply(ms);
+//                    parentTrans.get().apply(ms);
+//                }
+//            }
+            //part.data.render(stack, part, renderer, transformType, ms, buffer, light, overlay);
         }
 
         if (!renderedAnything)
