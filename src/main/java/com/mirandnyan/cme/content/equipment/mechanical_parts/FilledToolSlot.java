@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
@@ -20,16 +21,19 @@ import java.util.Optional;
 
 public record FilledToolSlot(
         @NonNull ResourceKey<MechanicalToolSlot> slot,
-        @Nullable ResourceKey<MechanicalPart> part) {
+        @Nullable ResourceKey<MechanicalPart> part, // TODO: make optional
+        Optional<ResourceKey<MechanicalPart>> parent) {
 
     public static final Codec<FilledToolSlot> CODEC = RecordCodecBuilder.create(i -> i.group(
             MechanicalToolSlot.CODEC.fieldOf("slot").forGetter(FilledToolSlot::slot),
-            MechanicalPart.CODEC.fieldOf("part").forGetter(FilledToolSlot::part)
+            MechanicalPart.CODEC.fieldOf("part").forGetter(FilledToolSlot::part),
+            MechanicalPart.CODEC.optionalFieldOf("parent").forGetter(FilledToolSlot::parent)
     ).apply(i, FilledToolSlot::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, FilledToolSlot> STREAM_CODEC = StreamCodec.composite(
             MechanicalToolSlot.STREAM_CODEC, FilledToolSlot::slot,
             MechanicalPart.STREAM_CODEC, FilledToolSlot::part,
+            MechanicalPart.STREAM_CODEC.apply(ByteBufCodecs::optional), FilledToolSlot::parent,
             FilledToolSlot::new
     );
 
@@ -55,6 +59,13 @@ public record FilledToolSlot(
         if (slot == null)
             return Optional.empty();
         return slot.getPart();
+    }
+
+    public boolean has(FilledToolSlot slot) {
+        var maybe_part = getPart();
+        if (slot == null || maybe_part.isEmpty())
+            return false;
+        return maybe_part.get().get().slots().has(slot.slot());
     }
 
     public boolean isSlot(FilledToolSlot other) {

@@ -32,12 +32,13 @@ public class CreateMechanicallyEnhanced {
     Cat coins:
     Coin Stack Block
 
-    Hunger regen: Icon: heart but like an apple
 
     # Mechanical Tool
     BUG: refilling air can cause use anim in offhand item (which isn't a tool)
 
     # Mechanical Parts:
+    for now we assume all parts in a given slot have the same slot holders
+
     ## mechanical cat:
     TODO: make ears rotate with cogs
 

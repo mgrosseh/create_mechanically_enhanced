@@ -6,6 +6,7 @@ import com.mirandnyan.cme.CMETranslations;
 import com.mirandnyan.cme.content.equipment.MechanicalItem;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalToolSlot;
 import com.simibubi.create.content.equipment.armor.BacktankUtil;
 import com.simibubi.create.foundation.item.CustomArmPoseItem;
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
@@ -13,6 +14,7 @@ import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -81,7 +83,7 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         var stack = CMEItems.MECHANICAL_TOOL.asStack();
 
         for (var part : parts) {
-            var slot = new FilledToolSlot(part.get().validSlot, part.getKey());
+            var slot = new FilledToolSlot(part.get().getOriginSlot().getKey(), part.getKey(), null);
             insertFilledToolSlot(stack, slot);
         }
         recalculateTotalWeight(stack);
@@ -94,6 +96,11 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         super(properties.rarity(Rarity.UNCOMMON).stacksTo(1));
     }
 
+
+    @Override
+    public boolean alwaysFit(ResourceKey<MechanicalToolSlot> slot) {
+        return MechanicalToolSlot.GRIP_SLOT.getKey().equals(slot);
+    }
 
     @SubscribeEvent
     public static void entityTick(EntityTickEvent.Post event) {
@@ -274,11 +281,13 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         if (maybe_part.isEmpty())
             return false;
         var part = maybe_part.get();
-        var partSlot = part.get().getSlot().getKey();
+        var partSlot = part.get().getOriginSlot().getKey();
 
-        var filledSlot = new FilledToolSlot(partSlot, part.getKey());
+        var filledSlot = new FilledToolSlot(partSlot, part.getKey(), null);
 
         var old = insertFilledToolSlot(stack, filledSlot);
+        if (old == filledSlot)
+            return false;
         recalculateTotalWeight(stack);
         other.shrink(1);
         if (old == null || old.part() == null)

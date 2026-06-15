@@ -4,9 +4,9 @@
 	"parent": "create:item/handheld_blockzapper/item",
 	"ambientocclusion": false,
 	"textures": {
+		"particle": "create:item/extendo_grip",
 		"extendo_grip": "create:item/extendo_grip",
-		"mechanical_press_pole": "create:block/mechanical_press_pole",
-		"particle": "create_mechanically_enhanced:block/small_copper_backtank"
+		"mechanical_press_pole": "create:block/mechanical_press_pole"
 	},
 	"elements": [
 		{
