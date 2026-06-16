@@ -2,7 +2,6 @@ package com.mirandnyan.cme.content.equipment.mechanical_tool;
 
 import com.mirandnyan.cme.CMEDataComponents;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
-import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
@@ -23,17 +22,19 @@ public class MechanicalToolRenderer extends CustomRenderedItemModelRenderer {
         if (maybe_part.isEmpty())
             return;
         var part = maybe_part.get();
-        var partTrans = part.slots().getTransform();
-        partTrans.apply(ms);
+        var origin = part.slots().getOriginTransform();
+        ms.pushPose();
+        origin.apply(ms);
         part.data.render(stack, part, renderer, transformType, ms, buffer, light, overlay);
+        ms.popPose();
         for (var child : filledToolSlots) {
             if (child.parent().isEmpty() || child.parent().get() != filledToolSlot.part())
                 continue;
-            ms.pushPose();
-            var childTrans = part.slots().getTransform(child.slot());
-            if (childTrans.isEmpty())
+            var attachmentTrans = part.slots().getTransform(child.slot());
+            if (attachmentTrans.isEmpty())
                 continue; // TODO log
-            childTrans.get().apply(ms);
+            ms.pushPose();
+            //attachmentTrans.get().apply(ms);
             renderSlot(child, filledToolSlots, stack, renderer, transformType, ms, buffer, light, overlay);
             ms.popPose();
         }
@@ -44,7 +45,7 @@ public class MechanicalToolRenderer extends CustomRenderedItemModelRenderer {
                           PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
         boolean renderedAnything = false;
         ms.pushPose();
-        ms.translate(0, 0.5 / 15f, -2 / 16f);
+        //ms.translate(0, 0.5 / 15f, -2 / 16f);
         // TODO: hand drawing
 
         List<FilledToolSlot> filledToolSlots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());

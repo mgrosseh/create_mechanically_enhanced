@@ -50,10 +50,24 @@ public class AffineTransform implements Affine<AffineTransform> {
     }
 
     public Matrix4f asPose() {
-        return new Matrix4f().set(matrix).translate(translation);
+        return new Matrix4f().set(matrix).setTranslation(translation);
     }
 
     public void apply(PoseStack ms) {
         ms.mulPose(asPose());
+    }
+
+    public AffineTransform scaleTranslation(float scale) {
+        translation.mul(scale);
+        return this;
+    }
+
+    public AffineTransform mul(AffineTransform transform, AffineTransform dest) {
+        transform.translation.mul(matrix, dest.translation).add(translation);
+        matrix.mul(transform.matrix, dest.matrix);
+        return dest;
+    }
+    public AffineTransform mul(AffineTransform transform) {
+        return mul(transform, this);
     }
 }

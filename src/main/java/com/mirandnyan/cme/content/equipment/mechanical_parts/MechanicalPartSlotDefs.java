@@ -32,7 +32,7 @@ public class MechanicalPartSlotDefs {
         return Optional.empty();
     }
 
-    public AffineTransform getTransform() {
+    public AffineTransform getOriginTransform() {
         return origin.transform;
     }
 

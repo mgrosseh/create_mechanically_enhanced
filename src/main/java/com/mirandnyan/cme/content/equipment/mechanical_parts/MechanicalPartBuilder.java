@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
+import java.util.stream.Stream;
 
 import static com.mirandnyan.cme.CreateMechanicallyEnhanced.REGISTRATE;
 
@@ -58,7 +59,7 @@ public class MechanicalPartBuilder {
         return origin(new AffineTransform(), slot); // TODO: maybe different value for tool origin
     }
     public MechanicalPartBuilder origin(AffineTransform transform, ResourceKey<MechanicalToolSlot> slot) {
-        this.origin = new MechanicalPartSlotDefs.SlotDefinition(transform.inverse(), slot);
+        this.origin = new MechanicalPartSlotDefs.SlotDefinition(transform, slot);
         return this;
     }
     public MechanicalPartBuilder origin(AffineTransform transform, RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> slot) {
@@ -82,9 +83,17 @@ public class MechanicalPartBuilder {
         if (models.isEmpty())
             models.add(resource("tool_part", name));
 
-        var def = new MechanicalPartSlotDefs(origin, slots.toArray(new MechanicalPartSlotDefs.SlotDefinition[]{}));
+        var originTrans = origin.transform().scaleTranslation(1 / 16f);
+        origin = new MechanicalPartSlotDefs.SlotDefinition(originTrans.inverse(), origin.slot());
+
+        var defs = new MechanicalPartSlotDefs(origin, slots.stream()
+                .map(def -> new MechanicalPartSlotDefs.SlotDefinition(
+                        def.transform().scaleTranslation(1 / 16f),
+                        def.slot()))
+                .toArray(MechanicalPartSlotDefs.SlotDefinition[]::new));
+
         return REGISTRATE.object(name).simple(registry, () ->
-                new MechanicalPart(def, validItem.getKey(), data, name, models.toArray(new ResourceLocation[]{})));
+                new MechanicalPart(defs, validItem.getKey(), data, name, models.toArray(ResourceLocation[]::new)));
     }
 
     public RegistryEntry<MechanicalPart, MechanicalPart> build() {
