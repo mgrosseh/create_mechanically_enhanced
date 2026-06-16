@@ -57,6 +57,10 @@ public class AffineTransform implements Affine<AffineTransform> {
         ms.mulPose(asPose());
     }
 
+    public AffineTransform copy() {
+        return new AffineTransform(new Matrix3f(matrix), new Vector3f(translation));
+    }
+
     public AffineTransform scaleTranslation(float scale) {
         translation.mul(scale);
         return this;

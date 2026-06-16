@@ -83,12 +83,15 @@ public class MechanicalPartBuilder {
         if (models.isEmpty())
             models.add(resource("tool_part", name));
 
-        var originTrans = origin.transform().scaleTranslation(1 / 16f);
+        var modelToWorld = new AffineTransform().scale(1 / 16f);
+        var worldToModel = modelToWorld.inverse();
+
+        var originTrans = modelToWorld.copy().mul(origin.transform()).mul(worldToModel);
         origin = new MechanicalPartSlotDefs.SlotDefinition(originTrans.inverse(), origin.slot());
 
         var defs = new MechanicalPartSlotDefs(origin, slots.stream()
                 .map(def -> new MechanicalPartSlotDefs.SlotDefinition(
-                        def.transform().scaleTranslation(1 / 16f),
+                        modelToWorld.copy().mul(def.transform()).mul(worldToModel),
                         def.slot()))
                 .toArray(MechanicalPartSlotDefs.SlotDefinition[]::new));
 
