@@ -229,7 +229,7 @@ public class MechanicalPart {
             .build();
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> SMALL_MECHANICAL_PUMPKIN = new MechanicalPartBuilder("small_mechanical_pumpkin")
-            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.TANK_SLOT)
+            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.GEARED_TOP_SLOT)
             .item(CMEItems.SMALL_MECHANICAL_PUMPKIN)
             .data(new MechanicalPumpkinPartData())
             .model("tool_part", "small_mechanical_pumpkin")

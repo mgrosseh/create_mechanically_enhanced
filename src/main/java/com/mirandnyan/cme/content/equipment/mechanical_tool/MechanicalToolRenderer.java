@@ -23,10 +23,10 @@ public class MechanicalToolRenderer extends CustomRenderedItemModelRenderer {
             return;
         var part = maybe_part.get();
         var origin = part.slots().getOriginTransform();
-        ms.pushPose();
+        //ms.pushPose();
         origin.apply(ms);
         part.data.render(stack, part, renderer, transformType, ms, buffer, light, overlay);
-        ms.popPose();
+        //ms.popPose();
         for (var child : filledToolSlots) {
             if (child.parent().isEmpty() || child.parent().get() != filledToolSlot.part())
                 continue;
@@ -34,7 +34,7 @@ public class MechanicalToolRenderer extends CustomRenderedItemModelRenderer {
             if (attachmentTrans.isEmpty())
                 continue; // TODO log
             ms.pushPose();
-            //attachmentTrans.get().apply(ms);
+            attachmentTrans.get().apply(ms);
             renderSlot(child, filledToolSlots, stack, renderer, transformType, ms, buffer, light, overlay);
             ms.popPose();
         }
@@ -45,7 +45,7 @@ public class MechanicalToolRenderer extends CustomRenderedItemModelRenderer {
                           PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
         boolean renderedAnything = false;
         ms.pushPose();
-        //ms.translate(0, 0.5 / 15f, -2 / 16f);
+        ms.translate(0, 0.5 / 15f, -2 / 16f);
         // TODO: hand drawing
 
         List<FilledToolSlot> filledToolSlots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
