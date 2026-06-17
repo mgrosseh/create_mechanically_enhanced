@@ -67,7 +67,7 @@ public class AffineTransform implements Affine<AffineTransform> {
     }
 
     public AffineTransform mul(AffineTransform transform, AffineTransform dest) {
-        transform.translation.mul(matrix, dest.translation).add(translation);
+        dest.translation = transform.translation.mul(matrix, new Vector3f()).add(translation);
         matrix.mul(transform.matrix, dest.matrix);
         return dest;
     }

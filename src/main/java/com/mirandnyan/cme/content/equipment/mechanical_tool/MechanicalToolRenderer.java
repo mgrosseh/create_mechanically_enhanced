@@ -1,19 +1,34 @@
 package com.mirandnyan.cme.content.equipment.mechanical_tool;
 
 import com.mirandnyan.cme.CMEDataComponents;
+import com.mirandnyan.cme.CreateMechanicallyEnhanced;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.MechanicalBlazePartData;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MechanicalToolRenderer extends CustomRenderedItemModelRenderer {
+    static final PartialModel debug_arrow_up = PartialModel.of(CreateMechanicallyEnhanced.asResource("debug", "arrow_up"));
+    static final PartialModel debug_arrow_south = PartialModel.of(CreateMechanicallyEnhanced.asResource("debug", "arrow_south"));
+    static final PartialModel debug_arrow_east = PartialModel.of(CreateMechanicallyEnhanced.asResource("debug", "arrow_east"));
+    static final PartialModel debug_coordinate_origin = PartialModel.of(CreateMechanicallyEnhanced.asResource("debug", "coords_origin"));
+    static final PartialModel debug_pixel = PartialModel.of(CreateMechanicallyEnhanced.asResource("debug", "1pixel"));
+    static final PartialModel debug_block = PartialModel.of(CreateMechanicallyEnhanced.asResource("debug", "full_cube"));
 
     private void renderSlot(FilledToolSlot filledToolSlot, List<FilledToolSlot> filledToolSlots,
                             ItemStack stack, PartialItemModelRenderer renderer, ItemDisplayContext transformType,
@@ -21,20 +36,17 @@ public class MechanicalToolRenderer extends CustomRenderedItemModelRenderer {
         var maybe_part = filledToolSlot.getPart().map(DeferredHolder::get);
         if (maybe_part.isEmpty())
             return;
-        var part = maybe_part.get();
+        MechanicalPart part = maybe_part.get();
         var origin = part.slots().getOriginTransform();
-        //ms.pushPose();
+
         origin.apply(ms);
         part.data.render(stack, part, renderer, transformType, ms, buffer, light, overlay);
-        //ms.popPose();
         for (var child : filledToolSlots) {
             if (child.parent().isEmpty() || child.parent().get() != filledToolSlot.part())
                 continue;
             var attachmentTrans = part.slots().getTransform(child.slot());
-            if (attachmentTrans.isEmpty())
-                continue; // TODO log
             ms.pushPose();
-            attachmentTrans.get().apply(ms);
+            attachmentTrans.ifPresent(p -> p.apply(ms));
             renderSlot(child, filledToolSlots, stack, renderer, transformType, ms, buffer, light, overlay);
             ms.popPose();
         }
@@ -43,10 +55,10 @@ public class MechanicalToolRenderer extends CustomRenderedItemModelRenderer {
     @Override
     protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer, ItemDisplayContext transformType,
                           PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
+        // TODO: hand drawing
+
         boolean renderedAnything = false;
         ms.pushPose();
-        //ms.translate(0, 0.5 / 15f, -2 / 16f);
-        // TODO: hand drawing
 
         List<FilledToolSlot> filledToolSlots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
 
@@ -60,18 +72,6 @@ public class MechanicalToolRenderer extends CustomRenderedItemModelRenderer {
                 renderSlot(filledToolSlot, filledToolSlots, stack, renderer, transformType, ms, buffer, light, overlay);
                 ms.popPose();
             }
-
-//            if (filledToolSlot.parent().isPresent()) {
-//                var parent = filledToolSlot.parent().get();
-//                var parentTrans = MechanicalPart.get(parent).get().slots().getTransform(part.slots().getOrigin());
-//                if (parentTrans.isPresent()) { // TODO: logging?
-//                    var partTrans = part.slots().getTransform();
-//
-//                    partTrans.apply(ms);
-//                    parentTrans.get().apply(ms);
-//                }
-//            }
-            //part.data.render(stack, part, renderer, transformType, ms, buffer, light, overlay);
         }
 
         if (!renderedAnything)
