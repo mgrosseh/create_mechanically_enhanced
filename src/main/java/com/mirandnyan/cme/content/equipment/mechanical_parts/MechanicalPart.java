@@ -137,7 +137,7 @@ public class MechanicalPart {
 
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> DEFAULT_GRIP = new MechanicalPartBuilder("default_grip")
-            .origin(MechanicalToolSlot.GRIP_SLOT)
+            .origin(new AffineTransform().translate(0, -0.5, 2), MechanicalToolSlot.GRIP_SLOT)
             .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 5f), MechanicalToolSlot.COG_SLOT)
             .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 1f), MechanicalToolSlot.GEARBOX_SLOT)
             .item(CMEItems.DEFAULT_GRIP)
@@ -146,7 +146,7 @@ public class MechanicalPart {
 
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> NETHERITE_GRIP = new MechanicalPartBuilder("netherite_grip")
-            .origin(MechanicalToolSlot.GRIP_SLOT)
+            .origin(new AffineTransform().translate(0, -0.5, 2), MechanicalToolSlot.GRIP_SLOT)
             .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 5f), MechanicalToolSlot.COG_SLOT)
             .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 1f), MechanicalToolSlot.GEARBOX_SLOT)
             .item(CMEItems.NETHERITE_GRIP)
