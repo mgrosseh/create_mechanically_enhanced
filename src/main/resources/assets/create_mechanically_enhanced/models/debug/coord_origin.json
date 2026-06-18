@@ -1,0 +1,18 @@
+{
+	"textures": {
+		"0": "block/debug",
+		"particle": "block/debug"
+	},
+    "loader": "neoforge:composite",
+    "children": {
+        "arrow_up": {
+            "parent": "create_mechanically_enhanced:debug/arrow_up"
+        },
+        "arrow_south": {
+            "parent": "create_mechanically_enhanced:debug/arrow_south"
+        },
+        "arrow_east": {
+            "parent": "create_mechanically_enhanced:debug/arrow_east"
+        }
+    }
+}
