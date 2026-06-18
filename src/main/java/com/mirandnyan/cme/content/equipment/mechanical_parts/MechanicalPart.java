@@ -84,37 +84,37 @@ public class MechanicalPart {
     // STATIC
 
     // TODO: maybe make them with transform(Item, MechanicalToolSlot, apply) out of Items
-    public static final RegistryEntry<MechanicalPart, MechanicalPart> COPPER_TANK = new MechanicalPartBuilder("copper_tank")
-            .origin(new AffineTransform().translate(8f, 5f, -2f), MechanicalToolSlot.TANK_SLOT)
-            .item(CMEItems.SMALL_COPPER_TANK)
-            .data(new MechanicalTankPartData(800))
-            .build();
 
-    public static final RegistryEntry<MechanicalPart, MechanicalPart> NETHERITE_TANK = new MechanicalPartBuilder("netherite_tank")
-            .origin(new AffineTransform().translate(8f, 5f, -2f), MechanicalToolSlot.TANK_SLOT)
-            .item(CMEItems.SMALL_NETHERITE_TANK)
-            .data(new MechanicalTankPartData(1200))
-            .build();
-
-    public static final RegistryEntry<MechanicalPart, MechanicalPart> ANDESITE_GEARBOX = new MechanicalPartBuilder("andesite_gearbox")
-            .origin(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 1f), MechanicalToolSlot.GEARBOX_SLOT)
-            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 13f, -2f), MechanicalToolSlot.GEARED_TOP_SLOT)
-            .slot(new AffineTransform().translate(8f, 5f, -2f), MechanicalToolSlot.TANK_SLOT)
-            .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, -6f), MechanicalToolSlot.TIP_SLOT)
-            .item(CMEItems.SMALL_ANDESITE_VERTICAL_GEARBOX)
-            .data(new MechanicalGearboxPartData(MechanicalToolItem.DEFAULT_TRANSFER_RATIO))
-            .build();
-
-    public static final RegistryEntry<MechanicalPart, MechanicalPart> BRASS_GEARBOX = new MechanicalPartBuilder("brass_gearbox")
-            .origin(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 1f), MechanicalToolSlot.GEARBOX_SLOT)
-            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 13f, -2f), MechanicalToolSlot.GEARED_TOP_SLOT)
-            .slot(new AffineTransform().translate(8f, 5f, -2f), MechanicalToolSlot.TANK_SLOT)
-            .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, -6f), MechanicalToolSlot.TIP_SLOT)
-            .item(CMEItems.SMALL_BRASS_VERTICAL_GEARBOX)
-            .data(new MechanicalGearboxPartData(MechanicalToolItem.DEFAULT_TRANSFER_RATIO / 2))
+    // -------- Grips
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> DEFAULT_GRIP = new MechanicalPartBuilder("default_grip")
+            .origin(new AffineTransform().translate(0, -0.5, 2), MechanicalToolSlot.GRIP_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 5f), MechanicalToolSlot.COG_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 3f), MechanicalToolSlot.ACCELERATOR_SLOT)
+            .item(CMEItems.DEFAULT_GRIP)
+            .data(new MechanicalGripPartData(600))
             .build();
 
 
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> NETHERITE_GRIP = new MechanicalPartBuilder("netherite_grip")
+            .origin(new AffineTransform().translate(0, -0.5, 2), MechanicalToolSlot.GRIP_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 5f), MechanicalToolSlot.COG_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 3f), MechanicalToolSlot.ACCELERATOR_SLOT)
+            .item(CMEItems.NETHERITE_GRIP)
+            .data(new MechanicalGripPartData(1300) {
+                @Override
+                public void onInserted(ItemStack tool) {
+                    tool.set(DataComponents.FIRE_RESISTANT, Unit.INSTANCE);
+                    super.onInserted(tool);
+                }
+                @Override
+                public void onRemoved(ItemStack tool) {
+                    tool.remove(DataComponents.FIRE_RESISTANT);
+                    super.onInserted(tool);
+                }
+            })
+            .build();
+
+    // -------- Cogs
     public static final RegistryEntry<MechanicalPart, MechanicalPart> WOODEN_COG = new MechanicalPartBuilder("wooden_cog")
             .origin(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 5f), MechanicalToolSlot.COG_SLOT)
             .item(CMEItems.SMALL_WOODEN_COG)
@@ -133,35 +133,72 @@ public class MechanicalPart {
             .data(new MechanicalCogPartData(14))
             .build();
 
-
-    public static final RegistryEntry<MechanicalPart, MechanicalPart> DEFAULT_GRIP = new MechanicalPartBuilder("default_grip")
-            .origin(new AffineTransform().translate(0, -0.5, 2), MechanicalToolSlot.GRIP_SLOT)
-            .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 5f), MechanicalToolSlot.COG_SLOT)
-            .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 1f), MechanicalToolSlot.GEARBOX_SLOT)
-            .item(CMEItems.DEFAULT_GRIP)
-            .data(new MechanicalGripPartData(600))
+    // -------- Accelerators
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> STONE_ACCELERATOR = new MechanicalPartBuilder("stone_accelerator")
+            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.ACCELERATOR_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 2f, 8f), MechanicalToolSlot.GEARBOX_SLOT)
+            .item(CMEItems.STONE_ACCELERATOR)
+            .data(new MechanicalAcceleratorPartData(0))
             .build();
 
-
-    public static final RegistryEntry<MechanicalPart, MechanicalPart> NETHERITE_GRIP = new MechanicalPartBuilder("netherite_grip")
-            .origin(new AffineTransform().translate(0, -0.5, 2), MechanicalToolSlot.GRIP_SLOT)
-            .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 5f), MechanicalToolSlot.COG_SLOT)
-            .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 1f), MechanicalToolSlot.GEARBOX_SLOT)
-            .item(CMEItems.NETHERITE_GRIP)
-            .data(new MechanicalGripPartData(1300) {
-                @Override
-                public void onInserted(ItemStack tool) {
-                    tool.set(DataComponents.FIRE_RESISTANT, Unit.INSTANCE);
-                    super.onInserted(tool);
-                }
-                @Override
-                public void onRemoved(ItemStack tool) {
-                    tool.remove(DataComponents.FIRE_RESISTANT);
-                    super.onInserted(tool);
-                }
-            })
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> NETHER_STAR_ACCELERATOR = new MechanicalPartBuilder("nether_star_accelerator")
+            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, -0.5f, 8f), MechanicalToolSlot.ACCELERATOR_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 2.5f, 8f), MechanicalToolSlot.GEARBOX_SLOT)
+            .item(CMEItems.NETHER_STAR_ACCELERATOR)
+            .data(new MechanicalStarAcceleratorPartData(10))
             .build();
 
+    // -------- Gearboxes
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> ANDESITE_GEARBOX = new MechanicalPartBuilder("andesite_gearbox")
+            .origin(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 1f), MechanicalToolSlot.GEARBOX_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 13f, -2f), MechanicalToolSlot.GEARED_TOP_SLOT)
+            .slot(new AffineTransform().translate(8f, 5f, -2f), MechanicalToolSlot.TANK_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, -6f), MechanicalToolSlot.TIP_SLOT)
+            .item(CMEItems.SMALL_ANDESITE_VERTICAL_GEARBOX)
+            .data(new MechanicalGearboxPartData(MechanicalToolItem.DEFAULT_TRANSFER_RATIO))
+            .build();
+
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> COPPER_GEARBOX = new MechanicalPartBuilder("copper_gearbox")
+            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 1f, 8f), MechanicalToolSlot.GEARBOX_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(270f).translate(8f, 4f, 12f), MechanicalToolSlot.GEARED_TOP_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 4f, 4f), MechanicalToolSlot.TANK_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 8f, 8f), MechanicalToolSlot.TIP_SLOT)
+            .item(CMEItems.SMALL_COPPER_GEARBOX)
+            .data(new MechanicalGearboxPartData(MechanicalToolItem.DEFAULT_TRANSFER_RATIO))
+            .build();
+
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> NETHERITE_GEARBOX = new MechanicalPartBuilder("netherite_gearbox")
+            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 1f, 8f), MechanicalToolSlot.GEARBOX_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(270f).translate(8f, 4f, 12f), MechanicalToolSlot.GEARED_TOP_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 4f, 4f), MechanicalToolSlot.TANK_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 8f, 8f), MechanicalToolSlot.TIP_SLOT)
+            .item(CMEItems.SMALL_NETHERITE_GEARBOX)
+            .data(new MechanicalGearboxPartData(MechanicalToolItem.DEFAULT_TRANSFER_RATIO / 2))
+            .build();
+
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> BRASS_GEARBOX = new MechanicalPartBuilder("brass_gearbox")
+            .origin(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 1f), MechanicalToolSlot.GEARBOX_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 13f, -2f), MechanicalToolSlot.GEARED_TOP_SLOT)
+            .slot(new AffineTransform().translate(8f, 5f, -2f), MechanicalToolSlot.TANK_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, -6f), MechanicalToolSlot.TIP_SLOT)
+            .item(CMEItems.SMALL_BRASS_VERTICAL_GEARBOX)
+            .data(new MechanicalGearboxPartData(MechanicalToolItem.DEFAULT_TRANSFER_RATIO / 2))
+            .build();
+
+    // -------- Tanks
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> COPPER_TANK = new MechanicalPartBuilder("copper_tank")
+            .origin(new AffineTransform().translate(8f, 5f, -2f), MechanicalToolSlot.TANK_SLOT)
+            .item(CMEItems.SMALL_COPPER_TANK)
+            .data(new MechanicalTankPartData(800))
+            .build();
+
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> NETHERITE_TANK = new MechanicalPartBuilder("netherite_tank")
+            .origin(new AffineTransform().translate(8f, 5f, -2f), MechanicalToolSlot.TANK_SLOT)
+            .item(CMEItems.SMALL_NETHERITE_TANK)
+            .data(new MechanicalTankPartData(1200))
+            .build();
+
+    // -------- Drill Heads
     public static final RegistryEntry<MechanicalPart, MechanicalPart> IRON_DRILL_HEAD = new MechanicalPartBuilder("iron_drill_head")
             .origin(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, -6f), MechanicalToolSlot.TIP_SLOT)
             .item(CMEItems.IRON_DRILL_HEAD)
@@ -201,6 +238,39 @@ public class MechanicalPart {
             ))
             .build();
 
+
+    // -------- Saw Heads
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> IRON_SAW_HEAD = new MechanicalPartBuilder("iron_saw_head")
+            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.TIP_SLOT)
+            .item(CMEItems.IRON_SAW_HEAD)
+            .data(new MechanicalSawPartData(5 + Tiers.IRON.getAttackDamageBonus(),
+                    new Tool(List.of(
+                            Tool.Rule.deniesDrops(BlockTags.INCORRECT_FOR_IRON_TOOL),
+                            Tool.Rule.minesAndDrops(CMETags.Blocks.MINEABLE_WITH_MECHANICAL_SAW, Tiers.IRON.getSpeed())),
+                            1.0F,
+                            0
+                    )
+            ))
+            .model("tool_part", "saw", "saw_off")
+            .model("tool_part", "saw", "saw_on")
+            .build();
+
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> NETHERITE_SAW_HEAD = new MechanicalPartBuilder("netherite_saw_head")
+            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.TIP_SLOT)
+            .item(CMEItems.NETHERITE_SAW_HEAD)
+            .data(new MechanicalSawPartData(6 + Tiers.NETHERITE.getAttackDamageBonus(),
+                    new Tool(List.of(
+                            Tool.Rule.deniesDrops(BlockTags.INCORRECT_FOR_NETHERITE_TOOL),
+                            Tool.Rule.minesAndDrops(CMETags.Blocks.MINEABLE_WITH_MECHANICAL_SAW, Tiers.NETHERITE.getSpeed())),
+                            1.0F,
+                            0
+                    )
+            ))
+            .model("tool_part", "saw", "netherite_saw_off")
+            .model("tool_part", "saw", "netherite_saw_on")
+            .build();
+
+    // -------- Mechanical Helpers
     public static final RegistryEntry<MechanicalPart, MechanicalPart> SMALL_MECHANICAL_BLAZE = new MechanicalPartBuilder("small_mechanical_blaze")
             .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.GEARED_TOP_SLOT)
             .item(CMEItems.SMALL_MECHANICAL_BLAZE)
@@ -233,6 +303,8 @@ public class MechanicalPart {
             .model("tool_part", "small_mechanical_pumpkin")
             .model("tool_part", "small_mechanical_blaze", "cog")
             .build();
+
+
 
     public static Stream<RegistryEntry<MechanicalPart, MechanicalPart>> getAll(Predicate<? super RegistryEntry<MechanicalPart, MechanicalPart>> filter) {
         return REGISTRATE.getAll(REGISTRY).stream().filter(filter);

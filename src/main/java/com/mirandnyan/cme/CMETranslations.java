@@ -22,19 +22,18 @@ public class CMETranslations {
     public static final LangEntry TOOL_SLOTS_NONE = new StyledLangEntry("tool_slots.none", "No parts",
             component -> component.withStyle(ChatFormatting.ITALIC)
     );
-    public static final LangEntry TANK_TOOL_SLOT = toolSlot("tank", "Tank");
-    public static final LangEntry GEARBOX_TOOL_SLOT = toolSlot("gearbox", "Gearbox");
-    public static final LangEntry TIP_TOOL_SLOT = toolSlot("tip", "Tip");
-    public static final LangEntry COG_TOOL_SLOT = toolSlot("cog", "Cog");
     public static final LangEntry GRIP_TOOL_SLOT = toolSlot("grip", "Grip");
+    public static final LangEntry COG_TOOL_SLOT = toolSlot("cog", "Cog");
+    public static final LangEntry ACCELERATOR_TOOL_SLOT = toolSlot("accelerator", "Accelerator");
+    public static final LangEntry GEARBOX_TOOL_SLOT = toolSlot("gearbox", "Gearbox");
+    public static final LangEntry TANK_TOOL_SLOT = toolSlot("tank", "Tank");
+    public static final LangEntry TIP_TOOL_SLOT = toolSlot("tip", "Tip");
     public static final LangEntry GEARED_TOP_TOOL_SLOT = toolSlot("geared_top", "Geared Top");
 
     public static final LangEntry MECHANICAL_TOOL_NO_AIR = tooltip("mechanical_tool.no_air", "No Tank");
     public static final LangEntry MECHANICAL_TOOL_AIR_LEVEL_PRE = tooltip("mechanical_tool.air.prefix", "Air: ");
     public static final LangEntry MECHANICAL_TOOL_AIR_LEVEL_IN = tooltip("mechanical_tool.air.infix", " / ");
     public static final LangEntry MECHANICAL_TOOL_AIR_LEVEL_POST = tooltip("mechanical_tool.air.postfix", "");
-
-    // TODO: separate "Active Bonus" from bonus
 
     public static final LangEntry MECHANICAL_CAT_ACTIVE_BONUS = new StyledLangEntry("tooltip.mechanical_cat.bonus", "Active Bonus: ",
             component -> component.withStyle(ChatFormatting.DARK_PURPLE));
@@ -54,7 +53,12 @@ public class CMETranslations {
     public static final LangEntry CAT_COIN_TIER_3 = new StyledLangEntry("cat_coin.tier_3", "Tier 3",
             c -> c.withStyle(ChatFormatting.GRAY));
 
+    public static final LangEntry NETHER_STAR_ACCELERATOR_TOOLTIP = new StyledLangEntry("tooltip.nether_star_accelerator",
+            "Immune to explosions",
+            c -> c.withStyle(ChatFormatting.GRAY));
+
     public static final LangEntry MECHANICAL_TOOL_DRILL_TYPE = new LangEntry("mechanical_tool.type.drill", " (Drill)");
+    public static final LangEntry MECHANICAL_TOOL_SAW_TYPE = new LangEntry("mechanical_tool.type.saw", " (Saw)");
 
 
 

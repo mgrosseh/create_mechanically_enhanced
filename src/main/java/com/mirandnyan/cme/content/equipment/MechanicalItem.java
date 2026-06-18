@@ -62,8 +62,19 @@ public abstract class MechanicalItem extends Item {
             }
         }
         if (removed != null) {
+            // TODO: handle possible future case where a part that is replaced has different slots than the replacee, making children orphaned
             parent = removed.parent();
             removed = new FilledToolSlot(removed.slot(), removed.part(), Optional.empty());
+
+            // reparent children
+            for (int i = 0; i < newSlots.size(); i++) {
+               var slot =  newSlots.get(i);
+                if (slot.parent().isEmpty())
+                    continue;
+                if (slot.parent().get() != removed.part())
+                    continue;
+                newSlots.set(i, new FilledToolSlot(slot.slot(), slot.part(), Optional.of(newSlot.part())));
+            }
         }
         if (parent.isEmpty() && (!(stack.getItem() instanceof MechanicalItem item) || !item.alwaysFit(newSlot.slot()))) {
             return newSlot;

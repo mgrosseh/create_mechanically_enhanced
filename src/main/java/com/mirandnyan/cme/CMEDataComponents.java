@@ -77,6 +77,12 @@ builder -> builder.persistent(FilledToolSlot.CODEC.listOf()).networkSynchronized
             builder -> builder.persistent(MechanicalCatGiftType.CODEC).networkSynchronized(MechanicalCatGiftType.STREAM_CODEC)
     );
 
+
+    public static final DataComponentType<Unit> EXPLOSION_IMMUNE = register(
+            "explosion_resistant",
+            builder -> builder.persistent(Unit.CODEC).networkSynchronized(StreamCodec.unit(Unit.INSTANCE))
+    );
+
     public static final DataComponentType<CoinMintingItemComponent> COIN_MINTING_ITEM = register(
             "coin_minting_item",
             builder -> builder.persistent(CoinMintingItemComponent.CODEC).networkSynchronized(CoinMintingItemComponent.STREAM_CODEC)

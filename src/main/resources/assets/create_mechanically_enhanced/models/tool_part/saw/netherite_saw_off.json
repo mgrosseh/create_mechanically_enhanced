@@ -1,0 +1,9 @@
+{
+  "parent": "create_mechanically_enhanced:tool_part/saw/saw_off",
+  "render_type": "cutout",
+  "textures": {
+    "saw": "create_mechanically_enhanced:item/netherite_saw_off",
+    "gearbox": "create_mechanically_enhanced:block/small_gearbox_alt_extra",
+    "shaft": "create_mechanically_enhanced:block/small_gearbox_alt"
+  }
+}

@@ -10,12 +10,15 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.kinetics.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.kinetics.press.PressingRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeBuilder;
+import com.simibubi.create.foundation.data.CreateRegistrate;
+import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateItemModelProvider;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.util.Unit;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -38,18 +41,32 @@ public class CMEItems {
             .model(getExisting("default"))
             .register();
 
-    public static final ItemEntry<Item> DEFAULT_GRIP = part("part_default_grip");
-    public static final ItemEntry<Item> NETHERITE_GRIP = part("part_netherite_grip");
-    public static final ItemEntry<Item> SMALL_BRASS_VERTICAL_GEARBOX = part("small_vertical_brass_gearbox");
+    public static final ItemEntry<Item> DEFAULT_GRIP = part("part_default_grip", "Wooden Grip");
+    public static final ItemEntry<Item> NETHERITE_GRIP = part("part_netherite_grip", "Netherite Grip");
+    public static final ItemEntry<Item> STONE_ACCELERATOR = part("part_stone_accelerator", "Stone Accelerator");
+    public static final ItemEntry<TooltipItem> NETHER_STAR_ACCELERATOR = inTab(
+            REGISTRATE.item("part_nether_star_accelerator", p -> new TooltipItem(p, CMETranslations.NETHER_STAR_ACCELERATOR_TOOLTIP::resolveComponent))
+                    .properties(p -> p
+                            .stacksTo(1)
+                            .rarity(Rarity.EPIC)
+                            .component(CMEDataComponents.EXPLOSION_IMMUNE, Unit.INSTANCE))
+                    .model(CMEItems::getExisting)
+                    .lang("Nether Star Accelerator")
+                    .register());
     public static final ItemEntry<Item> SMALL_ANDESITE_VERTICAL_GEARBOX = part("small_vertical_andesite_gearbox");
+    public static final ItemEntry<Item> SMALL_COPPER_GEARBOX = part("small_copper_gearbox");
+    public static final ItemEntry<Item> SMALL_BRASS_VERTICAL_GEARBOX = part("small_vertical_brass_gearbox");
+    public static final ItemEntry<Item> SMALL_NETHERITE_GEARBOX = part("small_netherite_gearbox");
     public static final ItemEntry<Item> SMALL_COPPER_TANK = part("small_copper_tank");
     public static final ItemEntry<Item> SMALL_NETHERITE_TANK = part("small_netherite_tank");
     public static final ItemEntry<Item> SMALL_WOODEN_COG = part("small_wooden_cog");
     public static final ItemEntry<Item> SMALL_BRASS_COG = part("small_brass_cog");
     public static final ItemEntry<Item> SMALL_NETHERITE_COG = part("small_netherite_cog");
-    public static final ItemEntry<Item> IRON_DRILL_HEAD = part("part_iron_drill_head");
-    public static final ItemEntry<Item> DIAMOND_DRILL_HEAD = part("part_diamond_drill_head");
-    public static final ItemEntry<Item> NETHERITE_DRILL_HEAD = part("part_netherite_drill_head");
+    public static final ItemEntry<Item> IRON_DRILL_HEAD = part("part_iron_drill_head", "Iron Drill Head");
+    public static final ItemEntry<Item> DIAMOND_DRILL_HEAD = part("part_diamond_drill_head", "Diamond Drill Head");
+    public static final ItemEntry<Item> NETHERITE_DRILL_HEAD = part("part_netherite_drill_head", "Netherite Drill Head");
+    public static final ItemEntry<Item> IRON_SAW_HEAD = part("part_iron_saw_head", "Iron Saw head");
+    public static final ItemEntry<Item> NETHERITE_SAW_HEAD = part("part_netherite_saw_head", "Netherite Saw Head");
 
     public static final ItemEntry<Item> SMALL_MECHANICAL_BLAZE = part("small_mechanical_blaze");
     public static final ItemEntry<Item> SMALL_MECHANICAL_CAT = part("small_mechanical_cat");
@@ -158,10 +175,22 @@ public class CMEItems {
                 .register());
     }
 
+    private static ItemBuilder<Item, CreateRegistrate> prepart(String name) {
+        return REGISTRATE.item(name, Item::new)
+                .properties(p -> p.stacksTo(1))
+                .model(CMEItems::getExisting);
+    }
     private static ItemEntry<Item> part(String name) {
         return inTab(REGISTRATE.item(name, Item::new)
                 .properties(p -> p.stacksTo(1))
                 .model(CMEItems::getExisting)
+                .register());
+    }
+    private static ItemEntry<Item> part(String name, String lang) {
+        return inTab(REGISTRATE.item(name, Item::new)
+                .properties(p -> p.stacksTo(1))
+                .model(CMEItems::getExisting)
+                .lang(lang)
                 .register());
     }
 
@@ -197,20 +226,21 @@ public class CMEItems {
                                 output.accept(MechanicalToolItem.newStackWithParts(
                                         MechanicalPart.DEFAULT_GRIP,
                                         MechanicalPart.WOODEN_COG,
-                                        MechanicalPart.ANDESITE_GEARBOX,
-                                        MechanicalPart.IRON_DRILL_HEAD
+                                        MechanicalPart.STONE_ACCELERATOR
                                 ));
                                 output.accept(MechanicalToolItem.newStackWithParts(
                                         MechanicalPart.DEFAULT_GRIP,
                                         MechanicalPart.WOODEN_COG,
+                                        MechanicalPart.STONE_ACCELERATOR,
                                         MechanicalPart.ANDESITE_GEARBOX,
                                         MechanicalPart.COPPER_TANK,
                                         MechanicalPart.IRON_DRILL_HEAD
                                 ));
                                 output.accept(MechanicalToolItem.newStackWithParts(
-                                        MechanicalPart.DEFAULT_GRIP,
+                                        MechanicalPart.NETHERITE_GRIP,
                                         MechanicalPart.NETHERITE_COG,
-                                        MechanicalPart.BRASS_GEARBOX,
+                                        MechanicalPart.NETHER_STAR_ACCELERATOR,
+                                        MechanicalPart.NETHERITE_GEARBOX,
                                         MechanicalPart.NETHERITE_TANK,
                                         MechanicalPart.NETHERITE_DRILL_HEAD,
                                         MechanicalPart.SMALL_MECHANICAL_BLAZE
