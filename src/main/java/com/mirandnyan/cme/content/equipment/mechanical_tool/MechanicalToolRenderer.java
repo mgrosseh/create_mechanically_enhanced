@@ -1,42 +1,24 @@
 package com.mirandnyan.cme.content.equipment.mechanical_tool;
 
 import com.mirandnyan.cme.CMEDataComponents;
-import com.mirandnyan.cme.CreateMechanicallyEnhanced;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
-import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.MechanicalBlazePartData;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
-import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.registries.DeferredHolder;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MechanicalToolRenderer extends CustomRenderedItemModelRenderer {
-    static final PartialModel debug_arrow_up = PartialModel.of(CreateMechanicallyEnhanced.asResource("debug", "arrow_up"));
-    static final PartialModel debug_arrow_south = PartialModel.of(CreateMechanicallyEnhanced.asResource("debug", "arrow_south"));
-    static final PartialModel debug_arrow_east = PartialModel.of(CreateMechanicallyEnhanced.asResource("debug", "arrow_east"));
-    static final PartialModel debug_coordinate_origin = PartialModel.of(CreateMechanicallyEnhanced.asResource("debug", "coords_origin"));
-    static final PartialModel debug_pixel = PartialModel.of(CreateMechanicallyEnhanced.asResource("debug", "1pixel"));
-    static final PartialModel debug_block = PartialModel.of(CreateMechanicallyEnhanced.asResource("debug", "full_cube"));
 
     private void renderSlot(FilledToolSlot filledToolSlot, List<FilledToolSlot> filledToolSlots,
                             ItemStack stack, PartialItemModelRenderer renderer, ItemDisplayContext transformType,
                             PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-        var maybe_part = filledToolSlot.getPart().map(DeferredHolder::get);
-        if (maybe_part.isEmpty())
-            return;
-        MechanicalPart part = maybe_part.get();
+        MechanicalPart part = filledToolSlot.getPartRegistry().get();
         var origin = part.slots().getOriginTransform();
 
         origin.apply(ms);
@@ -64,8 +46,6 @@ public class MechanicalToolRenderer extends CustomRenderedItemModelRenderer {
 
 
         for (var filledToolSlot : filledToolSlots) {
-            if (filledToolSlot.getPart().isEmpty())
-                return;
             renderedAnything = true;
             if (filledToolSlot.parent().isEmpty()) {
                 ms.pushPose();

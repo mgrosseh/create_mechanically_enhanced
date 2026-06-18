@@ -15,14 +15,13 @@ import net.minecraft.world.item.TooltipFlag;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
 public record FilledToolSlot(
         @NonNull ResourceKey<MechanicalToolSlot> slot,
-        @Nullable ResourceKey<MechanicalPart> part, // TODO: make optional
-        Optional<ResourceKey<MechanicalPart>> parent) {
+        @NotNull ResourceKey<MechanicalPart> part,
+        @NotNull Optional<ResourceKey<MechanicalPart>> parent) {
 
     public static final Codec<FilledToolSlot> CODEC = RecordCodecBuilder.create(i -> i.group(
             MechanicalToolSlot.CODEC.fieldOf("slot").forGetter(FilledToolSlot::slot),
@@ -37,35 +36,22 @@ public record FilledToolSlot(
             FilledToolSlot::new
     );
 
-    public boolean isEmpty() {
-        return part == null;
-    }
-
     public RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> getSlot() {
         return MechanicalToolSlot.get(slot);
     }
 
-    public Optional<RegistryEntry<MechanicalPart, MechanicalPart>> getPart() {
-        if (this.part == null)
-            return Optional.empty();
-        return Optional.of(MechanicalPart.get(this.part));
+    public RegistryEntry<MechanicalPart, MechanicalPart> getPartRegistry() {
+        return MechanicalPart.get(this.part);
     }
 
-    public Optional<RegistryEntry<Item, Item>> getItem() {
-        return this.getPart().map(p -> p.get().getItem());
-    }
-
-    public static Optional<RegistryEntry<MechanicalPart, MechanicalPart>> getPartOf(@Nullable FilledToolSlot slot) {
-        if (slot == null)
-            return Optional.empty();
-        return slot.getPart();
+    public RegistryEntry<Item, Item> getItem() {
+        return this.getPartRegistry().get().getItem();
     }
 
     public boolean has(FilledToolSlot slot) {
-        var maybe_part = getPart();
-        if (slot == null || maybe_part.isEmpty())
+        if (slot == null)
             return false;
-        return maybe_part.get().get().slots().has(slot.slot());
+        return getPartRegistry().get().slots().has(slot.slot());
     }
 
     public boolean isSlot(FilledToolSlot other) {
@@ -80,10 +66,7 @@ public record FilledToolSlot(
 
     public void appendHoverText(@NotNull ItemStack stack, Item.@NotNull TooltipContext context,
                                 @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        var maybe_part = getPart();
-        var part = maybe_part.isEmpty()
-                ? CMETranslations.TOOL_SLOTS_EMPTY.resolveComponent()
-                : CMETranslations.Components.item(maybe_part.get().get().getItem());
+        var part = CMETranslations.Components.item(getPartRegistry().get().getItem());
 
         tooltip.add(CMETranslations.Components.line(
                 getSlot().get().lang().resolveComponent(),

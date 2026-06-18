@@ -14,6 +14,6 @@ as well as enhanced food that can be imbued with potion effects.
 # About
 Made by Mirandnyan.
 
-Big thanks to Frizi for the BlockBench plugin and helpful debugging sessions and ideas.
+Big thanks to Frizi for the BlockBench plugin and helpful debugging sessions and ideas + making the Mechanical Part orientation work.
 
 No AI used to make this mod.

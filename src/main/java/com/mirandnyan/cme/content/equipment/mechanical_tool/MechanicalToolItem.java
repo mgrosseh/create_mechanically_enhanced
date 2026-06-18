@@ -7,7 +7,6 @@ import com.mirandnyan.cme.content.equipment.MechanicalItem;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalToolSlot;
-import com.simibubi.create.content.equipment.armor.BacktankUtil;
 import com.simibubi.create.foundation.item.CustomArmPoseItem;
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import com.tterrag.registrate.util.entry.RegistryEntry;
@@ -39,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 @EventBusSubscriber
@@ -83,7 +83,7 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         var stack = CMEItems.MECHANICAL_TOOL.asStack();
 
         for (var part : parts) {
-            var slot = new FilledToolSlot(part.get().getOriginSlot().getKey(), part.getKey(), null);
+            var slot = new FilledToolSlot(part.get().getOriginSlot().getKey(), part.getKey(), Optional.empty());
             insertFilledToolSlot(stack, slot);
         }
         recalculateTotalWeight(stack);
@@ -110,9 +110,9 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
 
         List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
-            slot.getPart().ifPresent(p -> p.get().data.playerTick(
+            slot.getPartRegistry().get().data.playerTick(
                     player, stack
-            ));
+            );
         }
     }
     // -- Breaking Blocks with Item --
@@ -136,10 +136,8 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
 
         List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
-            var part = slot.getPart();
-            if (part.isEmpty())
-                continue;
-            var data = part.get().get().data;
+            var part = slot.getPartRegistry();
+            var data = part.get().data;
             var absorbed = data.tryAbsorbDamage(player, item, equipmentSlot, BLOCK_BREAK_DURABILITY_USE);
             if (absorbed)
                 return;
@@ -157,7 +155,7 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
 
         List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
-            slot.getPart().ifPresent(p -> p.get().data.brokeBlock(player, item, event));
+            slot.getPartRegistry().get().data.brokeBlock(player, item, event);
         }
     }
 
@@ -166,10 +164,8 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         var item = context.getItemInHand();
         List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
-            var part = slot.getPart();
-            if (part.isEmpty())
-                continue;
-            var result = part.get().get().data.useOn(context);
+            var part = slot.getPartRegistry();
+            var result = part.get().data.useOn(context);
             if (result != InteractionResult.PASS)
                 return result;
         }
@@ -182,10 +178,8 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
             @NotNull LivingEntity interactionTarget, @NotNull InteractionHand usedHand) {
         List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
-            var part = slot.getPart();
-            if (part.isEmpty())
-                continue;
-            var result = part.get().get().data.interactLivingEntity(stack, player, interactionTarget, usedHand);
+            var part = slot.getPartRegistry();
+            var result = part.get().data.interactLivingEntity(stack, player, interactionTarget, usedHand);
             if (result != InteractionResult.PASS)
                 return result;
         }
@@ -197,10 +191,8 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         var result = true;
         for (var slot : slots) {
-            var part = slot.getPart();
-            if (part.isEmpty())
-                continue;
-            result = result && part.get().get().data.onDroppedByPlayer(item, player);
+            var part = slot.getPartRegistry();
+            result = result && part.get().data.onDroppedByPlayer(item, player);
         }
         return result && super.onDroppedByPlayer(item, player);
     }
@@ -210,10 +202,8 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         var result = super.getHighlightTip(item, displayName);
         for (var slot : slots) {
-            var part = slot.getPart();
-            if (part.isEmpty())
-                continue;
-            result = part.get().get().data.getHighlightTip(item, result);
+            var part = slot.getPartRegistry();
+            result = part.get().data.getHighlightTip(item, result);
         }
         return result;
     }
@@ -232,9 +222,9 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
 
         List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
-            slot.getPart().ifPresent(p -> p.get().data.inventoryTick(
+            slot.getPartRegistry().get().data.inventoryTick(
                     stack, level, entity, slotId, isSelected
-            ));
+            );
         }
         super.inventoryTick(stack, level, entity, slotId, isSelected);
     }
@@ -259,10 +249,8 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
                                                           @NotNull Player player, @NotNull SlotAccess access) {
         List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var tool_slot : slots) {
-            var part = tool_slot.getPart();
-            if (part.isEmpty())
-                continue;
-            var handled = part.get().get().data.tryHandlingStackedOnMe(stack, other, slot, action, player, access);
+            var part = tool_slot.getPartRegistry();
+            var handled = part.get().data.tryHandlingStackedOnMe(stack, other, slot, action, player, access);
             if (handled)
                 return true;
         }
@@ -283,16 +271,16 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         var part = maybe_part.get();
         var partSlot = part.get().getOriginSlot().getKey();
 
-        var filledSlot = new FilledToolSlot(partSlot, part.getKey(), null);
+        var filledSlot = new FilledToolSlot(partSlot, part.getKey(), Optional.empty());
 
         var old = insertFilledToolSlot(stack, filledSlot);
         if (old == filledSlot)
             return false;
         recalculateTotalWeight(stack);
         other.shrink(1);
-        if (old == null || old.part() == null)
+        if (old == null)
             return true;
-        var item = MechanicalPart.get(old.part()).get().getItem().get().getDefaultInstance();
+        var item = old.getPartRegistry().get().getItem().get().getDefaultInstance();
         access.set(item);
 
         return true;
@@ -356,10 +344,8 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         }
 
         for (FilledToolSlot slot : slots) {
-            var part = slot.getPart();
-            if (part.isEmpty())
-                continue;
-            part.get().get().data.appendHoverText(stack, context, tooltip, flagIn);
+            var part = slot.getPartRegistry();
+            part.get().data.appendHoverText(stack, context, tooltip, flagIn);
         }
         tooltip.add(Component.empty());
         super.appendHoverText(stack, context, tooltip, flagIn);
@@ -381,10 +367,8 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         var duration = 0;
         List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
-            var part = slot.getPart();
-            if (part.isEmpty())
-                continue;
-            duration = Math.max(duration, part.get().get().data.getUseDuration(stack, entity));
+            var part = slot.getPartRegistry();
+            duration = Math.max(duration, part.get().data.getUseDuration(stack, entity));
         }
         return duration;
     }
@@ -393,10 +377,8 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
     public void onUseTick(@NotNull Level level, @NotNull LivingEntity livingEntity, @NotNull ItemStack stack, int remainingUseDuration) {
         List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
-            var part = slot.getPart();
-            if (part.isEmpty())
-                continue;
-            var data = part.get().get().data;
+            var part = slot.getPartRegistry();
+            var data = part.get().data;
             var duration = data.getUseDuration(stack, livingEntity);
             if(duration == 0)
                 continue;
@@ -448,14 +430,12 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
 
         List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
-            var part = slot.getPart();
-            if (part.isEmpty())
-                continue;
+            var part = slot.getPartRegistry();
             boolean result = false;
             if (state != null)
-                result = part.get().get().data.canAbsorbDurability(stack, state, amount);
+                result = part.get().data.canAbsorbDurability(stack, state, amount);
             else if (attacker != null && target != null)
-                result = part.get().get().data.canAbsorbDurability(stack, attacker, target, amount);
+                result = part.get().data.canAbsorbDurability(stack, attacker, target, amount);
             if (result)
                 return true;
         }

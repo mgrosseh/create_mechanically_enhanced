@@ -4,13 +4,11 @@ import com.mirandnyan.cme.CreateMechanicallyEnhanced;
 import com.mirandnyan.cme.util.AffineTransform;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
-import java.util.stream.Stream;
 
 import static com.mirandnyan.cme.CreateMechanicallyEnhanced.REGISTRATE;
 
@@ -83,7 +81,7 @@ public class MechanicalPartBuilder {
         if (models.isEmpty())
             models.add(resource("tool_part", name));
 
-        // WTF
+        // Annoying model space to hand space offsets
         var pixelToBlock = new AffineTransform().scale(1 / 16f).translate(-0.5f);
         var blockToPixel = pixelToBlock.inverse();
 

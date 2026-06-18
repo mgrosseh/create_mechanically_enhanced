@@ -2,8 +2,6 @@ package com.mirandnyan.cme.util;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.engine_room.flywheel.lib.transform.Affine;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Quaternionfc;
@@ -59,11 +57,6 @@ public class AffineTransform implements Affine<AffineTransform> {
 
     public AffineTransform copy() {
         return new AffineTransform(new Matrix3f(matrix), new Vector3f(translation));
-    }
-
-    public AffineTransform scaleTranslation(float scale) {
-        translation.mul(scale);
-        return this;
     }
 
     public AffineTransform mul(AffineTransform transform, AffineTransform dest) {

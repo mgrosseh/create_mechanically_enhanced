@@ -22,7 +22,6 @@ public class CMETranslations {
     public static final LangEntry TOOL_SLOTS_NONE = new StyledLangEntry("tool_slots.none", "No parts",
             component -> component.withStyle(ChatFormatting.ITALIC)
     );
-    public static final LangEntry TOOL_SLOTS_EMPTY = new LangEntry("tool_slots.empty_slot", "Empty");
     public static final LangEntry TANK_TOOL_SLOT = toolSlot("tank", "Tank");
     public static final LangEntry GEARBOX_TOOL_SLOT = toolSlot("gearbox", "Gearbox");
     public static final LangEntry TIP_TOOL_SLOT = toolSlot("tip", "Tip");

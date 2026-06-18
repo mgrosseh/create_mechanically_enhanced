@@ -1,9 +1,8 @@
 package com.mirandnyan.cme.content.items.cat_coin_die;
 
+import com.mirandnyan.cme.CMEDataComponents;
 import com.mirandnyan.cme.recipes.coin_minting.CatCoinDieMintingRecipe;
-import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.content.equipment.sandPaper.SandPaperItemComponent;
 import com.simibubi.create.content.equipment.sandPaper.SandPaperItemRenderer;
 import com.simibubi.create.foundation.item.CustomUseEffectsItem;
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
@@ -54,7 +53,7 @@ public class CatCoinDieItem extends Item implements CustomUseEffectsItem {
         ItemStack itemstack = playerIn.getItemInHand(handIn);
         InteractionResultHolder<ItemStack> FAIL = new InteractionResultHolder<>(InteractionResult.FAIL, itemstack);
 
-        if (itemstack.has(AllDataComponents.SAND_PAPER_POLISHING)) {
+        if (itemstack.has(CMEDataComponents.COIN_MINTING_ITEM)) {
             playerIn.startUsingItem(handIn);
             return new InteractionResultHolder<>(InteractionResult.PASS, itemstack);
         }
@@ -66,7 +65,7 @@ public class CatCoinDieItem extends Item implements CustomUseEffectsItem {
             ItemStack item = itemInOtherHand.copy();
             ItemStack toMint = item.split(1);
             playerIn.startUsingItem(handIn);
-            itemstack.set(AllDataComponents.SAND_PAPER_POLISHING, new SandPaperItemComponent(toMint));
+            itemstack.set(CMEDataComponents.COIN_MINTING_ITEM, new CoinMintingItemComponent(toMint));
             playerIn.setItemInHand(otherHand, item);
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
         }
@@ -99,7 +98,7 @@ public class CatCoinDieItem extends Item implements CustomUseEffectsItem {
         playerIn.startUsingItem(handIn);
 
         if (!worldIn.isClientSide) {
-            itemstack.set(AllDataComponents.SAND_PAPER_POLISHING, new SandPaperItemComponent(toPolish));
+            itemstack.set(CMEDataComponents.COIN_MINTING_ITEM, new CoinMintingItemComponent(toPolish));
             if (item.isEmpty())
                 pickUp.discard();
             else
@@ -113,8 +112,9 @@ public class CatCoinDieItem extends Item implements CustomUseEffectsItem {
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level level, @NotNull LivingEntity entityLiving) {
         if (!(entityLiving instanceof Player player))
             return stack;
-        if (stack.has(AllDataComponents.SAND_PAPER_POLISHING)) {
-            ItemStack toMint = stack.get(AllDataComponents.SAND_PAPER_POLISHING).item();
+        if (stack.has(CMEDataComponents.COIN_MINTING_ITEM)) {
+            @SuppressWarnings("DataFlowIssue") // can't be null, has guard above
+            ItemStack toMint = stack.get(CMEDataComponents.COIN_MINTING_ITEM).item();
             ItemStack minted = CatCoinDieMintingRecipe.applyMint(level, toMint);
 
             if (level.isClientSide) {
@@ -132,7 +132,7 @@ public class CatCoinDieItem extends Item implements CustomUseEffectsItem {
                 playerInv.placeItemBackInInventory(toMint.getCraftingRemainingItem());
             }
 
-            stack.remove(AllDataComponents.SAND_PAPER_POLISHING);
+            stack.remove(CMEDataComponents.COIN_MINTING_ITEM);
             stack.hurtAndBreak(1, entityLiving, LivingEntity.getSlotForHand(entityLiving.getUsedItemHand()));
         }
 
@@ -152,10 +152,11 @@ public class CatCoinDieItem extends Item implements CustomUseEffectsItem {
     public void releaseUsing(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity entityLiving, int timeLeft) {
         if (!(entityLiving instanceof Player player))
             return;
-        if (stack.has(AllDataComponents.SAND_PAPER_POLISHING)) {
-            ItemStack toMint = stack.get(AllDataComponents.SAND_PAPER_POLISHING).item();
+        if (stack.has(CMEDataComponents.COIN_MINTING_ITEM)) {
+            @SuppressWarnings("DataFlowIssue") // can't be null, has guard above
+            ItemStack toMint = stack.get(CMEDataComponents.COIN_MINTING_ITEM).item();
             player.getInventory().placeItemBackInInventory(toMint);
-            stack.remove(AllDataComponents.SAND_PAPER_POLISHING);
+            stack.remove(CMEDataComponents.COIN_MINTING_ITEM);
         }
     }
 
@@ -205,8 +206,9 @@ public class CatCoinDieItem extends Item implements CustomUseEffectsItem {
 
     @Override
     public boolean triggerUseEffects(ItemStack stack, LivingEntity entity, int count, RandomSource random) {
-        if (stack.has(AllDataComponents.SAND_PAPER_POLISHING)) {
-            ItemStack polishing = stack.get(AllDataComponents.SAND_PAPER_POLISHING).item();
+        if (stack.has(CMEDataComponents.COIN_MINTING_ITEM)) {
+            @SuppressWarnings("DataFlowIssue") // can't be null, has guard above
+            ItemStack polishing = stack.get(CMEDataComponents.COIN_MINTING_ITEM).item();
             if (!polishing.isEmpty())
                 ((LivingEntityAccessor) entity).create$callSpawnItemParticles(polishing, 1);
         }

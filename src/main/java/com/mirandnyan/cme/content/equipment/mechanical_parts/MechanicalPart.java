@@ -5,11 +5,9 @@ import com.mirandnyan.cme.content.equipment.mechanical_tool.MechanicalToolItem;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.*;
 import com.mirandnyan.cme.util.AffineTransform;
 import com.mojang.serialization.Codec;
-import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.codec.StreamCodec;
@@ -251,8 +249,7 @@ public class MechanicalPart {
     public boolean isIn(ItemStack stack) {
         List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
-            var part = slot.getPart();
-            if ( part.isEmpty() || part.get().get() != this)
+            if (slot.getPartRegistry().get() != this)
                 continue;
             return true;
         }
@@ -263,7 +260,7 @@ public class MechanicalPart {
     public static boolean isIn(ResourceKey<MechanicalPart> part, ItemStack stack) {
         List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
-            if (slot.part() == null || slot.part().compareTo(part) != 0)
+            if (slot.part().compareTo(part) != 0)
                 continue;
             return true;
         }

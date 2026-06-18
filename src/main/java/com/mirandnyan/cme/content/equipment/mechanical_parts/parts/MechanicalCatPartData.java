@@ -231,10 +231,10 @@ public class MechanicalCatPartData extends MechanicalPartData {
 
         List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (FilledToolSlot slot : slots) {
-            var part = slot.getPart();
-            if (part.isEmpty() || part.get() != MechanicalPart.SMALL_MECHANICAL_CAT)
+            var part = slot.getPartRegistry();
+            if (part != MechanicalPart.SMALL_MECHANICAL_CAT)
                 continue;
-            var data = (MechanicalCatPartData) part.get().get().data;
+            var data = (MechanicalCatPartData) part.get().data;
             //noinspection DataFlowIssue // cant be null since item.has guard
             data.handleGifts(player, item, item.get(CMEDataComponents.MECHANICAL_CAT_GIVE_GIFT), event);
         }
@@ -244,9 +244,7 @@ public class MechanicalCatPartData extends MechanicalPartData {
                                BlockDropsEvent event) {
         var level = event.getLevel();
         switch (gift) {
-            case EXPERIENCE -> {
-                event.setDroppedExperience(2);
-            } // handled above
+            case EXPERIENCE -> event.setDroppedExperience(2); // handled above
             case DOUBLE_DROPS -> {
                 // TODO: tag to forbid certain duplications
                 var drops = event.getDrops();

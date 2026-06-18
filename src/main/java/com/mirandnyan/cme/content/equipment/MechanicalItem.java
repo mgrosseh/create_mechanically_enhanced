@@ -54,24 +54,22 @@ public abstract class MechanicalItem extends Item {
             var slot = newSlots.get(i);
             if (slot.isSlot(newSlot)) {
                 removed = newSlots.remove(i);
-                removed.getPart().ifPresent(part -> part.get().data.onRemoved(stack));
+                removed.getPartRegistry().get().data.onRemoved(stack);
                 break;
             }
             if (slot.has(newSlot)) {
-                var part = slot.part();
-                if (part != null)
-                    parent = Optional.of(part);
+                parent = Optional.of(slot.part());
             }
         }
         if (removed != null) {
             parent = removed.parent();
-            removed = new FilledToolSlot(removed.slot(), removed.part(), null);
+            removed = new FilledToolSlot(removed.slot(), removed.part(), Optional.empty());
         }
         if (parent.isEmpty() && (!(stack.getItem() instanceof MechanicalItem item) || !item.alwaysFit(newSlot.slot()))) {
             return newSlot;
         }
 
-        newSlot.getPart().ifPresent(part -> part.get().data.onInserted(stack));
+        newSlot.getPartRegistry().get().data.onInserted(stack);
         newSlots.add(new FilledToolSlot(newSlot.slot(), newSlot.part(), parent));
         stack.set(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.copyOf(newSlots));
         return removed;
@@ -82,10 +80,8 @@ public abstract class MechanicalItem extends Item {
 
         float weight = 0;
         for (FilledToolSlot slot : slots) {
-            var part = slot.getPart();
-            if (part.isEmpty())
-                continue;
-            weight += part.get().get().data.weight;
+            var part = slot.getPartRegistry();
+            weight += part.get().data.weight;
         }
 
         stack.set(DataComponents.ATTRIBUTE_MODIFIERS, new ItemAttributeModifiersRebuilder(stack.getAttributeModifiers())

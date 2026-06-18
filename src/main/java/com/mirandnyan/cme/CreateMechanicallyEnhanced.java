@@ -28,19 +28,19 @@ public class CreateMechanicallyEnhanced {
 
     Scanner: Scan mobs to be able to create mechanic versions of them
 
-    Part Trading villager (takes cat coins)
     Cat coins:
-    Coin Stack Block
+    - Part Trading villager (takes cat coins)
+    - Coin Stack Block
 
 
     # Mechanical Tool
     BUG: refilling air can cause use anim in offhand item (which isn't a tool)
 
     # Mechanical Parts:
-    for now we assume all parts in a given slot have the same slot holders
-
     ## mechanical cat:
-    TODO: make ears rotate with cogs
+    TODO:
+    - make ears rotate with cogs
+    - range blessing broken
 
     ## Mechanical Chicken
     Gives slow falling
