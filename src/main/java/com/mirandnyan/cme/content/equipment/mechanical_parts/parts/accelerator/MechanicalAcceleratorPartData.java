@@ -1,13 +1,11 @@
-package com.mirandnyan.cme.content.equipment.mechanical_parts.parts;
+package com.mirandnyan.cme.content.equipment.mechanical_parts.parts.accelerator;
 
 import com.mirandnyan.cme.CreateMechanicallyEnhanced;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPartData;
 import com.mirandnyan.cme.util.ItemAttributeModifiersRebuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
-import net.createmod.catnip.animation.AnimationTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.EquipmentSlotGroup;

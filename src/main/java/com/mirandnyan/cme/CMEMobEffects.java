@@ -1,6 +1,6 @@
 package com.mirandnyan.cme;
 
-import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.mechanical_cat.HungerRegenerationMobEffect;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.mechanical_cat.HungerRegenerationMobEffect;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffect;

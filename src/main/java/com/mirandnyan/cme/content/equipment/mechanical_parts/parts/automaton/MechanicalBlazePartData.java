@@ -1,9 +1,10 @@
-package com.mirandnyan.cme.content.equipment.mechanical_parts.parts;
+package com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton;
 
 import com.mirandnyan.cme.CMEDataComponents;
 import com.mirandnyan.cme.CreateMechanicallyEnhanced;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPartData;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.MechanicalPartUtil;
 import com.mirandnyan.cme.util.AttributeHelpers;
 import com.mirandnyan.cme.util.ItemAttributeModifiersRebuilder;
 import com.mojang.blaze3d.vertex.PoseStack;

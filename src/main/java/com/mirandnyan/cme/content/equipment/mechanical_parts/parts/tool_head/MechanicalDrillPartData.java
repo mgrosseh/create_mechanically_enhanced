@@ -1,4 +1,4 @@
-package com.mirandnyan.cme.content.equipment.mechanical_parts.parts;
+package com.mirandnyan.cme.content.equipment.mechanical_parts.parts.tool_head;
 
 import com.mirandnyan.cme.CMEDataComponents;
 import com.mirandnyan.cme.CMETranslations;
@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import net.createmod.catnip.animation.AnimationTickHolder;
+import net.createmod.catnip.animation.PhysicalFloat;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.component.DataComponents;
@@ -28,19 +29,17 @@ import java.util.Optional;
 import java.util.WeakHashMap;
 
 
-public class MechanicalSawPartData extends MechanicalPartData {
+public class MechanicalDrillPartData extends MechanicalPartData {
 
-    private static final int SAW_OFF = 0;
-    private static final int SAW_ON = 1;
 
     @SuppressWarnings("FieldCanBeLocal") // can be used in quering player for this, so it is useful
-    private final AttributeModifier sawDamageModifier;
-    private final ItemAttributeModifiers.Entry sawDamage;
+    private final AttributeModifier drillDamageModifier;
+    private final ItemAttributeModifiers.Entry drillDamage;
 
     private static class ClientData {
         int lastAir = 0;
         int lastDamage = 0;
-        int active;
+        PhysicalFloat pAngle = new PhysicalFloat(1).withDrag(0.1);
         static WeakHashMap<String, ClientData> clientData = new WeakHashMap<>();
 
         static ClientData of(String name) {
@@ -60,10 +59,10 @@ public class MechanicalSawPartData extends MechanicalPartData {
 
     Tool tool;
 
-    public MechanicalSawPartData(float attackDamage, Tool toolProperties) {
-        super(1.6f);
-        sawDamageModifier = new AttributeModifier(Item.BASE_ATTACK_DAMAGE_ID, attackDamage, AttributeModifier.Operation.ADD_VALUE);
-        sawDamage = new ItemAttributeModifiers.Entry(Attributes.ATTACK_DAMAGE, sawDamageModifier, EquipmentSlotGroup.MAINHAND);
+    public MechanicalDrillPartData(float attackDamage, Tool toolProperties) {
+        super(1.2f);
+        drillDamageModifier = new AttributeModifier(Item.BASE_ATTACK_DAMAGE_ID, attackDamage, AttributeModifier.Operation.ADD_VALUE);
+        drillDamage = new ItemAttributeModifiers.Entry(Attributes.ATTACK_DAMAGE, drillDamageModifier, EquipmentSlotGroup.MAINHAND);
         this.tool = toolProperties;
     }
 
@@ -72,7 +71,7 @@ public class MechanicalSawPartData extends MechanicalPartData {
         tool.set(DataComponents.TOOL, this.tool);
         tool.set(DataComponents.ATTRIBUTE_MODIFIERS, new ItemAttributeModifiersRebuilder(tool.getAttributeModifiers())
                 .takeAll()
-                .add(sawDamage)
+                .add(drillDamage)
                 .build());
         super.onInserted(tool);
     }
@@ -81,7 +80,7 @@ public class MechanicalSawPartData extends MechanicalPartData {
     public void onRemoved(ItemStack tool) {
         tool.remove(DataComponents.TOOL);
         tool.set(DataComponents.ATTRIBUTE_MODIFIERS, new ItemAttributeModifiersRebuilder(tool.getAttributeModifiers())
-                .removing(sawDamage)
+                .removing(drillDamage)
                 .build());
         super.onRemoved(tool);
     }
@@ -103,28 +102,35 @@ public class MechanicalSawPartData extends MechanicalPartData {
         data.lastAir = air;
         data.lastDamage = damage;
         if (mining)
-            data.active = 20;
+            data.pAngle.bump(5.5);
 
-        if (data.active > 0) {
-            data.active--;
-        }
+        data.pAngle.tick();
     }
 
     @Override
     public Component getHighlightTip(@NotNull ItemStack item, @NotNull Component displayName) {
-        return Component.empty().append(displayName).append(CMETranslations.MECHANICAL_TOOL_SAW_TYPE.resolveComponent());
+        return Component.empty().append(displayName).append(CMETranslations.MECHANICAL_TOOL_DRILL_TYPE.resolveComponent());
+    }
+
+    private float getAngle(ItemStack stack) {
+        return ClientData.of(stack)
+                .map(d -> d.pAngle.getValue(AnimationTickHolder.getPartialTicks()) % 360)
+                .orElse(0f);
     }
 
     @Override
     public void render(ItemStack stack, MechanicalPart part, PartialItemModelRenderer renderer, ItemDisplayContext transformType,
                        PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-        var active = switch (transformType) {
+        var angle = switch (transformType) {
             case THIRD_PERSON_LEFT_HAND, THIRD_PERSON_RIGHT_HAND, // can only be mining in someone's hand
-                 FIRST_PERSON_LEFT_HAND, FIRST_PERSON_RIGHT_HAND -> ClientData.of(stack).map(d -> d.active).orElse(0);
+                 FIRST_PERSON_LEFT_HAND, FIRST_PERSON_RIGHT_HAND -> getAngle(stack);
             case NONE, HEAD, GUI, GROUND, FIXED -> 0;
         };
         ms.pushPose();
-        renderer.render(part.models[active > 0 ? SAW_ON : SAW_OFF].get(), light);
+        ms.translate(0, 1 / 16f, 0);
+        ms.mulPose(Axis.ZP.rotationDegrees(angle));
+        ms.translate(0, -1 / 16f, 0);
+        super.render(stack, part, renderer, transformType, ms, buffer, light, overlay);
         ms.popPose();
     }
 }

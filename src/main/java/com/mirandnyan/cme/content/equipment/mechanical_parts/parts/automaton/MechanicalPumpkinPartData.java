@@ -1,7 +1,8 @@
-package com.mirandnyan.cme.content.equipment.mechanical_parts.parts;
+package com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton;
 
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPartData;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.MechanicalPartUtil;
 import com.mirandnyan.cme.util.AttributeHelpers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;

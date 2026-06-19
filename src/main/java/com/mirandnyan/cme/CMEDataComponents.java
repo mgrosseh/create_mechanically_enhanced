@@ -1,8 +1,8 @@
 package com.mirandnyan.cme;
 
 import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
-import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.mechanical_cat.MechanicalCatBonusType;
-import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.mechanical_cat.MechanicalCatGiftType;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.mechanical_cat.MechanicalCatBonusType;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.mechanical_cat.MechanicalCatGiftType;
 import com.mirandnyan.cme.content.items.cat_coin_die.CoinMintingItemComponent;
 import com.mojang.serialization.Codec;
 import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;

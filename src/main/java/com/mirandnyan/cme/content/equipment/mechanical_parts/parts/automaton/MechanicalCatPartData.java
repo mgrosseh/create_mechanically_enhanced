@@ -1,4 +1,4 @@
-package com.mirandnyan.cme.content.equipment.mechanical_parts.parts;
+package com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton;
 
 import com.mirandnyan.cme.CMEDataComponents;
 import com.mirandnyan.cme.CMEItems;
@@ -7,8 +7,9 @@ import com.mirandnyan.cme.CMETranslations;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPartData;
-import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.mechanical_cat.MechanicalCatBonusType;
-import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.mechanical_cat.MechanicalCatGiftType;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.MechanicalPartUtil;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.mechanical_cat.MechanicalCatBonusType;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.mechanical_cat.MechanicalCatGiftType;
 import com.mirandnyan.cme.util.AttributeHelpers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;

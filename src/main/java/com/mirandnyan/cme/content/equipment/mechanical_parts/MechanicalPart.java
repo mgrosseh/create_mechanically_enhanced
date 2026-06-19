@@ -1,6 +1,13 @@
 package com.mirandnyan.cme.content.equipment.mechanical_parts;
 
 import com.mirandnyan.cme.*;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.accelerator.MechanicalAcceleratorPartData;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.accelerator.MechanicalStarAcceleratorPartData;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.MechanicalBlazePartData;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.MechanicalCatPartData;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.MechanicalPumpkinPartData;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.tool_head.MechanicalDrillPartData;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.tool_head.MechanicalSawPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_tool.MechanicalToolItem;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.*;
 import com.mirandnyan.cme.util.AffineTransform;
@@ -170,7 +177,7 @@ public class MechanicalPart {
     // -------- Gearboxes
     public static final RegistryEntry<MechanicalPart, MechanicalPart> ANDESITE_GEARBOX = new MechanicalPartBuilder("andesite_gearbox")
             .origin(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 1f), MechanicalToolSlot.GEARBOX_SLOT)
-            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 13f, -2f), MechanicalToolSlot.GEARED_TOP_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 13f, -2f), MechanicalToolSlot.AUTOMATON_SLOT)
             .slot(new AffineTransform().translate(8f, 5f, -2f), MechanicalToolSlot.TANK_SLOT)
             .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, -6f), MechanicalToolSlot.TIP_SLOT)
             .item(CMEItems.SMALL_ANDESITE_VERTICAL_GEARBOX)
@@ -179,7 +186,7 @@ public class MechanicalPart {
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> COPPER_GEARBOX = new MechanicalPartBuilder("copper_gearbox")
             .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 1f, 8f), MechanicalToolSlot.GEARBOX_SLOT)
-            .slot(new AffineTransform().rotateXDegrees(270f).translate(8f, 4f, 12f), MechanicalToolSlot.GEARED_TOP_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(270f).translate(8f, 4f, 12f), MechanicalToolSlot.AUTOMATON_SLOT)
             .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 4f, 4f), MechanicalToolSlot.TANK_SLOT)
             .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 8f, 8f), MechanicalToolSlot.TIP_SLOT)
             .item(CMEItems.SMALL_COPPER_GEARBOX)
@@ -188,7 +195,7 @@ public class MechanicalPart {
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> NETHERITE_GEARBOX = new MechanicalPartBuilder("netherite_gearbox")
             .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 1f, 8f), MechanicalToolSlot.GEARBOX_SLOT)
-            .slot(new AffineTransform().rotateXDegrees(270f).translate(8f, 4f, 12f), MechanicalToolSlot.GEARED_TOP_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(270f).translate(8f, 4f, 12f), MechanicalToolSlot.AUTOMATON_SLOT)
             .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 4f, 4f), MechanicalToolSlot.TANK_SLOT)
             .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 8f, 8f), MechanicalToolSlot.TIP_SLOT)
             .item(CMEItems.SMALL_NETHERITE_GEARBOX)
@@ -197,7 +204,7 @@ public class MechanicalPart {
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> BRASS_GEARBOX = new MechanicalPartBuilder("brass_gearbox")
             .origin(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 1f), MechanicalToolSlot.GEARBOX_SLOT)
-            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 13f, -2f), MechanicalToolSlot.GEARED_TOP_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 13f, -2f), MechanicalToolSlot.AUTOMATON_SLOT)
             .slot(new AffineTransform().translate(8f, 5f, -2f), MechanicalToolSlot.TANK_SLOT)
             .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, -6f), MechanicalToolSlot.TIP_SLOT)
             .item(CMEItems.SMALL_BRASS_VERTICAL_GEARBOX)
@@ -306,7 +313,7 @@ public class MechanicalPart {
 
     // -------- Mechanical Helpers
     public static final RegistryEntry<MechanicalPart, MechanicalPart> SMALL_MECHANICAL_BLAZE = new MechanicalPartBuilder("small_mechanical_blaze")
-            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.GEARED_TOP_SLOT)
+            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.AUTOMATON_SLOT)
             .item(CMEItems.SMALL_MECHANICAL_BLAZE)
             .data(new MechanicalBlazePartData())
             // TODO: auto assign names to not use hardcoded order
@@ -323,7 +330,7 @@ public class MechanicalPart {
             .build();
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> SMALL_MECHANICAL_CAT = new MechanicalPartBuilder("small_mechanical_cat")
-            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.GEARED_TOP_SLOT)
+            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.AUTOMATON_SLOT)
             .item(CMEItems.SMALL_MECHANICAL_CAT)
             .data(new MechanicalCatPartData())
             .model("tool_part", "small_mechanical_cat")
@@ -331,7 +338,7 @@ public class MechanicalPart {
             .build();
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> SMALL_MECHANICAL_PUMPKIN = new MechanicalPartBuilder("small_mechanical_pumpkin")
-            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.GEARED_TOP_SLOT)
+            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.AUTOMATON_SLOT)
             .item(CMEItems.SMALL_MECHANICAL_PUMPKIN)
             .data(new MechanicalPumpkinPartData())
             .model("tool_part", "small_mechanical_pumpkin")

@@ -1,4 +1,4 @@
-package com.mirandnyan.cme.content.equipment.mechanical_parts.parts;
+package com.mirandnyan.cme.content.equipment.mechanical_parts.parts.accelerator;
 
 import com.mirandnyan.cme.CMEDataComponents;
 import net.minecraft.tags.DamageTypeTags;

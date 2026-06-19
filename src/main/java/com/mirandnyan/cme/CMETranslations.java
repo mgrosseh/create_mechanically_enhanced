@@ -28,7 +28,7 @@ public class CMETranslations {
     public static final LangEntry GEARBOX_TOOL_SLOT = toolSlot("gearbox", "Gearbox");
     public static final LangEntry TANK_TOOL_SLOT = toolSlot("tank", "Tank");
     public static final LangEntry TIP_TOOL_SLOT = toolSlot("tip", "Tip");
-    public static final LangEntry GEARED_TOP_TOOL_SLOT = toolSlot("geared_top", "Geared Top");
+    public static final LangEntry AUTOMATON_TOOL_SLOT = toolSlot("automaton", "Automaton");
 
     public static final LangEntry MECHANICAL_TOOL_NO_AIR = tooltip("mechanical_tool.no_air", "No Tank");
     public static final LangEntry MECHANICAL_TOOL_AIR_LEVEL_PRE = tooltip("mechanical_tool.air.prefix", "Air: ");

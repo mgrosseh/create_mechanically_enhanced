@@ -1,4 +1,4 @@
-package com.mirandnyan.cme.content.equipment.mechanical_parts.parts.mechanical_cat;
+package com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.mechanical_cat;
 
 import com.mirandnyan.cme.CMEMobEffects;
 import com.mojang.serialization.Codec;
