@@ -22,6 +22,7 @@ import net.minecraft.world.item.component.Tool;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3f;
 
 import java.util.Arrays;
 import java.util.List;
@@ -98,7 +99,6 @@ public class MechanicalPart {
     public static final RegistryEntry<MechanicalPart, MechanicalPart> NETHERITE_GRIP = new MechanicalPartBuilder("netherite_grip")
             .origin(new AffineTransform().translate(0, -0.5, 2), MechanicalToolSlot.GRIP_SLOT)
             .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 5f), MechanicalToolSlot.COG_SLOT)
-            .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 3f), MechanicalToolSlot.ACCELERATOR_SLOT)
             .item(CMEItems.NETHERITE_GRIP)
             .data(new MechanicalGripPartData(1300) {
                 @Override
@@ -117,20 +117,31 @@ public class MechanicalPart {
     // -------- Cogs
     public static final RegistryEntry<MechanicalPart, MechanicalPart> WOODEN_COG = new MechanicalPartBuilder("wooden_cog")
             .origin(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 5f), MechanicalToolSlot.COG_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 3f), MechanicalToolSlot.ACCELERATOR_SLOT)
             .item(CMEItems.SMALL_WOODEN_COG)
-            .data(new MechanicalCogPartData(4))
+            .data(new MechanicalCogPartData(4, new Vector3f(0f, 1f, 0f)))
+            .build();
+
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> ANDESITE_COG = new MechanicalPartBuilder("andesite_cog")
+            .origin(new AffineTransform().rotateXDegrees(90f).translate(8f, 4f, 10f), MechanicalToolSlot.COG_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 4f, 6f), MechanicalToolSlot.ACCELERATOR_SLOT)
+            .item(CMEItems.SMALL_ANDESITE_COG)
+            .data(new MechanicalCogPartData(6, new Vector3f(0f, -4f, 0f)))
+            .model("tool_part", "cog", "andesite_cog")
             .build();
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> BRASS_COG = new MechanicalPartBuilder("brass_cog")
             .origin(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 5f), MechanicalToolSlot.COG_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 3f), MechanicalToolSlot.ACCELERATOR_SLOT)
             .item(CMEItems.SMALL_BRASS_COG)
-            .data(new MechanicalCogPartData(8))
+            .data(new MechanicalCogPartData(8, new Vector3f(0f, 1f, 0f)))
             .build();
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> NETHERITE_COG = new MechanicalPartBuilder("netherite_cog")
             .origin(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 5f), MechanicalToolSlot.COG_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 3f), MechanicalToolSlot.ACCELERATOR_SLOT)
             .item(CMEItems.SMALL_NETHERITE_COG)
-            .data(new MechanicalCogPartData(14))
+            .data(new MechanicalCogPartData(14, new Vector3f(0f, 1f, 0f)))
             .build();
 
     // -------- Accelerators
@@ -139,6 +150,14 @@ public class MechanicalPart {
             .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 2f, 8f), MechanicalToolSlot.GEARBOX_SLOT)
             .item(CMEItems.STONE_ACCELERATOR)
             .data(new MechanicalAcceleratorPartData(0))
+            .build();
+
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> COPPER_ACCELERATOR = new MechanicalPartBuilder("copper_accelerator")
+            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.ACCELERATOR_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 6f, 8f), MechanicalToolSlot.GEARBOX_SLOT)
+            .item(CMEItems.COPPER_ACCELERATOR)
+            .data(new MechanicalAcceleratorPartData(4))
+            .model("tool_part", "accelerator", "copper_accelerator")
             .build();
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> NETHER_STAR_ACCELERATOR = new MechanicalPartBuilder("nether_star_accelerator")
@@ -253,6 +272,21 @@ public class MechanicalPart {
             ))
             .model("tool_part", "saw", "saw_off")
             .model("tool_part", "saw", "saw_on")
+            .build();
+
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> COPPER_SAW_HEAD = new MechanicalPartBuilder("copper_saw_head")
+            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.TIP_SLOT)
+            .item(CMEItems.COPPER_SAW_HEAD)
+            .data(new MechanicalSawPartData(5 + Tiers.IRON.getAttackDamageBonus(),
+                    new Tool(List.of(
+                            Tool.Rule.deniesDrops(BlockTags.INCORRECT_FOR_IRON_TOOL),
+                            Tool.Rule.minesAndDrops(CMETags.Blocks.MINEABLE_WITH_MECHANICAL_SAW, Tiers.IRON.getSpeed())),
+                            1.0F,
+                            0
+                    )
+            ))
+            .model("tool_part", "saw", "copper_saw_off")
+            .model("tool_part", "saw", "copper_saw_on")
             .build();
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> NETHERITE_SAW_HEAD = new MechanicalPartBuilder("netherite_saw_head")

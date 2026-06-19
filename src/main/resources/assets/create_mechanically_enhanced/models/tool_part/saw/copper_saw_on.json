@@ -1,0 +1,7 @@
+{
+  "parent": "create_mechanically_enhanced:tool_part/saw/copper_saw_off",
+  "render_type": "cutout",
+  "textures": {
+    "saw": "create_mechanically_enhanced:item/copper_saw_on"
+  }
+}

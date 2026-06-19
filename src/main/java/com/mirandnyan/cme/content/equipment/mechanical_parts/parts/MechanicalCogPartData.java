@@ -16,15 +16,22 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 public class MechanicalCogPartData extends MechanicalPartData {
 
     private final AttributeModifier cogBoostModifier;
     private final ItemAttributeModifiers.Entry cogBoost;
 
+    Vector3f rotationOffset;
     int speedModifier;
     public MechanicalCogPartData(int speedModifier) {
+        this(speedModifier, new Vector3f(0f, 0f, 0f));
+    }
+    public MechanicalCogPartData(int speedModifier, Vector3f rotationOffset) {
         super(0.1f);
+        this.rotationOffset = rotationOffset;
         this.speedModifier = speedModifier;
         cogBoostModifier =
                 new AttributeModifier(CreateMechanicallyEnhanced.asResource("cog_mining_boost"),
@@ -60,11 +67,8 @@ public class MechanicalCogPartData extends MechanicalPartData {
 
         angle %= 360;
 
-
         ms.pushPose();
-        ms.translate(0, 1 / 16f, 0);
-        ms.mulPose(Axis.ZP.rotationDegrees(angle));
-        ms.translate(0, -1 / 16f, 0);
+        ms.rotateAround(Axis.ZP.rotationDegrees(angle), rotationOffset.x / 16f, rotationOffset.y / 16f, rotationOffset.z / 16f);
         super.render(stack, part, renderer, transformType, ms, buffer, light, overlay);
         ms.popPose();
     }
