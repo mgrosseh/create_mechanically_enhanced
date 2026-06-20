@@ -127,8 +127,21 @@ public class MechanicalTankPartData extends MechanicalPartData {
     }
 
     @Override
-    public boolean overridesBar(@NotNull ItemStack stack) {
+    public boolean hasExtraTooltip(@NotNull ItemStack stack, Item.@NotNull TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         return true;
+    }
+
+    @Override
+    public void appendExtraTooltip(@NotNull ItemStack stack, Item.@NotNull TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+        tooltip.add(CMETranslations.TOOLTIP_WHEN_USED_WHILE_SNEAKING.resolveComponent());
+        tooltip.add(CMETranslations.TOOLTIP_TANK_PART_REFILL.resolveComponent());
+    }
+
+    @Override
+    public boolean overridesBar(@NotNull ItemStack stack) {
+        var maxAir = stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR_CAPACITY, 0);
+        var air = stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR, 0);
+        return maxAir > 0 && air > 0;
     }
 
     @Override
@@ -137,7 +150,7 @@ public class MechanicalTankPartData extends MechanicalPartData {
         var air = stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR, 0);
         if (maxAir > 0 && air > 0)
             return Math.round((float) air * Item.MAX_BAR_WIDTH / (float) maxAir);
-        return stack.getBarWidth();
+        return 0; // should never happen, just in case
     }
 
     @Override

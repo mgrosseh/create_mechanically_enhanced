@@ -165,12 +165,44 @@ public class MechanicalPart {
             .defaultModel("accelerator")
             .build();
 
-    public static final RegistryEntry<MechanicalPart, MechanicalPart> COPPER_ACCELERATOR = new MechanicalPartBuilder("copper_accelerator")
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> ANDESITE_CASING_ACCELERATOR = new MechanicalPartBuilder("andesite_casing_accelerator")
+            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.ACCELERATOR_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 3f, 8f), MechanicalToolSlot.GEARBOX_SLOT)
+            .item(CMEItems.ANDESITE_CASING_ACCELERATOR)
+            .data(new MechanicalAcceleratorPartData(4))
+            .customModel("accelerator", "andesite_casing")
+            .build();
+
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> COPPER_CASING_ACCELERATOR = new MechanicalPartBuilder("copper_casing_accelerator")
+            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.ACCELERATOR_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 3f, 8f), MechanicalToolSlot.GEARBOX_SLOT)
+            .item(CMEItems.COPPER_CASING_ACCELERATOR)
+            .data(new MechanicalAcceleratorPartData(4))
+            .customModel("accelerator", "copper_casing")
+            .build();
+
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> COPPER_PIPE_NODE_ACCELERATOR = new MechanicalPartBuilder("copper_pipe_node_accelerator")
             .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.ACCELERATOR_SLOT)
             .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 6f, 8f), MechanicalToolSlot.GEARBOX_SLOT)
-            .item(CMEItems.COPPER_ACCELERATOR)
+            .item(CMEItems.COPPER_PIPE_NODE_ACCELERATOR)
             .data(new MechanicalAcceleratorPartData(4))
-            .defaultModel("accelerator")
+            .customModel("accelerator", "copper_pipe_node")
+            .build();
+
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> BRASS_CASING_ACCELERATOR = new MechanicalPartBuilder("brass_casing_accelerator")
+            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.ACCELERATOR_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 3f, 8f), MechanicalToolSlot.GEARBOX_SLOT)
+            .item(CMEItems.BRASS_CASING_ACCELERATOR)
+            .data(new MechanicalAcceleratorPartData(6))
+            .customModel("accelerator", "brass_casing")
+            .build();
+
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> NETHERITE_CASING_ACCELERATOR = new MechanicalPartBuilder("netherite_casing_accelerator")
+            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.ACCELERATOR_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 3f, 8f), MechanicalToolSlot.GEARBOX_SLOT)
+            .item(CMEItems.NETHERITE_CASING_ACCELERATOR)
+            .data(new MechanicalAcceleratorPartData(6))
+            .customModel("accelerator", "netherite_casing")
             .build();
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> NETHER_STAR_ACCELERATOR = new MechanicalPartBuilder("nether_star_accelerator")
@@ -186,7 +218,7 @@ public class MechanicalPart {
             .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 1f, 8f), MechanicalToolSlot.GEARBOX_SLOT)
             .slot(new AffineTransform().rotateXDegrees(270f).translate(8f, 4f, 12f), MechanicalToolSlot.AUTOMATON_SLOT)
             .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 4f, 4f), MechanicalToolSlot.TANK_SLOT)
-            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 7f, 8f), MechanicalToolSlot.TIP_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 8f, 8f), MechanicalToolSlot.TIP_SLOT)
             .item(CMEItems.SMALL_ANDESITE_VERTICAL_GEARBOX)
             .data(new MechanicalGearboxPartData(MechanicalToolItem.DEFAULT_TRANSFER_RATIO))
             .defaultModel("gearbox")
@@ -196,7 +228,7 @@ public class MechanicalPart {
             .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 1f, 8f), MechanicalToolSlot.GEARBOX_SLOT)
             .slot(new AffineTransform().rotateXDegrees(270f).translate(8f, 4f, 12f), MechanicalToolSlot.AUTOMATON_SLOT)
             .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 4f, 4f), MechanicalToolSlot.TANK_SLOT)
-            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 7f, 8f), MechanicalToolSlot.TIP_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 8f, 8f), MechanicalToolSlot.TIP_SLOT)
             .item(CMEItems.SMALL_COPPER_GEARBOX)
             .data(new MechanicalGearboxPartData(MechanicalToolItem.DEFAULT_TRANSFER_RATIO))
             .defaultModel("gearbox")
@@ -206,7 +238,7 @@ public class MechanicalPart {
             .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 1f, 8f), MechanicalToolSlot.GEARBOX_SLOT)
             .slot(new AffineTransform().rotateXDegrees(270f).translate(8f, 4f, 12f), MechanicalToolSlot.AUTOMATON_SLOT)
             .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 4f, 4f), MechanicalToolSlot.TANK_SLOT)
-            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 7f, 8f), MechanicalToolSlot.TIP_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 8f, 8f), MechanicalToolSlot.TIP_SLOT)
             .item(CMEItems.SMALL_NETHERITE_GEARBOX)
             .data(new MechanicalGearboxPartData(MechanicalToolItem.DEFAULT_TRANSFER_RATIO / 2))
             .defaultModel("gearbox")
@@ -216,7 +248,7 @@ public class MechanicalPart {
             .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 1f, 8f), MechanicalToolSlot.GEARBOX_SLOT)
             .slot(new AffineTransform().rotateXDegrees(270f).translate(8f, 4f, 12f), MechanicalToolSlot.AUTOMATON_SLOT)
             .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 4f, 4f), MechanicalToolSlot.TANK_SLOT)
-            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 7f, 8f), MechanicalToolSlot.TIP_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 8f, 8f), MechanicalToolSlot.TIP_SLOT)
             .item(CMEItems.SMALL_BRASS_VERTICAL_GEARBOX)
             .data(new MechanicalGearboxPartData(MechanicalToolItem.DEFAULT_TRANSFER_RATIO / 2))
             .defaultModel("gearbox")

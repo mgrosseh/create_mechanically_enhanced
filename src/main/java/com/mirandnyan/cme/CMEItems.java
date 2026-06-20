@@ -45,7 +45,11 @@ public class CMEItems {
     public static final ItemEntry<Item> NETHERITE_GRIP = inTab(part("grip_netherite").lang("Netherite Grip").register());
 
     public static final ItemEntry<Item> STONE_ACCELERATOR = inTab(part("accelerator_stone").lang("Stone Accelerator").register());
-    public static final ItemEntry<Item> COPPER_ACCELERATOR = inTab(part("accelerator_copper").lang("Copper Accelerator").register());
+    public static final ItemEntry<Item> ANDESITE_CASING_ACCELERATOR = inTab(part("accelerator_andesite_casing").lang("Andesite Encased Accelerator").register());
+    public static final ItemEntry<Item> COPPER_CASING_ACCELERATOR = inTab(part("accelerator_copper_casing").lang("Copper Encased Accelerator").register());
+    public static final ItemEntry<Item> BRASS_CASING_ACCELERATOR = inTab(part("accelerator_brass_casing").lang("Brass Encased Accelerator").register());
+    public static final ItemEntry<Item> NETHERITE_CASING_ACCELERATOR = inTab(part("accelerator_netherite_casing").lang("Netherite Encased Accelerator").register());
+    public static final ItemEntry<Item> COPPER_PIPE_NODE_ACCELERATOR = inTab(part("accelerator_copper_pipe_node").lang("Copper Pipe Accelerator").register());
     public static final ItemEntry<TooltipItem> NETHER_STAR_ACCELERATOR = inTab(
             REGISTRATE.item("accelerator_nether_star", p -> new TooltipItem(p, CMETranslations.NETHER_STAR_ACCELERATOR_TOOLTIP::resolveComponent))
                     .properties(p -> p
@@ -252,7 +256,7 @@ public class CMEItems {
                                 output.accept(MechanicalToolItem.newStackWithParts(
                                         MechanicalPart.WOODEN_GRIP,
                                         MechanicalPart.ANDESITE_COG,
-                                        MechanicalPart.COPPER_ACCELERATOR,
+                                        MechanicalPart.COPPER_CASING_ACCELERATOR,
                                         MechanicalPart.COPPER_GEARBOX,
                                         MechanicalPart.COPPER_TANK,
                                         MechanicalPart.COPPER_SAW_HEAD

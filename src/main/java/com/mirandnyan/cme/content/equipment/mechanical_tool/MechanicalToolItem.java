@@ -61,6 +61,7 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
 
 
     /*
+    TODO: remove since most has been done (not all hence this todo)
     TODO: reworking Slots / Parts / FilledSlots etc
     Tool has a slot for Grip:
     Tag defines two slots on grip: cog + gearbox

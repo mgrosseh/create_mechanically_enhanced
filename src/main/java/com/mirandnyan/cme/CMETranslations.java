@@ -19,6 +19,10 @@ public class CMETranslations {
 
 
     // TODO: use user keybinds instead of hardcoded Shift / Control
+    public static final LangEntry TOOLTIP_WHEN_USED_WHILE_SNEAKING = new StyledLangEntry("tooltip.used_while_sneaking",
+            "When used while sneaking",
+            component -> component.withStyle(ChatFormatting.GRAY));
+
     private static final LangEntry EXTRA_TOOLTIP_INFO_0 = new StyledLangEntry("mechanical_item.extra_info0", "Hold [",
             c -> c.withStyle(ChatFormatting.DARK_GRAY));
     private static final LangEntry EXTRA_TOOLTIP_INFO_1 = new StyledLangEntry("mechanical_item.extra_info1", "Shift",
@@ -53,6 +57,10 @@ public class CMETranslations {
     public static final LangEntry MECHANICAL_TOOL_AIR_LEVEL_PRE = tooltip("mechanical_tool.air.prefix", "Air: ");
     public static final LangEntry MECHANICAL_TOOL_AIR_LEVEL_IN = tooltip("mechanical_tool.air.infix", " / ");
     public static final LangEntry MECHANICAL_TOOL_AIR_LEVEL_POST = tooltip("mechanical_tool.air.postfix", "");
+
+    public static final LangEntry TOOLTIP_TANK_PART_REFILL = new StyledLangEntry("mechanical_tool.tank.refill_air",
+            "  Refills contained air using equipped backtanks.",
+            component -> component.withStyle(ChatFormatting.DARK_GRAY));
 
     public static final LangEntry MECHANICAL_CAT_ACTIVE_BONUS = new StyledLangEntry("tooltip.mechanical_cat.bonus", "Active Bonus: ",
             component -> component.withStyle(ChatFormatting.DARK_PURPLE));
