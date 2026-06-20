@@ -49,7 +49,6 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
     public static final int BLOCK_BREAK_DURABILITY_USE = 1;
     public static final int ENTITY_ATTACK_DURABILITY_USE = 2;
 
-    // TODO: insta mining Deepslate Requires mining_efficiency of ~80 or more, make possible
     // TODO: pose is weird (crossing) when in offhand: extendo grip, crossbow, other mechanical tool
     // TODO: enchants: unbreaking (for when no air)
     // TODO: no anvil
@@ -59,7 +58,7 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
     // TODO: right / left click on drill in inventory
     // TODO: sound when air empty
 
-    // TODO: head: explosion generator, saw
+    // TODO: head: explosion generator
 
 
     /*

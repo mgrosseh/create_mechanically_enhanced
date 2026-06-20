@@ -1,0 +1,7 @@
+{
+  "parent": "create_mechanically_enhanced:mechanical_part/automaton/blaze/base_idle",
+  "textures": {
+    "0": "create_mechanically_enhanced:item/mechanical_part/automaton/blaze/superheated_idle",
+    "particle": "create_mechanically_enhanced:item/mechanical_part/automaton/blaze/superheated_idle"
+  }
+}

@@ -1,0 +1,7 @@
+{
+	"parent": "create_mechanically_enhanced:mechanical_part/gearbox/copper_gearbox",
+	"textures": {
+		"particle": "create_mechanically_enhanced:item/mechanical_part/casing/andesite_brass",
+		"gearboxes": "create_mechanically_enhanced:item/mechanical_part/casing/andesite_brass"
+	}
+}

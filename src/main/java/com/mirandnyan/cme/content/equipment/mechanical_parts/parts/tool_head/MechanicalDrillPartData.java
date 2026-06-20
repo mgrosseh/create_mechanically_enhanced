@@ -128,7 +128,7 @@ public class MechanicalDrillPartData extends MechanicalPartData {
         };
         ms.pushPose();
         ms.translate(0, 1 / 16f, 0);
-        ms.mulPose(Axis.ZP.rotationDegrees(angle));
+        ms.mulPose(Axis.YP.rotationDegrees(angle));
         ms.translate(0, -1 / 16f, 0);
         super.render(stack, part, renderer, transformType, ms, buffer, light, overlay);
         ms.popPose();

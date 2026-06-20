@@ -1,7 +1,0 @@
-{
-	"parent": "create_mechanically_enhanced:item/small_wooden_cog",
-	"textures": {
-		"particle": "minecraft:block/netherite_block",
-		"brass_block": "minecraft:block/netherite_block"
-	}
-}

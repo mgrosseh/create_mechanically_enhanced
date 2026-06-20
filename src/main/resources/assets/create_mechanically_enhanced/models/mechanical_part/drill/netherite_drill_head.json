@@ -1,0 +1,9 @@
+{
+	"parent": "create_mechanically_enhanced:mechanical_part/drill/diamond_drill_head",
+	"textures": {
+		"drill_material": "block/netherite_block",
+		"drill_fixation": "create:block/andesite_casing_very_short",
+		"particle": "block/netherite_block",
+		"drill_back": "block/anvil"
+	}
+}

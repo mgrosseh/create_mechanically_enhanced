@@ -9,7 +9,10 @@ public class MechanicalGripPartData extends MechanicalPartData {
     private final int maxDamage;
 
     public MechanicalGripPartData(int maxDamage) {
-        super(0.5f);
+        this(maxDamage, 0.5f);
+    }
+    public MechanicalGripPartData(int maxDamage, float weight) {
+        super(weight);
         this.maxDamage = maxDamage;
     }
 

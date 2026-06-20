@@ -1,0 +1,9 @@
+{
+  "parent": "create_mechanically_enhanced:mechanical_part/saw/iron_saw_off",
+  "render_type": "cutout",
+  "textures": {
+    "saw": "create_mechanically_enhanced:item/mechanical_part/saw/netherite_off",
+    "gearbox": "create_mechanically_enhanced:item/mechanical_part/casing/netherite_copper_halfs",
+    "shaft": "create_mechanically_enhanced:item/mechanical_part/casing/netherite_copper"
+  }
+}

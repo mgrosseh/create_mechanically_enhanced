@@ -1,6 +1,0 @@
-{
-  "parent": "create_mechanically_enhanced:tool_part/default_grip",
-  "textures": {
-    "extendo_grip": "block/netherite_block"
-  }
-}

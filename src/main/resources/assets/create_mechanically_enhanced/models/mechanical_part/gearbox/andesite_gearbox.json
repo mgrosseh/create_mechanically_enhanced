@@ -1,0 +1,7 @@
+{
+	"parent": "create_mechanically_enhanced:mechanical_part/gearbox/netherite_gearbox",
+	"textures": {
+		"gearboxes": "create_mechanically_enhanced:item/mechanical_part/casing/andesite_brass",
+		"particle": "create_mechanically_enhanced:item/mechanical_part/casing/andesite_brass"
+	}
+}

@@ -1,0 +1,7 @@
+{
+	"parent": "create_mechanically_enhanced:mechanical_part/cog/wooden_cog",
+	"textures": {
+		"particle": "create_mechanically_enhanced:item/mechanical_part/cog/brass",
+		"material": "create_mechanically_enhanced:item/mechanical_part/cog/brass"
+	}
+}

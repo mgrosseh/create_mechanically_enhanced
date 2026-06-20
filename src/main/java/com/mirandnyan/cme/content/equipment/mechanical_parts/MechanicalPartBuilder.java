@@ -2,6 +2,7 @@ package com.mirandnyan.cme.content.equipment.mechanical_parts;
 
 import com.mirandnyan.cme.CreateMechanicallyEnhanced;
 import com.mirandnyan.cme.util.AffineTransform;
+import com.mirandnyan.cme.util.java_helpers.VarArgs;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.core.Registry;
@@ -45,6 +46,15 @@ public class MechanicalPartBuilder {
         this.data = data;
         return this;
     }
+
+    public MechanicalPartBuilder defaultModel(String... path) {
+        model(resource(VarArgs.of("mechanical_part").and(path).and(name).toArray()));
+        return this;
+    }
+    public MechanicalPartBuilder customModel(String... path) {
+        model(resource(VarArgs.of("mechanical_part").and(path).toArray()));
+        return this;
+    }
     public MechanicalPartBuilder model(String... path) {
         model(resource(path));
         return this;
@@ -79,7 +89,7 @@ public class MechanicalPartBuilder {
         if (validItem == null)
             throw new RuntimeException("Part must have a valid item.");
         if (models.isEmpty())
-            models.add(resource("tool_part", name));
+            defaultModel();
 
         // Annoying model space to hand space offsets
         var pixelToBlock = new AffineTransform().scale(1 / 16f).translate(-0.5f);
@@ -105,7 +115,6 @@ public class MechanicalPartBuilder {
 
     private ResourceLocation resource(String... pathParts) {
         return resource(String.join("/", pathParts));
-
     }
     private ResourceLocation resource(String path) {
         return ResourceLocation.fromNamespaceAndPath(modId, path);

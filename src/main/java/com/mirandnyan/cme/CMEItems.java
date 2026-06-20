@@ -41,13 +41,13 @@ public class CMEItems {
             .model(getExisting("default"))
             .register();
 
-    public static final ItemEntry<Item> DEFAULT_GRIP = part("part_default_grip", "Wooden Grip");
-    public static final ItemEntry<Item> NETHERITE_GRIP = part("part_netherite_grip", "Netherite Grip");
+    public static final ItemEntry<Item> WOODEN_GRIP = inTab(part("grip_wooden").lang("Wooden Grip").register());
+    public static final ItemEntry<Item> NETHERITE_GRIP = inTab(part("grip_netherite").lang("Netherite Grip").register());
 
-    public static final ItemEntry<Item> STONE_ACCELERATOR = part("part_stone_accelerator", "Stone Accelerator");
-    public static final ItemEntry<Item> COPPER_ACCELERATOR = part("part_copper_accelerator", "Copper Accelerator");
+    public static final ItemEntry<Item> STONE_ACCELERATOR = inTab(part("accelerator_stone").lang("Stone Accelerator").register());
+    public static final ItemEntry<Item> COPPER_ACCELERATOR = inTab(part("accelerator_copper").lang("Copper Accelerator").register());
     public static final ItemEntry<TooltipItem> NETHER_STAR_ACCELERATOR = inTab(
-            REGISTRATE.item("part_nether_star_accelerator", p -> new TooltipItem(p, CMETranslations.NETHER_STAR_ACCELERATOR_TOOLTIP::resolveComponent))
+            REGISTRATE.item("accelerator_nether_star", p -> new TooltipItem(p, CMETranslations.NETHER_STAR_ACCELERATOR_TOOLTIP::resolveComponent))
                     .properties(p -> p
                             .stacksTo(1)
                             .rarity(Rarity.EPIC)
@@ -56,30 +56,30 @@ public class CMEItems {
                     .lang("Nether Star Accelerator")
                     .register());
 
-    public static final ItemEntry<Item> SMALL_WOODEN_COG = part("small_wooden_cog");
-    public static final ItemEntry<Item> SMALL_ANDESITE_COG = part("small_andesite_cog");
-    public static final ItemEntry<Item> SMALL_BRASS_COG = part("small_brass_cog");
-    public static final ItemEntry<Item> SMALL_NETHERITE_COG = part("small_netherite_cog");
+    public static final ItemEntry<Item> SMALL_WOODEN_COG = inTab(part("small_cog_wooden").register());
+    public static final ItemEntry<Item> SMALL_ANDESITE_COG = inTab(part("small_cog_andesite").register());
+    public static final ItemEntry<Item> SMALL_BRASS_COG = inTab(part("small_cog_brass").register());
+    public static final ItemEntry<Item> SMALL_NETHERITE_COG = inTab(part("small_cog_netherite").register());
 
-    public static final ItemEntry<Item> SMALL_ANDESITE_VERTICAL_GEARBOX = part("small_vertical_andesite_gearbox");
-    public static final ItemEntry<Item> SMALL_COPPER_GEARBOX = part("small_copper_gearbox");
-    public static final ItemEntry<Item> SMALL_BRASS_VERTICAL_GEARBOX = part("small_vertical_brass_gearbox");
-    public static final ItemEntry<Item> SMALL_NETHERITE_GEARBOX = part("small_netherite_gearbox");
+    public static final ItemEntry<Item> SMALL_ANDESITE_VERTICAL_GEARBOX = inTab(part("small_gearbox_andesite").register());
+    public static final ItemEntry<Item> SMALL_COPPER_GEARBOX = inTab(part("small_gearbox_copper").register());
+    public static final ItemEntry<Item> SMALL_BRASS_VERTICAL_GEARBOX = inTab(part("small_gearbox_brass").register());
+    public static final ItemEntry<Item> SMALL_NETHERITE_GEARBOX = inTab(part("small_gearbox_netherite").register());
 
-    public static final ItemEntry<Item> SMALL_COPPER_TANK = part("small_copper_tank");
-    public static final ItemEntry<Item> SMALL_NETHERITE_TANK = part("small_netherite_tank");
+    public static final ItemEntry<Item> SMALL_COPPER_TANK = inTab(part("tank_copper").register());
+    public static final ItemEntry<Item> SMALL_NETHERITE_TANK = inTab(part("tank_netherite").register());
 
-    public static final ItemEntry<Item> IRON_DRILL_HEAD = part("part_iron_drill_head", "Iron Drill Head");
-    public static final ItemEntry<Item> DIAMOND_DRILL_HEAD = part("part_diamond_drill_head", "Diamond Drill Head");
-    public static final ItemEntry<Item> NETHERITE_DRILL_HEAD = part("part_netherite_drill_head", "Netherite Drill Head");
+    public static final ItemEntry<Item> IRON_DRILL_HEAD = inTab(part("drill_head_iron").lang("Iron Drill Head").register());
+    public static final ItemEntry<Item> DIAMOND_DRILL_HEAD = inTab(part("drill_head_diamond").lang("Diamond Drill Head").register());
+    public static final ItemEntry<Item> NETHERITE_DRILL_HEAD = inTab(part("drill_head_netherite").lang("Netherite Drill Head").register());
 
-    public static final ItemEntry<Item> IRON_SAW_HEAD = part("part_iron_saw_head", "Iron Saw head");
-    public static final ItemEntry<Item> COPPER_SAW_HEAD = part("part_copper_saw_head", "Copper Saw head");
-    public static final ItemEntry<Item> NETHERITE_SAW_HEAD = part("part_netherite_saw_head", "Netherite Saw Head");
+    public static final ItemEntry<Item> IRON_SAW_HEAD = inTab(part("saw_head_iron").lang("Iron Saw head").register());
+    public static final ItemEntry<Item> COPPER_SAW_HEAD = inTab(part("saw_head_copper").lang("Copper Saw head").register());
+    public static final ItemEntry<Item> NETHERITE_SAW_HEAD = inTab(part("saw_head_netherite").lang("Netherite Saw Head").register());
 
-    public static final ItemEntry<Item> SMALL_MECHANICAL_BLAZE = part("small_mechanical_blaze");
-    public static final ItemEntry<Item> SMALL_MECHANICAL_CAT = part("small_mechanical_cat");
-    public static final ItemEntry<Item> SMALL_MECHANICAL_PUMPKIN = part("small_mechanical_pumpkin");
+    public static final ItemEntry<Item> SMALL_MECHANICAL_BLAZE = inTab(part("automaton_blaze").register());
+    public static final ItemEntry<Item> SMALL_MECHANICAL_CAT = inTab(part("automaton_cat").register());
+    public static final ItemEntry<Item> SMALL_MECHANICAL_PUMPKIN = inTab(part("automaton_pumpkin").register());
 
     public static final ItemEntry<CatCoinDieItem> CAT_COIN_DIE = inTab(REGISTRATE.item("cat_coin_die", CatCoinDieItem::new)
             .defaultModel()
@@ -184,23 +184,10 @@ public class CMEItems {
                 .register());
     }
 
-    private static ItemBuilder<Item, CreateRegistrate> prepart(String name) {
+    private static ItemBuilder<Item, CreateRegistrate> part(String name) {
         return REGISTRATE.item(name, Item::new)
                 .properties(p -> p.stacksTo(1))
                 .model(CMEItems::getExisting);
-    }
-    private static ItemEntry<Item> part(String name) {
-        return inTab(REGISTRATE.item(name, Item::new)
-                .properties(p -> p.stacksTo(1))
-                .model(CMEItems::getExisting)
-                .register());
-    }
-    private static ItemEntry<Item> part(String name, String lang) {
-        return inTab(REGISTRATE.item(name, Item::new)
-                .properties(p -> p.stacksTo(1))
-                .model(CMEItems::getExisting)
-                .lang(lang)
-                .register());
     }
 
     private static <T extends Item> ItemEntry<T> inTab(ItemEntry<T> entry) {
@@ -216,9 +203,14 @@ public class CMEItems {
     private static <T extends Item> ModelFile getExisting(DataGenContext<Item, T> ctx, RegistrateItemModelProvider prov) {
         return prov.getExistingFile(CreateMechanicallyEnhanced.asResource("item/" + ctx.getName()));
     }
+
     private static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateItemModelProvider> getExisting(String sublocation) {
         return (ctx, prov) ->
                 prov.withExistingParent("item/" + ctx.getName(), prov.modLoc("item/" + ctx.getName() + "/" + sublocation));
+    }
+    private static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateItemModelProvider> getIn(String sublocation) {
+        return (ctx, prov) ->
+                prov.withExistingParent("item/" + ctx.getName(), prov.modLoc("item/" + sublocation + "/" + ctx.getName()));
     }
 
     // -- Creative Mode Tab --
@@ -233,13 +225,13 @@ public class CMEItems {
                             .icon(SMALL_BRASS_VERTICAL_GEARBOX::asStack)
                             .displayItems((parameters, output) -> {
                                 output.accept(MechanicalToolItem.newStackWithParts(
-                                        MechanicalPart.DEFAULT_GRIP,
+                                        MechanicalPart.WOODEN_GRIP,
                                         MechanicalPart.WOODEN_COG,
                                         MechanicalPart.STONE_ACCELERATOR
                                 ));
 
                                 output.accept(MechanicalToolItem.newStackWithParts(
-                                        MechanicalPart.DEFAULT_GRIP,
+                                        MechanicalPart.WOODEN_GRIP,
                                         MechanicalPart.WOODEN_COG,
                                         MechanicalPart.STONE_ACCELERATOR,
                                         MechanicalPart.ANDESITE_GEARBOX,
@@ -258,7 +250,7 @@ public class CMEItems {
 
 
                                 output.accept(MechanicalToolItem.newStackWithParts(
-                                        MechanicalPart.DEFAULT_GRIP,
+                                        MechanicalPart.WOODEN_GRIP,
                                         MechanicalPart.ANDESITE_COG,
                                         MechanicalPart.COPPER_ACCELERATOR,
                                         MechanicalPart.COPPER_GEARBOX,
@@ -280,7 +272,6 @@ public class CMEItems {
                                 }
                             }).build()
             );
-
 
 
     public static void register(IEventBus modEventBus) {
