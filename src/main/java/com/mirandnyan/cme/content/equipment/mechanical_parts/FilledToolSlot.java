@@ -4,6 +4,7 @@ import com.mirandnyan.cme.CMETranslations;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.tterrag.registrate.util.entry.RegistryEntry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -45,7 +46,7 @@ public record FilledToolSlot(
     }
 
     public RegistryEntry<Item, Item> getItem() {
-        return this.getPartRegistry().get().getItem();
+        return this.getPartRegistry().get().getItemRegistry();
     }
 
     public boolean has(FilledToolSlot slot) {
@@ -65,11 +66,17 @@ public record FilledToolSlot(
     }
 
     public void appendHoverText(@NotNull ItemStack stack, Item.@NotNull TooltipContext context,
-                                @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        var part = CMETranslations.Components.item(getPartRegistry().get().getItem());
+                                @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn,
+                                boolean isSelected, boolean isError) {
+        var part = CMETranslations.Components.item(getPartRegistry().get().getItemRegistry());
 
+        var comp = getSlot().get().lang().resolveComponentMutable();
+        if (isSelected)
+            comp = comp.withStyle(ChatFormatting.UNDERLINE);
+        if (isError)
+            comp = comp.withStyle(ChatFormatting.RED);
         tooltip.add(CMETranslations.Components.line(
-                getSlot().get().lang().resolveComponent(),
+                comp,
                 Component.literal(": "),
                 part
         ));

@@ -44,6 +44,7 @@ public class CMEItems {
     public static final ItemEntry<Item> WOODEN_GRIP = inTab(part("grip_wooden").lang("Wooden Grip").register());
     public static final ItemEntry<Item> NETHERITE_GRIP = inTab(part("grip_netherite").lang("Netherite Grip").register());
 
+    public static final ItemEntry<Item> SIMPLE_ANDESITE_ACCELERATOR = inTab(part("accelerator_simple_andesite").lang("Simple Connector").register());
     public static final ItemEntry<Item> STONE_ACCELERATOR = inTab(part("accelerator_stone").lang("Stone Accelerator").register());
     public static final ItemEntry<Item> ANDESITE_CASING_ACCELERATOR = inTab(part("accelerator_andesite_casing").lang("Andesite Encased Accelerator").register());
     public static final ItemEntry<Item> COPPER_CASING_ACCELERATOR = inTab(part("accelerator_copper_casing").lang("Copper Encased Accelerator").register());
@@ -231,7 +232,7 @@ public class CMEItems {
                                 output.accept(MechanicalToolItem.newStackWithParts(
                                         MechanicalPart.WOODEN_GRIP,
                                         MechanicalPart.WOODEN_COG,
-                                        MechanicalPart.STONE_ACCELERATOR
+                                        MechanicalPart.SIMPLE_ANDESITE_ACCELERATOR
                                 ));
 
                                 output.accept(MechanicalToolItem.newStackWithParts(

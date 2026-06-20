@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public abstract class MechanicalPartData {
@@ -55,6 +56,10 @@ public abstract class MechanicalPartData {
     public boolean tryHandlingStackedOnMe(@NotNull ItemStack stack, @NotNull ItemStack other, @NotNull Slot slot,
                                        @NotNull ClickAction action, @NotNull Player player, @NotNull SlotAccess access) {
         return false;
+    }
+
+    public Optional<Boolean> overrideInsertingPart(@NotNull ItemStack stack, @NotNull ItemStack other, @NotNull Player player, @NotNull SlotAccess access, @NotNull FilledToolSlot insertingPart) {
+        return Optional.empty();
     }
 
     public void appendHoverText(@NotNull ItemStack stack, Item.@NotNull TooltipContext context,

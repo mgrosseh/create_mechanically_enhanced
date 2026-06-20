@@ -2,6 +2,7 @@ package com.mirandnyan.cme.content.equipment.mechanical_parts;
 
 import com.mirandnyan.cme.*;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.accelerator.MechanicalAcceleratorPartData;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.accelerator.MechanicalSimpleAcceleratorPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.accelerator.MechanicalStarAcceleratorPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.MechanicalBlazePartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.MechanicalCatPartData;
@@ -69,10 +70,10 @@ public class MechanicalPart {
     }
 
     public boolean isItem(Item item) {
-        return getItem().is(item);
+        return getItemRegistry().is(item);
     }
 
-    public RegistryEntry<Item, Item> getItem() {
+    public RegistryEntry<Item, Item> getItemRegistry() {
         return REGISTRATE.get(validItem.location().getPath(), validItem.registryKey());
     }
 
@@ -128,7 +129,7 @@ public class MechanicalPart {
             .origin(new AffineTransform().rotateXDegrees(90f).translate(8f, 4f, 9f), MechanicalToolSlot.COG_SLOT)
             .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 4f, 7f), MechanicalToolSlot.ACCELERATOR_SLOT)
             .item(CMEItems.SMALL_WOODEN_COG)
-            .data(new MechanicalCogPartData(4, new Vector3f(0f, -4f, 0f)))
+            .data(new MechanicalCogPartData(2, new Vector3f(0f, -4f, 0f)))
             .defaultModel("cog")
             .build();
 
@@ -136,7 +137,7 @@ public class MechanicalPart {
             .origin(new AffineTransform().rotateXDegrees(90f).translate(8f, 4f, 10f), MechanicalToolSlot.COG_SLOT)
             .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 4f, 6f), MechanicalToolSlot.ACCELERATOR_SLOT)
             .item(CMEItems.SMALL_ANDESITE_COG)
-            .data(new MechanicalCogPartData(6, new Vector3f(0f, -4f, 0f)))
+            .data(new MechanicalCogPartData(3, new Vector3f(0f, -4f, 0f)))
             .defaultModel("cog")
             .build();
 
@@ -157,6 +158,15 @@ public class MechanicalPart {
             .build();
 
     // -------- Accelerators
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> SIMPLE_ANDESITE_ACCELERATOR = new MechanicalPartBuilder("simple_andesite_accelerator")
+            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.ACCELERATOR_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 1f, 8f), MechanicalToolSlot.GEARBOX_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 1f, 8f), MechanicalToolSlot.TIP_SLOT)
+            .item(CMEItems.SIMPLE_ANDESITE_ACCELERATOR)
+            .data(new MechanicalSimpleAcceleratorPartData(0))
+            .defaultModel("accelerator")
+            .build();
+
     public static final RegistryEntry<MechanicalPart, MechanicalPart> STONE_ACCELERATOR = new MechanicalPartBuilder("stone_accelerator")
             .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.ACCELERATOR_SLOT)
             .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 2f, 8f), MechanicalToolSlot.GEARBOX_SLOT)
