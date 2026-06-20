@@ -13,6 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -161,44 +162,6 @@ public class CatCoinDieItem extends Item implements CustomUseEffectsItem {
     }
 
     @Override
-    public @NotNull InteractionResult useOn(UseOnContext context) {
-        // TODO sounds
-        Player player = context.getPlayer();
-        ItemStack stack = context.getItemInHand();
-        Level level = context.getLevel();
-        BlockPos pos = context.getClickedPos();
-        BlockState state = level.getBlockState(pos);
-
-        BlockState newState = state.getToolModifiedState(context, ItemAbilities.AXE_SCRAPE, false);
-        if (newState != null) {
-            AllSoundEvents.SANDING_LONG.play(level, player, pos, 1, 1 + (level.random.nextFloat() * 0.5f - 1f) / 5f);
-            level.levelEvent(player, LevelEvent.PARTICLES_SCRAPE, pos, 0); // Spawn particles
-        } else {
-            newState = state.getToolModifiedState(context, ItemAbilities.AXE_WAX_OFF, false);
-            if (newState != null) {
-                AllSoundEvents.SANDING_LONG.play(level, player, pos, 1,
-                        1 + (level.random.nextFloat() * 0.5f - 1f) / 5f);
-                level.levelEvent(player, LevelEvent.PARTICLES_WAX_OFF, pos, 0); // Spawn particles
-            }
-        }
-
-        if (newState != null) {
-            level.setBlockAndUpdate(pos, newState);
-            if (player != null)
-                stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(player.getUsedItemHand()));
-            return InteractionResult.sidedSuccess(level.isClientSide);
-        }
-
-        return InteractionResult.PASS;
-    }
-
-    @Override
-    public boolean canPerformAction(@NotNull ItemStack stack, @NotNull ItemAbility itemAbility) {
-        // TODO
-        return itemAbility == ItemAbilities.AXE_SCRAPE || itemAbility == ItemAbilities.AXE_WAX_OFF;
-    }
-
-    @Override
     public TriState shouldTriggerUseEffects(ItemStack stack, LivingEntity entity) {
         // Trigger every tick so that we have more fine grain control over the animation
         return TriState.TRUE;
@@ -214,8 +177,8 @@ public class CatCoinDieItem extends Item implements CustomUseEffectsItem {
         }
 
         // After 6 ticks play the sound every 7th
-        if ((entity.getTicksUsingItem() - 6) % 7 == 0)
-            entity.playSound(entity.getEatingSound(stack), 0.9F + 0.2F * random.nextFloat(),
+        if ((entity.getTicksUsingItem() - 6) % 20 == 0)
+            entity.playSound(entity.getEatingSound(stack), 0.5F + 0.2F * random.nextFloat(),
                     random.nextFloat() * 0.2F + 0.9F);
 
         return true;
@@ -223,7 +186,7 @@ public class CatCoinDieItem extends Item implements CustomUseEffectsItem {
 
     @Override
     public @NotNull SoundEvent getEatingSound() {
-        return AllSoundEvents.SANDING_SHORT.getMainEvent(); // TODO some anvil sound maybe
+        return SoundEvents.ANVIL_PLACE;
     }
 
     @Override
@@ -246,6 +209,6 @@ public class CatCoinDieItem extends Item implements CustomUseEffectsItem {
     @Override
     @OnlyIn(Dist.CLIENT)
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(SimpleCustomRenderer.create(this, new SandPaperItemRenderer()));
+        consumer.accept(SimpleCustomRenderer.create(this, new CatCoinDieItemRenderer()));
     }
 }

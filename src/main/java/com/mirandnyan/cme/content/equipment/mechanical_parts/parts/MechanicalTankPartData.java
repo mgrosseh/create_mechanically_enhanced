@@ -22,6 +22,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class MechanicalTankPartData extends MechanicalPartData {
+    public static final int INTERNAL_AIR_COLOR = 0x9090F0;
+
     int capacity;
     public MechanicalTankPartData(int capacity) {
         super(0.4f);
@@ -57,6 +59,8 @@ public class MechanicalTankPartData extends MechanicalPartData {
 
     @Override
     public int getUseDuration(@NotNull ItemStack stack, @NotNull LivingEntity entity) {
+        if (!entity.isShiftKeyDown())
+            return 0;
         return Math.max(0,
                 stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR_CAPACITY, 0)
                         - stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR, 0));
@@ -120,5 +124,27 @@ public class MechanicalTankPartData extends MechanicalPartData {
                     .append(CMETranslations.MECHANICAL_TOOL_AIR_LEVEL_POST.resolveComponent())
             );
         }
+    }
+
+    @Override
+    public boolean overridesBar(@NotNull ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public int getBarWidth(@NotNull ItemStack stack) {
+        var maxAir = stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR_CAPACITY, 0);
+        var air = stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR, 0);
+        if (maxAir > 0 && air > 0)
+            return Math.round((float) air * Item.MAX_BAR_WIDTH / (float) maxAir);
+        return stack.getBarWidth();
+    }
+
+    @Override
+    public int getBarColor(@NotNull ItemStack stack) {
+        var air = stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR, 0);
+        if (air > 0)
+            return INTERNAL_AIR_COLOR;
+        return super.getBarColor(stack);
     }
 }

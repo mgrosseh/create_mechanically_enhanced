@@ -59,8 +59,13 @@ public abstract class MechanicalPartData {
 
     public void appendHoverText(@NotNull ItemStack stack, Item.@NotNull TooltipContext context,
                                 @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-
     }
+    public boolean hasExtraTooltip(@NotNull ItemStack stack, Item.@NotNull TooltipContext context,
+                                   @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+        return false;
+    }
+    public void appendExtraTooltip(@NotNull ItemStack stack, Item.@NotNull TooltipContext context,
+                                      @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {}
 
     public void brokeBlock(ServerPlayer player, ItemStack item, BlockEvent.BreakEvent event) { }
 
@@ -96,7 +101,17 @@ public abstract class MechanicalPartData {
         return 0;
     }
 
+    /** Only called if getUseDuration() > 0 */
     public void onUseTick(@NotNull Level level, @NotNull LivingEntity livingEntity, @NotNull ItemStack stack, int duration) {
+    }
 
+    public boolean overridesBar(@NotNull ItemStack stack) {
+        return false;
+    }
+    public int getBarWidth(@NotNull ItemStack stack) {
+        return 0;
+    }
+    public int getBarColor(@NotNull ItemStack stack) {
+        return 0;
     }
 }

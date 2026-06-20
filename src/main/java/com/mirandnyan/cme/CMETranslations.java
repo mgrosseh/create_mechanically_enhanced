@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.Item;
 
+import java.util.Arrays;
 import java.util.function.Function;
 
 /** AKA Lang */
@@ -16,8 +17,26 @@ public class CMETranslations {
 
     public static final LangEntry ANALOG_SCROLL_VALUE = new LangEntry("scroll_value_behaviour.analog_scoll_value", "Analog Value");
 
+
+    // TODO: use user keybinds instead of hardcoded Shift / Control
+    private static final LangEntry EXTRA_TOOLTIP_INFO_0 = new StyledLangEntry("mechanical_item.extra_info0", "Hold [",
+            c -> c.withStyle(ChatFormatting.DARK_GRAY));
+    private static final LangEntry EXTRA_TOOLTIP_INFO_1 = new StyledLangEntry("mechanical_item.extra_info1", "Shift",
+            c -> c.withStyle(ChatFormatting.GRAY));
+    private static final LangEntry EXTRA_TOOLTIP_INFO_2 = new StyledLangEntry("mechanical_item.extra_info2", "] for Info",
+            c -> c.withStyle(ChatFormatting.DARK_GRAY));
+    public static final ComposedLangEntry EXTRA_TOOLTIP_INFO = new ComposedLangEntry(EXTRA_TOOLTIP_INFO_0, EXTRA_TOOLTIP_INFO_1, EXTRA_TOOLTIP_INFO_2);
+
+    private static final LangEntry SHOW_SLOTS_TOOLTIP_INFO_0 = new StyledLangEntry("mechanical_item.show_slots0", "Hold [",
+            c -> c.withStyle(ChatFormatting.DARK_GRAY));
+    private static final LangEntry SHOW_SLOTS_TOOLTIP_INFO_1 = new StyledLangEntry("mechanical_item.show_slots1", "Control",
+            c -> c.withStyle(ChatFormatting.GRAY));
+    private static final LangEntry SHOW_SLOTS_TOOLTIP_INFO_2 = new StyledLangEntry("mechanical_item.show_slots2", "] to Show Parts",
+            c -> c.withStyle(ChatFormatting.DARK_GRAY));
+    public static final ComposedLangEntry SHOW_SLOTS_TOOLTIP_INFO = new ComposedLangEntry(SHOW_SLOTS_TOOLTIP_INFO_0, SHOW_SLOTS_TOOLTIP_INFO_1, SHOW_SLOTS_TOOLTIP_INFO_2);
+
     public static final LangEntry TOOL_SLOTS_TITLE = new StyledLangEntry("tool_slots.title", "Parts",
-            component -> component.withStyle(ChatFormatting.BOLD, ChatFormatting.UNDERLINE)
+            component -> component.withStyle(ChatFormatting.UNDERLINE)
     );
     public static final LangEntry TOOL_SLOTS_NONE = new StyledLangEntry("tool_slots.none", "No parts",
             component -> component.withStyle(ChatFormatting.ITALIC)
@@ -97,6 +116,31 @@ public class CMETranslations {
         }
     }
 
+    public interface ResolvableLangLike {
+        MutableComponent resolveComponentMutable();
+        default Component resolveComponent() {
+            return resolveComponentMutable();
+        }
+        String resolveString();
+    }
+
+    public static class ComposedLangEntry implements ResolvableLangLike {
+        LangEntry[] elements;
+        public ComposedLangEntry(LangEntry... elements) {
+            this.elements = elements;
+        }
+
+        @Override
+        public MutableComponent resolveComponentMutable() {
+            return Arrays.stream(elements).map(LangEntry::resolveComponentMutable).reduce(Component.empty(), MutableComponent::append);
+        }
+
+        @Override
+        public String resolveString() {
+            return Arrays.stream(elements).map(LangEntry::resolveString).reduce("", String::concat);
+        }
+    }
+
     public static class StyledLangEntry extends LangEntry {
 
         Function<MutableComponent, MutableComponent> styler;
@@ -118,7 +162,7 @@ public class CMETranslations {
         }
     }
 
-    public static class LangEntry extends LangMap {
+    public static class LangEntry extends LangMap implements ResolvableLangLike {
         public LangEntry(String translationKey, String textEnglish) {
             this(CreateMechanicallyEnhanced.MOD_ID, translationKey, textEnglish);
         }

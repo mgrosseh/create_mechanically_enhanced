@@ -45,7 +45,6 @@ import java.util.function.Consumer;
 public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseItem {
 
     public static final int DEFAULT_TRANSFER_RATIO = 2;
-    public static final int INTERNAL_AIR_COLOR = 0x9090F0;
     public static final int BLOCK_BREAK_DURABILITY_USE = 1;
     public static final int ENTITY_ATTACK_DURABILITY_USE = 2;
 
@@ -156,19 +155,6 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         for (var slot : slots) {
             slot.getPartRegistry().get().data.brokeBlock(player, item, event);
         }
-    }
-
-    @Override
-    public @NotNull InteractionResult useOn(UseOnContext context) {
-        var item = context.getItemInHand();
-        List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
-        for (var slot : slots) {
-            var part = slot.getPartRegistry();
-            var result = part.get().data.useOn(context);
-            if (result != InteractionResult.PASS)
-                return result;
-        }
-        return super.useOn(context);
     }
 
     @Override
@@ -332,25 +318,52 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
                                 @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
 
-        tooltip.add(Component.empty());
-
         if (slots.isEmpty())
             tooltip.add(CMETranslations.TOOL_SLOTS_NONE.resolveComponent());
-        else
-            tooltip.add(CMETranslations.TOOL_SLOTS_TITLE.resolveComponent());
-        for (FilledToolSlot slot : slots) {
-            slot.appendHoverText(stack, context, tooltip, flagIn);
+        else {
+            if (!flagIn.hasControlDown())
+                tooltip.add(CMETranslations.SHOW_SLOTS_TOOLTIP_INFO.resolveComponent());
+            else {
+                tooltip.add(CMETranslations.TOOL_SLOTS_TITLE.resolveComponent());
+                for (FilledToolSlot slot : slots) {
+                    slot.appendHoverText(stack, context, tooltip, flagIn);
+                }
+            }
         }
 
         for (FilledToolSlot slot : slots) {
             var part = slot.getPartRegistry();
             part.get().data.appendHoverText(stack, context, tooltip, flagIn);
         }
-        tooltip.add(Component.empty());
+
+        boolean more = false;
+        for (FilledToolSlot slot : slots) {
+            more = more || slot.getPartRegistry().get().data.hasExtraTooltip(stack, context, tooltip, flagIn);
+        }
+        if (more) {
+            if (!flagIn.hasShiftDown())
+                tooltip.add(CMETranslations.EXTRA_TOOLTIP_INFO.resolveComponent());
+            else {
+                for (FilledToolSlot slot : slots) {
+                    slot.getPartRegistry().get().data.appendExtraTooltip(stack, context, tooltip, flagIn);
+                }
+            }
+        }
         super.appendHoverText(stack, context, tooltip, flagIn);
     }
 
-    // Refilling
+    @Override
+    public @NotNull InteractionResult useOn(UseOnContext context) {
+        var item = context.getItemInHand();
+        List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        for (var slot : slots) {
+            var part = slot.getPartRegistry();
+            var result = part.get().data.useOn(context);
+            if (result != InteractionResult.PASS)
+                return result;
+        }
+        return super.useOn(context);
+    }
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand usedHand) {
         var item = player.getItemInHand(usedHand);
@@ -387,19 +400,26 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
 
     // Bar
     @Override
-    public int getBarWidth(ItemStack stack) {
-        var maxAir = stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR_CAPACITY, 0);
-        var air = stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR, 0);
-        if (maxAir > 0 && air > 0)
-            return Math.round((float) air * MAX_BAR_WIDTH / (float) maxAir);
+    public int getBarWidth(@NotNull ItemStack stack) {
+        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        for (var slot : slots) {
+            var data = slot.getPartRegistry().get().data;
+            if(!data.overridesBar(stack))
+                continue;
+            return data.getBarWidth(stack);
+        }
         return super.getBarWidth(stack);
     }
 
     @Override
     public int getBarColor(@NotNull ItemStack stack) {
-        var air = stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR, 0);
-        if (air > 0)
-            return INTERNAL_AIR_COLOR;
+        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        for (var slot : slots) {
+            var data = slot.getPartRegistry().get().data;
+            if(!data.overridesBar(stack))
+                continue;
+            return data.getBarColor(stack);
+        }
         return super.getBarColor(stack);
     }
     @Override
