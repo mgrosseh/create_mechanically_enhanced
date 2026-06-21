@@ -90,6 +90,7 @@ public class CreateMechanicallyEnhanced {
 
         REGISTRATE.setCreativeTab(CMEItems.MAIN);
 
+        CMEAttributes.register(modEventBus);
         CMEBlocks.register();
         CMEItems.register(modEventBus);
         CMEDataComponents.register(modEventBus);

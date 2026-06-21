@@ -33,6 +33,10 @@ public class ItemAttributeModifiersRebuilder {
         return this.add(entry.attribute(), entry.modifier(), entry.slot());
     }
 
+    public ItemAttributeModifiersRebuilder adding(ItemAttributeModifiers.Entry entry) {
+        return this.takeAll().add(entry.attribute(), entry.modifier(), entry.slot());
+    }
+
     public ItemAttributeModifiersRebuilder add(Holder<Attribute> attribute, AttributeModifier modifier, EquipmentSlotGroup slot) {
         builder.add(attribute, modifier, slot);
         return this;

@@ -6,7 +6,7 @@ import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.accelerator.M
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.accelerator.MechanicalStarAcceleratorPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.MechanicalBlazePartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.MechanicalCatPartData;
-import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.MechanicalPumpkinPartData;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.pumpkin.MechanicalPumpkinPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.tool_head.MechanicalDrillPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.tool_head.MechanicalSawPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_tool.MechanicalToolItem;
