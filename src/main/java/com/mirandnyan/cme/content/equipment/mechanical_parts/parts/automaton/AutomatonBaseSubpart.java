@@ -54,7 +54,7 @@ public final class AutomatonBaseSubpart extends MechanicalSubpart {
                        MechanicalSubpart subpart, PartialItemModelRenderer renderer, ItemDisplayContext transformType,
                        PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
         renderer.renderSolid(currentCasing(filledToolSlot).get(), light);
-        // cog
+
         ms.pushPose();
         float speedModifier = (float) (
                 AttributeHelpers.calculateAttributeValue(stack, Attributes.MINING_EFFICIENCY, EquipmentSlot.MAINHAND)

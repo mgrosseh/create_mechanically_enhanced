@@ -1,24 +1,26 @@
 {
 	"format_version": "1.9.0",
 	"credit": "Made with Blockbench",
-	"loader": "neoforge:composite",
-	"children": {
-		"base": {
-			"parent": "create_mechanically_enhanced:mechanical_part/automaton/andesite_base"
-		},
-		"head": {
-			"parent": "create_mechanically_enhanced:mechanical_part/automaton/blaze/base_idle"
-		},
-		"cog": {
-			"parent": "create_mechanically_enhanced:mechanical_part/automaton/cog"
-		},
-		"small_rods": {
-			"parent": "create_mechanically_enhanced:mechanical_part/automaton/blaze/small_rods"
-		},
-		"large_rods": {
-			"parent": "create_mechanically_enhanced:mechanical_part/automaton/blaze/large_rods"
-		}
+	"render_type": "cutout",
+	"textures": {
+		"3": "entity/conduit/cage",
+		"particle": "entity/conduit/cage"
 	},
+	"elements": [
+		{
+			"from": [4.5, 4.5, 4.5],
+			"to": [11.5, 11.5, 11.5],
+			"faces": {
+				"north": {"uv": [0, 8, 4, 16], "texture": "#3"},
+				"east": {"uv": [4, 8, 8, 16], "texture": "#3"},
+				"south": {"uv": [8, 8, 12, 16], "texture": "#3"},
+				"west": {"uv": [12, 8, 16, 16], "texture": "#3"},
+				"up": {"uv": [4, 0, 8, 8], "texture": "#3"},
+				"down": {"uv": [8, 0, 12, 8], "texture": "#3"}
+			},
+			"visibility": true
+		}
+	],
 	"display": {
 		"thirdperson_righthand": {
 			"translation": [0, 4, 1],

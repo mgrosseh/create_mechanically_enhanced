@@ -8,7 +8,7 @@
       "parent": "create_mechanically_enhanced:mechanical_part/automaton/cog"
     },
     "head": {
-      "parent": "create_mechanically_enhanced:mechanical_part/automaton/pumpkin/base"
+      "parent": "create_mechanically_enhanced:mechanical_part/automaton/conduit/inactive"
     }
   },
   "display": {

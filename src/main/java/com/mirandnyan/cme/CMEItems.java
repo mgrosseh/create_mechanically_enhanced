@@ -1,7 +1,6 @@
 package com.mirandnyan.cme;
 
 import com.mirandnyan.cme.content.equipment.mechanical_tool.MechanicalToolItem;
-import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
 import com.mirandnyan.cme.content.items.TooltipItem;
 import com.mirandnyan.cme.content.items.cat_coin_die.CatCoinDieItem;
 import com.mirandnyan.cme.recipes.CreateRecipeUtil;
@@ -82,9 +81,10 @@ public class CMEItems {
     public static final ItemEntry<Item> COPPER_SAW_HEAD = inTab(part("saw_head_copper").lang("Copper Saw head").register());
     public static final ItemEntry<Item> NETHERITE_SAW_HEAD = inTab(part("saw_head_netherite").lang("Netherite Saw Head").register());
 
-    public static final ItemEntry<Item> SMALL_MECHANICAL_BLAZE = inTab(part("automaton_blaze").register());
-    public static final ItemEntry<Item> SMALL_MECHANICAL_CAT = inTab(part("automaton_cat").register());
-    public static final ItemEntry<Item> SMALL_MECHANICAL_PUMPKIN = inTab(part("automaton_pumpkin").register());
+    public static final ItemEntry<Item> BLAZE_AUTOMATON = inTab(part("automaton_blaze").lang("Blaze Automaton").register());
+    public static final ItemEntry<Item> CAT_AUTOMATON = inTab(part("automaton_cat").lang("Cat Automaton").register());
+    public static final ItemEntry<Item> PUMPKIN_AUTOMATON = inTab(part("automaton_pumpkin").lang("Pumpkin Automaton").register());
+    public static final ItemEntry<Item> CONDUIT_AUTOMATON = inTab(part("automaton_conduit").lang("Conduit Automaton").register());
 
     public static final ItemEntry<CatCoinDieItem> CAT_COIN_DIE = inTab(REGISTRATE.item("cat_coin_die", CatCoinDieItem::new)
             .defaultModel()

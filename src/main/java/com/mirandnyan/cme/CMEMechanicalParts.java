@@ -11,6 +11,7 @@ import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.accelerator.M
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.accelerator.MechanicalSimpleAcceleratorPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.accelerator.MechanicalStarAcceleratorPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.AutomatonBaseSubpart;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.ConduitPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.MechanicalBlazePartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.MechanicalCatPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.pumpkin.MechanicalPumpkinPartData;
@@ -352,7 +353,7 @@ public class CMEMechanicalParts {
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> BLAZE_AUTOMATON = new MechanicalPartBuilder("blaze_automaton")
             .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.AUTOMATON_SLOT)
-            .item(CMEItems.SMALL_MECHANICAL_BLAZE)
+            .item(CMEItems.BLAZE_AUTOMATON)
             .data(new MechanicalBlazePartData())
             .subpart(AUTOMATON_BASE)
             // TODO: auto assign names to not use hardcoded order
@@ -369,7 +370,7 @@ public class CMEMechanicalParts {
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> CAT_AUTOMATON = new MechanicalPartBuilder("cat_automaton")
             .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.AUTOMATON_SLOT)
-            .item(CMEItems.SMALL_MECHANICAL_CAT)
+            .item(CMEItems.CAT_AUTOMATON)
             .data(new MechanicalCatPartData())
             .subpart(AUTOMATON_BASE)
             .customModel("automaton", "cat", "base")
@@ -377,10 +378,20 @@ public class CMEMechanicalParts {
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> PUMPKIN_AUTOMATON = new MechanicalPartBuilder("pumpkin_automaton")
             .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.AUTOMATON_SLOT)
-            .item(CMEItems.SMALL_MECHANICAL_PUMPKIN)
+            .item(CMEItems.PUMPKIN_AUTOMATON)
             .data(new MechanicalPumpkinPartData())
             .subpart(AUTOMATON_BASE)
             .customModel("automaton", "pumpkin", "base")
+            .build();
+
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> CONDUIT_AUTOMATON = new MechanicalPartBuilder("conduit_automaton")
+            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.AUTOMATON_SLOT)
+            .item(CMEItems.CONDUIT_AUTOMATON)
+            .data(new ConduitPartData())
+            .subpart(AUTOMATON_BASE)
+            .customModel("automaton", "conduit", "inactive")
+            .customModel("automaton", "conduit", "eye")
+            .customModel("automaton", "conduit", "shell_open")
             .build();
 
 

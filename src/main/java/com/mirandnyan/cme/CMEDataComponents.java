@@ -45,35 +45,35 @@ builder -> builder.persistent(FilledToolSlot.CODEC.listOf()).networkSynchronized
     );
 
     public static final DataComponentType<Long> BLAZE_BURNING_TIME = register(
-            "mechanical_blaze_remaining_burning_time",
+            "blaze_automaton_remaining_burning_time",
             builder -> builder.persistent(Codec.LONG).networkSynchronized(ByteBufCodecs.VAR_LONG)
     );
     public static final DataComponentType<Unit> BLAZE_BURNING_SUPER = register(
-            "mechanical_blaze_burning_supercharged",
+            "blaze_automaton_burning_supercharged",
             builder -> builder.persistent(Unit.CODEC).networkSynchronized(StreamCodec.unit(Unit.INSTANCE))
     );
     public static final DataComponentType<Unit> BLAZE_BURNING_INFINITE = register(
-            "mechanical_blaze_burning_infinite",
+            "blaze_automaton_burning_infinite",
             builder -> builder.persistent(Unit.CODEC).networkSynchronized(StreamCodec.unit(Unit.INSTANCE))
     );
 
 
     public static final DataComponentType<Long> MECHANICAL_CAT_BONUS_BLOCKED = register(
-            "mechanical_cat_bonus_blocked",
+            "cat_automaton_bonus_blocked",
             builder -> builder.persistent(Codec.LONG).networkSynchronized(ByteBufCodecs.VAR_LONG)
     );
     public static final DataComponentType<MechanicalCatBonusType> MECHANICAL_CAT_BONUS = register(
-            "mechanical_cat_bonus",
+            "cat_automaton_bonus",
             builder -> builder
                     .persistent(MechanicalCatBonusType.CODEC)
                     .networkSynchronized(MechanicalCatBonusType.STREAM_CODEC)
     );
     public static final DataComponentType<Unit> MECHANICAL_CAT_APPLY_BONUS = register(
-            "mechanical_cat_apply_bonus",
+            "cat_automaton_apply_bonus",
             builder -> builder.persistent(Unit.CODEC).networkSynchronized(StreamCodec.unit(Unit.INSTANCE))
     );
     public static final DataComponentType<MechanicalCatGiftType> MECHANICAL_CAT_GIVE_GIFT = register(
-            "mechanical_cat_give_gift",
+            "cat_automaton_give_gift",
             builder -> builder.persistent(MechanicalCatGiftType.CODEC).networkSynchronized(MechanicalCatGiftType.STREAM_CODEC)
     );
 
@@ -86,6 +86,11 @@ builder -> builder.persistent(FilledToolSlot.CODEC.listOf()).networkSynchronized
     public static final DataComponentType<CoinMintingItemComponent> COIN_MINTING_ITEM = register(
             "coin_minting_item",
             builder -> builder.persistent(CoinMintingItemComponent.CODEC).networkSynchronized(CoinMintingItemComponent.STREAM_CODEC)
+    );
+
+    public static final DataComponentType<Unit> CONDUIT_AUTOMATON_ACTIVE = register(
+            "conduit_automaton_active",
+            builder -> builder.persistent(Unit.CODEC).networkSynchronized(StreamCodec.unit(Unit.INSTANCE))
     );
 
     public static final DataComponentType<String> LAST_TOOL_HOLDER_NAME = register(

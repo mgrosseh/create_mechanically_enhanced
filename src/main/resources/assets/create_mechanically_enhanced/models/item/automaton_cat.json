@@ -1,6 +1,9 @@
 {
   "loader": "neoforge:composite",
   "children": {
+    "base": {
+      "parent": "create_mechanically_enhanced:mechanical_part/automaton/andesite_base"
+    },
     "cog": {
       "parent": "create_mechanically_enhanced:mechanical_part/automaton/cog"
     },
