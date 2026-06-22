@@ -46,8 +46,16 @@ public abstract class MechanicalPartData {
 
     public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity, int slotId, boolean isSelected) { }
 
+    public void render(ItemStack stack, FilledToolSlot slot, List<FilledToolSlot> filledToolSlots, MechanicalPart part,
+                       PartialItemModelRenderer renderer, ItemDisplayContext transformType,
+                       PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
+        render(stack, part, renderer, transformType, ms, buffer, light, overlay);
+        for (var subpart : part.subparts) {
+            subpart.render(stack, slot, filledToolSlots, part, subpart, renderer, transformType, ms, buffer, light, overlay);
+        }
+    }
     public void render(ItemStack stack, MechanicalPart part, PartialItemModelRenderer renderer, ItemDisplayContext transformType,
-                          PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
+                       PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
         renderer.renderSolid(part.models[0].get(), light);
     }
 

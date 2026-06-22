@@ -1,5 +1,6 @@
 package com.mirandnyan.cme.content.equipment.mechanical_parts;
 
+import com.mirandnyan.cme.CMEMechanicalParts;
 import com.mirandnyan.cme.CMETranslations;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -42,7 +43,7 @@ public record FilledToolSlot(
     }
 
     public RegistryEntry<MechanicalPart, MechanicalPart> getPartRegistry() {
-        return MechanicalPart.get(this.part);
+        return CMEMechanicalParts.get(this.part);
     }
 
     public RegistryEntry<Item, Item> getItem() {

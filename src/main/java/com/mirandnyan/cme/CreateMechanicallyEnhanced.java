@@ -96,7 +96,8 @@ public class CreateMechanicallyEnhanced {
         CMEDataComponents.register(modEventBus);
 
         CMETranslations.register();
-        MechanicalPart.register();
+        CMEMaterials.register();
+        CMEMechanicalParts.register();
         MechanicalToolSlot.register();
         CMERecipeTypes.register(modEventBus);
         CMEMobEffects.register(eventBus);

@@ -1,6 +1,7 @@
 package com.mirandnyan.cme.content.equipment.mechanical_parts.parts.accelerator;
 
 import com.mirandnyan.cme.CMEDataComponents;
+import com.mirandnyan.cme.CMEMechanicalParts;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
 import net.minecraft.util.Unit;
@@ -33,7 +34,7 @@ public class MechanicalSimpleAcceleratorPartData extends MechanicalAcceleratorPa
     public Optional<Boolean> overrideInsertingPart(@NotNull ItemStack stack, @NotNull ItemStack other, @NotNull Player player, @NotNull SlotAccess access, @NotNull FilledToolSlot insertingPart) {
         List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
-            if (slot.parent().isEmpty() || slot.parent().get() != MechanicalPart.SIMPLE_ANDESITE_ACCELERATOR.getKey())
+            if (slot.parent().isEmpty() || slot.parent().get() != CMEMechanicalParts.SIMPLE_ANDESITE_ACCELERATOR.getKey())
                 continue;
             if (slot.isSlot(insertingPart.slot()))
                 return Optional.empty(); // let item handle swapping parts

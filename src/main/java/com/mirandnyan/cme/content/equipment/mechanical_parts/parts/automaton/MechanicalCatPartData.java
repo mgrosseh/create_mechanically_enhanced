@@ -1,9 +1,6 @@
 package com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton;
 
-import com.mirandnyan.cme.CMEDataComponents;
-import com.mirandnyan.cme.CMEItems;
-import com.mirandnyan.cme.CMETags;
-import com.mirandnyan.cme.CMETranslations;
+import com.mirandnyan.cme.*;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPartData;
@@ -50,7 +47,6 @@ import java.util.List;
 
 @EventBusSubscriber
 public class MechanicalCatPartData extends MechanicalPartData {
-    private static int i = 0;
 
     /*
     TODO:
@@ -58,9 +54,6 @@ public class MechanicalCatPartData extends MechanicalPartData {
     - Model fix-up
     - Maybe make gifts effect probability depend on block strength of block
      */
-
-    private static final int CAT = i++;
-    private static final int COG = i++;
 
     public MechanicalCatPartData() {
         super(0.3f);
@@ -233,7 +226,7 @@ public class MechanicalCatPartData extends MechanicalPartData {
         List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (FilledToolSlot slot : slots) {
             var part = slot.getPartRegistry();
-            if (part != MechanicalPart.SMALL_MECHANICAL_CAT)
+            if (part != CMEMechanicalParts.CAT_AUTOMATON)
                 continue;
             var data = (MechanicalCatPartData) part.get().data;
             //noinspection DataFlowIssue // cant be null since item.has guard
@@ -320,28 +313,5 @@ public class MechanicalCatPartData extends MechanicalPartData {
             case BLOCK_INTERACTION_RANGE -> CMETranslations.MECHANICAL_CAT_BONUS_INTERACTION_RANGE.resolveComponentMutable();
         };
         tooltip.add(CMETranslations.MECHANICAL_CAT_ACTIVE_BONUS.resolveComponentMutable().append(component));
-    }
-
-    @Override
-    public void render(ItemStack stack, MechanicalPart part, PartialItemModelRenderer renderer, ItemDisplayContext transformType, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-        ms.pushPose();
-
-        // Cog
-        ms.pushPose();
-        float speedModifier = (float) (
-                AttributeHelpers.calculateAttributeValue(stack, Attributes.MINING_EFFICIENCY, EquipmentSlot.MAINHAND)
-                        * MechanicalPartUtil.MINING_EFFICIENCY_TO_COG_SPEED
-        );
-
-        float angle = AnimationTickHolder.getRenderTime() * -1 * 2.5f * speedModifier;
-        angle %= 360;
-        ms.mulPose(Axis.YP.rotationDegrees(angle));
-        renderer.renderSolid(part.models[COG].get(), light);
-        ms.popPose();
-
-        // Head
-        renderer.renderSolid(part.models[CAT].get(), light);
-
-        ms.popPose();
     }
 }

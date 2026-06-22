@@ -230,46 +230,46 @@ public class CMEItems {
                             .icon(SMALL_BRASS_VERTICAL_GEARBOX::asStack)
                             .displayItems((parameters, output) -> {
                                 output.accept(MechanicalToolItem.newStackWithParts(
-                                        MechanicalPart.WOODEN_GRIP,
-                                        MechanicalPart.WOODEN_COG,
-                                        MechanicalPart.SIMPLE_ANDESITE_ACCELERATOR
+                                        CMEMechanicalParts.WOODEN_GRIP,
+                                        CMEMechanicalParts.WOODEN_COG,
+                                        CMEMechanicalParts.SIMPLE_ANDESITE_ACCELERATOR
                                 ));
 
                                 output.accept(MechanicalToolItem.newStackWithParts(
-                                        MechanicalPart.WOODEN_GRIP,
-                                        MechanicalPart.WOODEN_COG,
-                                        MechanicalPart.STONE_ACCELERATOR,
-                                        MechanicalPart.ANDESITE_GEARBOX,
-                                        MechanicalPart.COPPER_TANK,
-                                        MechanicalPart.IRON_DRILL_HEAD
+                                        CMEMechanicalParts.WOODEN_GRIP,
+                                        CMEMechanicalParts.WOODEN_COG,
+                                        CMEMechanicalParts.STONE_ACCELERATOR,
+                                        CMEMechanicalParts.ANDESITE_GEARBOX,
+                                        CMEMechanicalParts.COPPER_TANK,
+                                        CMEMechanicalParts.IRON_DRILL_HEAD
                                 ));
                                 output.accept(MechanicalToolItem.newStackWithParts(
-                                        MechanicalPart.NETHERITE_GRIP,
-                                        MechanicalPart.NETHERITE_COG,
-                                        MechanicalPart.NETHER_STAR_ACCELERATOR,
-                                        MechanicalPart.NETHERITE_GEARBOX,
-                                        MechanicalPart.NETHERITE_TANK,
-                                        MechanicalPart.NETHERITE_DRILL_HEAD,
-                                        MechanicalPart.SMALL_MECHANICAL_BLAZE
+                                        CMEMechanicalParts.NETHERITE_GRIP,
+                                        CMEMechanicalParts.NETHERITE_COG,
+                                        CMEMechanicalParts.NETHER_STAR_ACCELERATOR,
+                                        CMEMechanicalParts.NETHERITE_GEARBOX,
+                                        CMEMechanicalParts.NETHERITE_TANK,
+                                        CMEMechanicalParts.NETHERITE_DRILL_HEAD,
+                                        CMEMechanicalParts.BLAZE_AUTOMATON
                                 ));
 
 
                                 output.accept(MechanicalToolItem.newStackWithParts(
-                                        MechanicalPart.WOODEN_GRIP,
-                                        MechanicalPart.ANDESITE_COG,
-                                        MechanicalPart.COPPER_CASING_ACCELERATOR,
-                                        MechanicalPart.COPPER_GEARBOX,
-                                        MechanicalPart.COPPER_TANK,
-                                        MechanicalPart.COPPER_SAW_HEAD
+                                        CMEMechanicalParts.WOODEN_GRIP,
+                                        CMEMechanicalParts.ANDESITE_COG,
+                                        CMEMechanicalParts.COPPER_CASING_ACCELERATOR,
+                                        CMEMechanicalParts.COPPER_GEARBOX,
+                                        CMEMechanicalParts.COPPER_TANK,
+                                        CMEMechanicalParts.COPPER_SAW_HEAD
                                 ));
                                 output.accept(MechanicalToolItem.newStackWithParts(
-                                        MechanicalPart.NETHERITE_GRIP,
-                                        MechanicalPart.NETHERITE_COG,
-                                        MechanicalPart.NETHER_STAR_ACCELERATOR,
-                                        MechanicalPart.NETHERITE_GEARBOX,
-                                        MechanicalPart.NETHERITE_TANK,
-                                        MechanicalPart.NETHERITE_DRILL_HEAD,
-                                        MechanicalPart.SMALL_MECHANICAL_BLAZE
+                                        CMEMechanicalParts.NETHERITE_GRIP,
+                                        CMEMechanicalParts.NETHERITE_COG,
+                                        CMEMechanicalParts.NETHER_STAR_ACCELERATOR,
+                                        CMEMechanicalParts.NETHERITE_GEARBOX,
+                                        CMEMechanicalParts.NETHERITE_TANK,
+                                        CMEMechanicalParts.NETHERITE_DRILL_HEAD,
+                                        CMEMechanicalParts.BLAZE_AUTOMATON
                                 ));
                                 output.accept(CMEBlocks.FOOD_REPLICATOR);
                                 for (var x : creativeModeItem) {

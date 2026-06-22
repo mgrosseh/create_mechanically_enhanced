@@ -2,6 +2,7 @@ package com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.pu
 
 import com.mirandnyan.cme.CMEAttributes;
 import com.mirandnyan.cme.CreateMechanicallyEnhanced;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.MechanicalPartUtil;
@@ -27,11 +28,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import org.jetbrains.annotations.NotNull;
 
 public class MechanicalPumpkinPartData extends MechanicalPartData {
-    // TODO: implementation
-    private static int i = 0;
-
-    private static final int PUMPKIN = i++;
-    private static final int COG = i++;
 
     // TODO: on hit enemy: make them levitate shortly
     // TODO: maybe catch once every few mins when taking fall damage
@@ -69,38 +65,5 @@ public class MechanicalPumpkinPartData extends MechanicalPartData {
                         .removing(pumpkinAttribute)
                         .build()
         );
-    }
-
-    @Override
-    public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity, int slotId, boolean isSelected) {
-        //level.findSupportingBlock()
-        //level.findSupportingBlock(); // TODO: mixin
-        //entity.getPersistentData().
-//        if (isSelected) {
-//            entity.getPersistentData().putBoolean(PUMPKIN_ACTIVE, true);
-//        }
-    }
-
-    @Override
-    public void render(ItemStack stack, MechanicalPart part, PartialItemModelRenderer renderer, ItemDisplayContext transformType, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-        ms.pushPose();
-
-        // Cog
-        ms.pushPose();
-        float speedModifier = (float) (
-                AttributeHelpers.calculateAttributeValue(stack, Attributes.MINING_EFFICIENCY, EquipmentSlot.MAINHAND)
-                        * MechanicalPartUtil.MINING_EFFICIENCY_TO_COG_SPEED
-        );
-
-        float angle = AnimationTickHolder.getRenderTime() * -1 * 2.5f * speedModifier;
-        angle %= 360;
-        ms.mulPose(Axis.YP.rotationDegrees(angle));
-        renderer.renderSolid(part.models[COG].get(), light);
-        ms.popPose();
-
-        // Head
-        renderer.renderSolid(part.models[PUMPKIN].get(), light);
-
-        ms.popPose();
     }
 }

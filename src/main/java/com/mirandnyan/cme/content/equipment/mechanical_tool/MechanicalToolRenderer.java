@@ -22,7 +22,7 @@ public class MechanicalToolRenderer extends CustomRenderedItemModelRenderer {
         var origin = part.slots().getOriginTransform();
 
         origin.apply(ms);
-        part.data.render(stack, part, renderer, transformType, ms, buffer, light, overlay);
+        part.data.render(stack, filledToolSlot, filledToolSlots, part, renderer, transformType, ms, buffer, light, overlay);
         for (var child : filledToolSlots) {
             if (child.parent().isEmpty() || child.parent().get() != filledToolSlot.part())
                 continue;

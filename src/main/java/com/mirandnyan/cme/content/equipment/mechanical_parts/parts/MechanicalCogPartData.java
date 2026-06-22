@@ -21,7 +21,6 @@ import org.joml.Vector3f;
 
 public class MechanicalCogPartData extends MechanicalPartData {
 
-    private final AttributeModifier cogBoostModifier;
     private final ItemAttributeModifiers.Entry cogBoost;
 
     Vector3f rotationOffset;
@@ -33,9 +32,8 @@ public class MechanicalCogPartData extends MechanicalPartData {
         super(0.1f);
         this.rotationOffset = rotationOffset;
         this.speedModifier = speedModifier;
-        cogBoostModifier =
-                new AttributeModifier(CreateMechanicallyEnhanced.asResource("cog_mining_boost"),
-                        speedModifier, AttributeModifier.Operation.ADD_VALUE);
+        AttributeModifier cogBoostModifier = new AttributeModifier(CreateMechanicallyEnhanced.asResource("cog_mining_boost"),
+                speedModifier, AttributeModifier.Operation.ADD_VALUE);
         cogBoost = new ItemAttributeModifiers.Entry(
                 Attributes.MINING_EFFICIENCY,
                 cogBoostModifier,

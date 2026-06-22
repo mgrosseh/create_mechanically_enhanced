@@ -2,6 +2,7 @@ package com.mirandnyan.cme.content.equipment.mechanical_tool;
 
 import com.mirandnyan.cme.CMEDataComponents;
 import com.mirandnyan.cme.CMEItems;
+import com.mirandnyan.cme.CMEMechanicalParts;
 import com.mirandnyan.cme.CMETranslations;
 import com.mirandnyan.cme.content.equipment.MechanicalItem;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
@@ -352,7 +353,7 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         if (stack.getCount() != 1)
             return false;
 
-        var maybe_part = MechanicalPart.getOfItem(other.getItem());
+        var maybe_part = CMEMechanicalParts.getOfItem(other.getItem());
         if (maybe_part.isEmpty())
             return false;
         var insertingPart = maybe_part.get();

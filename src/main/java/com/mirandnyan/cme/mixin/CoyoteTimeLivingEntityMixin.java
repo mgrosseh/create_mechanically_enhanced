@@ -16,9 +16,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.pumpkin.CoyoteTimeAttributeHandler.handleCoyoteTime;
 
 @Mixin(LivingEntity.class)
-public abstract class CoyoteTimeMixin extends Entity {
+public abstract class CoyoteTimeLivingEntityMixin extends Entity {
 
-    public CoyoteTimeMixin(EntityType<?> entityType, Level level) {
+    public CoyoteTimeLivingEntityMixin(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
 

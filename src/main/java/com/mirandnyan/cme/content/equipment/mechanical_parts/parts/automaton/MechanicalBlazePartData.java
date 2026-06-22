@@ -53,7 +53,6 @@ public class MechanicalBlazePartData extends MechanicalPartData {
     private static final int LARGE_RODS = i++;
     private static final int SMALL_RODS_SUPERHEATED = i++;
     private static final int LARGE_RODS_SUPERHEATED = i++;
-    private static final int COG = i++;
 
     private static final AttributeModifier superheatedBoostModifier =
             new AttributeModifier(CreateMechanicallyEnhanced.asResource("superheated_mining_boost"), 2.7,
@@ -284,20 +283,6 @@ public class MechanicalBlazePartData extends MechanicalPartData {
         var data = ClientData.of(stack);
 
         ms.pushPose();
-        //ms.translate(0, 13 / 16f, -10 / 16f); // TODO
-
-        // cog
-        ms.pushPose();
-        float speedModifier = (float) (
-                AttributeHelpers.calculateAttributeValue(stack, Attributes.MINING_EFFICIENCY, EquipmentSlot.MAINHAND)
-                        * MechanicalPartUtil.MINING_EFFICIENCY_TO_COG_SPEED
-        );
-
-        float angle = AnimationTickHolder.getRenderTime() * -1 * 2.5f * speedModifier;
-        angle %= 360;
-        ms.mulPose(Axis.YP.rotationDegrees(angle));
-        renderer.renderSolid(part.models[COG].get(), light);
-        ms.popPose();
 
         // base
         var working = data.map(d -> d.mining_visual).orElse(0) > 0 && time != 0;
