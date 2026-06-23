@@ -34,6 +34,8 @@ public record MechanicalToolSlot(CMETranslations.LangEntry lang) {
             CMETranslations.TIP_TOOL_SLOT);
     public static final RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> AUTOMATON_SLOT = register("automaton_top",
             CMETranslations.AUTOMATON_TOOL_SLOT);
+    public static final RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> MINING_REFINER_SLOT = register("mining_refiner_slot",
+            CMETranslations.MINING_REFINER_TOOL_SLOT);
 
     public static RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> register(String name, CMETranslations.LangEntry lang) {
         return REGISTRATE.object(name).simple(REGISTRY, () -> new MechanicalToolSlot(lang));

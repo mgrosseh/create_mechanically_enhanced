@@ -1,0 +1,49 @@
+{
+  "loader": "neoforge:composite",
+  "children": {
+    "base": {
+      "parent": "create_mechanically_enhanced:mechanical_part/mining_refiner/copper_base"
+    },
+    "fans": {
+      "parent": "create_mechanically_enhanced:mechanical_part/mining_refiner/blasting/fans"
+    }
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [0, 45, 0],
+      "translation": [0, 3, 0],
+      "scale": [0.375, 0.375, 0.375]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [0, 45, 0],
+      "translation": [0, 3, 0],
+      "scale": [0.375, 0.375, 0.375]
+    },
+    "firstperson_righthand": {
+      "rotation": [0, 45, 0],
+      "translation": [0, 3.75, 0],
+      "scale": [0.4, 0.4, 0.4]
+    },
+    "firstperson_lefthand": {
+      "rotation": [0, 45, 0],
+      "translation": [0, 3.75, 0],
+      "scale": [0.4, 0.4, 0.4]
+    },
+    "ground": {
+      "translation": [0, 2.25, 0],
+      "scale": [0.5, 0.5, 0.5]
+    },
+    "gui": {
+      "rotation": [30, -135, 0],
+      "translation": [0, 2, 0],
+      "scale": [0.8, 0.8, 0.8]
+    },
+    "head": {
+      "translation": [0, 14, 0]
+    },
+    "fixed": {
+      "rotation": [-90, 0, 0],
+      "translation": [0, 0.5, -7.5]
+    }
+  }
+}

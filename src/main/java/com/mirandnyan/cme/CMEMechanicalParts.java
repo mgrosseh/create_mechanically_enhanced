@@ -2,6 +2,7 @@ package com.mirandnyan.cme;
 
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPartBuilder;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalToolSlot;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.MechanicalCogPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.MechanicalGearboxPartData;
@@ -10,7 +11,8 @@ import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.MechanicalTan
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.accelerator.MechanicalAcceleratorPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.accelerator.MechanicalSimpleAcceleratorPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.accelerator.MechanicalStarAcceleratorPartData;
-import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.AutomatonBaseSubpart;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.subparts.AutoMaterialSubpart;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.subparts.AutomatonBaseSubpart;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.ConduitPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.MechanicalBlazePartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.MechanicalCatPartData;
@@ -394,6 +396,23 @@ public class CMEMechanicalParts {
             .customModel("automaton", "conduit", "shell_open")
             .build();
 
+    // -------- Mining Refiners
+    public static final AutoMaterialSubpart MINING_REFINER_BASE = new AutoMaterialSubpart.GenericBuilder("mining_refiner")
+            .casing(CMEMaterials.ANDESITE.getKey(), "andesite_base")
+            .casing(CMEMaterials.COPPER.getKey(), "copper_base")
+            .casing(CMEMaterials.BRASS.getKey(), "brass_base")
+            .casing(CMEMaterials.NETHERITE.getKey(), "netherite_base")
+            .build();
+
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> BLASTING_REFINER = new MechanicalPartBuilder("blasting_refiner")
+            .subpart(MINING_REFINER_BASE)
+            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.TIP_SLOT) // TODO: slot tag system then use REFINER SLOT
+            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 1f, 8f), MechanicalToolSlot.TIP_SLOT)
+            .item(CMEItems.BLASTING_MINING_REFINER)
+            .data(new MechanicalPartData(0) {})
+            .customModel("mining_refiner", "blasting", "fans")
+            .customModel("mining_refiner", "blasting", "fire_effect")
+            .build();
 
 
     public static Stream<RegistryEntry<MechanicalPart, MechanicalPart>> getAll(Predicate<? super RegistryEntry<MechanicalPart, MechanicalPart>> filter) {

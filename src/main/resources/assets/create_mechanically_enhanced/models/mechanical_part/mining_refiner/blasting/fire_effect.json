@@ -1,0 +1,63 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
+	"textures": {
+		"0": "create_mechanically_enhanced:item/mechanical_part/mining_refiner/fire_effect",
+		"particle": "create_mechanically_enhanced:item/mechanical_part/mining_refiner/fire_effect"
+	},
+	"elements": [
+		{
+			"from": [0, 10.25, 0],
+			"to": [16, 10.25, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 10.25, 0]},
+			"faces": {
+				"north": {"uv": [0, 1, 16, 1], "texture": "#0"},
+				"east": {"uv": [0, 1, 16, 1], "texture": "#0"},
+				"south": {"uv": [0, 1, 16, 1], "texture": "#0"},
+				"west": {"uv": [0, 1, 16, 1], "texture": "#0"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#0"}
+			},
+			"visibility": true
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [0, 45, 0],
+			"translation": [0, 3, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [0, 45, 0],
+			"translation": [0, 3, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 45, 0],
+			"translation": [0, 3.75, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 45, 0],
+			"translation": [0, 3.75, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"ground": {
+			"translation": [0, 2.25, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"gui": {
+			"rotation": [30, -135, 0],
+			"translation": [0, 2, 0],
+			"scale": [0.8, 0.8, 0.8]
+		},
+		"head": {
+			"translation": [0, 14, 0]
+		},
+		"fixed": {
+			"rotation": [-90, 0, 0],
+			"translation": [0, 0.5, -7.5]
+		}
+	}
+}

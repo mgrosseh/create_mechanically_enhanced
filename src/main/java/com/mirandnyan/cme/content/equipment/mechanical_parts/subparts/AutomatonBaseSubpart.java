@@ -1,4 +1,4 @@
-package com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton;
+package com.mirandnyan.cme.content.equipment.mechanical_parts.subparts;
 
 import com.mirandnyan.cme.CMEMaterials;
 import com.mirandnyan.cme.CMEMechanicalParts;
@@ -23,17 +23,12 @@ import net.minecraft.world.item.ItemStack;
 import java.util.HashMap;
 import java.util.List;
 
-public final class AutomatonBaseSubpart extends MechanicalSubpart {
-    public final HashMap<ResourceKey<CMEMaterial>, PartialModel> casings;
+public final class AutomatonBaseSubpart extends AutoMaterialSubpart {
     public final HashMap<ResourceKey<CMEMaterial>, PartialModel> cogs;
 
     private AutomatonBaseSubpart(HashMap<ResourceKey<CMEMaterial>, PartialModel> casings, HashMap<ResourceKey<CMEMaterial>, PartialModel> cogs) {
-        this.casings = casings;
+        super(casings);
         this.cogs = cogs;
-    }
-
-    private ResourceKey<CMEMaterial> getMaterial(FilledToolSlot partSlot) {
-        return partSlot.parent().map(p -> CMEMechanicalParts.get(p).get().material).orElse(null);
     }
 
     private PartialModel currentCog(FilledToolSlot partSlot) {
@@ -41,12 +36,6 @@ public final class AutomatonBaseSubpart extends MechanicalSubpart {
         if (!cogs.containsKey(material))
             material = CMEMaterials.NETHERITE.getKey();
         return cogs.get(material);
-    }
-    private PartialModel currentCasing(FilledToolSlot partSlot) {
-        var material = getMaterial(partSlot);
-        if (!casings.containsKey(material))
-            material = CMEMaterials.ANDESITE.getKey();
-        return casings.get(material);
     }
 
     @Override
@@ -68,31 +57,26 @@ public final class AutomatonBaseSubpart extends MechanicalSubpart {
         ms.popPose();
     }
 
-    public static class Builder {
-        private final String sharedSubpath;
-        private final HashMap<ResourceKey<CMEMaterial>, PartialModel> casings = new HashMap<>();
+    public static class Builder extends AutoMaterialSubpart.Builder<AutomatonBaseSubpart, Builder> {
         private final HashMap<ResourceKey<CMEMaterial>, PartialModel> cogs = new HashMap<>();
 
         public Builder(String... sharedSubpath) {
-            this.sharedSubpath = String.join("/", sharedSubpath);
+            super(sharedSubpath);
         }
 
-        public Builder casing(ResourceKey<CMEMaterial> material, String... location) {
-            casings.put(material, PartialModel.of(resource(VarArgs.of(sharedSubpath).and(location).toArray())));
+        @Override
+        protected Builder self() {
             return this;
         }
+
         public Builder cog(ResourceKey<CMEMaterial> material, String... location) {
             cogs.put(material, PartialModel.of(resource(VarArgs.of(sharedSubpath).and(location).toArray())));
             return this;
         }
 
+        @Override
         public AutomatonBaseSubpart build() {
             return new AutomatonBaseSubpart(casings, cogs);
-        }
-
-        private ResourceLocation resource(String... pathParts) {
-            return CreateMechanicallyEnhanced.asResource(
-                    MechanicalPartBuilder.MECHANICAL_PART_LOCATION_PREFIX + "/" + String.join("/", pathParts));
         }
     }
 }

@@ -1,0 +1,7 @@
+{
+	"parent": "create_mechanically_enhanced:mechanical_part/mining_refiner/refiner_fans",
+	"textures": {
+		"0": "create_mechanically_enhanced:item/mechanical_part/mining_refiner/blasting_fan",
+		"particle": "create_mechanically_enhanced:item/mechanical_part/mining_refiner/blasting_fan"
+	}
+}
