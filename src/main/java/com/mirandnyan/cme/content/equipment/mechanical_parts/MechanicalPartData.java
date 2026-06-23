@@ -2,6 +2,7 @@ package com.mirandnyan.cme.content.equipment.mechanical_parts;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
+import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,7 +24,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -66,7 +66,7 @@ public abstract class MechanicalPartData {
         return false;
     }
 
-    public Optional<Boolean> overrideInsertingPart(@NotNull ItemStack stack, @NotNull ItemStack other, @NotNull Player player, @NotNull SlotAccess access, @NotNull FilledToolSlot insertingPart) {
+    public Optional<Boolean> overrideInsertingPart(@NotNull ItemStack stack, @NotNull ItemStack other, @NotNull Player player, @NotNull SlotAccess access, RegistryEntry<MechanicalPart, MechanicalPart> insertingPart) {
         return Optional.empty();
     }
 
@@ -127,4 +127,5 @@ public abstract class MechanicalPartData {
     public int getBarColor(@NotNull ItemStack stack) {
         return 0;
     }
+
 }

@@ -5,40 +5,36 @@ import com.mirandnyan.cme.util.AffineTransform;
 import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class MechanicalPartSlotDefs {
-    SlotDefinition origin;
+    AffineTransform origin;
+    ResourceKey<MechanicalToolSlot> fitsInto;
     SlotDefinition[] slots;
 
-    public MechanicalPartSlotDefs(@NotNull SlotDefinition origin, @NotNull SlotDefinition... slots) {
+    public MechanicalPartSlotDefs(@NotNull AffineTransform origin, ResourceKey<MechanicalToolSlot> fitsInto, @NotNull SlotDefinition... slots) {
         this.origin = origin;
+        this.fitsInto = fitsInto;
         this.slots = slots;
     }
 
-    public boolean has(ResourceKey<MechanicalToolSlot> slot) {
-        for (var slotDefs : slots) {
-            if (slotDefs.slot().equals(slot))
-                return true;
-        }
-        return false;
+    public Stream<FilledToolSlot.SlotId> supportingSlots(ResourceKey<MechanicalToolSlot> slotType) {
+        return Arrays.stream(slots).filter(def -> def.slot().type().equals(slotType)).map(def -> def.slot);
     }
 
-    public Optional<AffineTransform> getTransform(ResourceKey<MechanicalToolSlot> slot) {
-        for (var slotDefs : slots) {
-            if (slotDefs.slot().equals(slot))
-                return Optional.of(slotDefs.transform);
-        }
-        return Optional.empty();
+    public Optional<AffineTransform> getTransform(FilledToolSlot.SlotId slot) {
+        return Arrays.stream(slots).filter(def -> def.slot.equals(slot)).map(def -> def.transform).findAny();
     }
 
     public AffineTransform getOriginTransform() {
-        return origin.transform;
+        return origin;
     }
 
     public ResourceKey<MechanicalToolSlot> getOrigin() {
-        return origin.slot;
+        return fitsInto;
     }
 
-    public record SlotDefinition(AffineTransform transform, @NotNull ResourceKey<MechanicalToolSlot> slot) {}
+    public record SlotDefinition(AffineTransform transform, @NotNull FilledToolSlot.SlotId slot) {}
 }

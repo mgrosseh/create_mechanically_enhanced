@@ -54,20 +54,13 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
     // TODO: pose is weird (crossing) when in offhand: extendo grip, crossbow, other mechanical tool
     // TODO: enchants: unbreaking (for when no air)
     // TODO: no anvil
-    // TODO: has slot: tag + if part has slot then this has that slot
+    // TODO: has type: tag + if part has type then this has that type
     // TODO: parts: incompatible with tag
     // TODO: add right click (as opposed to right hold = refill) as an action parts can access
     // TODO: right / left click on drill in inventory
     // TODO: sound when air empty
 
     // TODO: head: explosion generator
-
-
-    /*
-    TODO: part selection in creative:
-    Ctrl+L-Click cycles tool parts
-    Ctrl+R-Click tries to swap in-hand with selected part, or remove part if no children and hand empty
-     */
 
     /*
     TODO: ECS / Rules:
@@ -79,9 +72,9 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
     /*
     TODO: remove since most has been done (not all hence this todo)
     TODO: reworking Slots / Parts / FilledSlots etc
-    Tool has a slot for Grip:
+    Tool has a type for Grip:
     Tag defines two slots on grip: cog + gearbox
-    Each slot stores position offset on tool
+    Each type stores position offset on tool
 
     In render we find grip, render; then find attached parts, offset to their slots offset, render;
     then find their attached parts etc
@@ -98,8 +91,7 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         var stack = CMEItems.MECHANICAL_TOOL.asStack();
 
         for (var part : parts) {
-            var slot = new FilledToolSlot(part.get().getOriginSlot().getKey(), part.getKey(), Optional.empty());
-            insertFilledToolSlot(stack, slot);
+            tryInsertingMechanicalPart(stack, part);
         }
         recalculateTotalWeight(stack);
         var capacity = stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR_CAPACITY, 0);
@@ -112,11 +104,6 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
     }
 
 
-    @Override
-    public boolean alwaysFit(ResourceKey<MechanicalToolSlot> slot) {
-        return MechanicalToolSlot.GRIP_SLOT.getKey().equals(slot);
-    }
-
     @SubscribeEvent
     public static void entityTick(EntityTickEvent.Post event) {
         if (!(event.getEntity() instanceof Player player))
@@ -125,7 +112,7 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
 
         List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
-            slot.getPartRegistry().get().data.playerTick(
+            slot.getPartEntry().get().data.playerTick(
                     player, stack
             );
         }
@@ -151,7 +138,7 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
 
         List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
-            var part = slot.getPartRegistry();
+            var part = slot.getPartEntry();
             var data = part.get().data;
             var absorbed = data.tryAbsorbDamage(player, item, equipmentSlot, BLOCK_BREAK_DURABILITY_USE);
             if (absorbed)
@@ -170,7 +157,7 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
 
         List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
-            slot.getPartRegistry().get().data.brokeBlock(player, item, event);
+            slot.getPartEntry().get().data.brokeBlock(player, item, event);
         }
     }
 
@@ -180,7 +167,7 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
             @NotNull LivingEntity interactionTarget, @NotNull InteractionHand usedHand) {
         List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
-            var part = slot.getPartRegistry();
+            var part = slot.getPartEntry();
             var result = part.get().data.interactLivingEntity(stack, player, interactionTarget, usedHand);
             if (result != InteractionResult.PASS)
                 return result;
@@ -193,7 +180,7 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         var result = true;
         for (var slot : slots) {
-            var part = slot.getPartRegistry();
+            var part = slot.getPartEntry();
             result = result && part.get().data.onDroppedByPlayer(item, player);
         }
         return result && super.onDroppedByPlayer(item, player);
@@ -204,7 +191,7 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         var result = super.getHighlightTip(item, displayName);
         for (var slot : slots) {
-            var part = slot.getPartRegistry();
+            var part = slot.getPartEntry();
             result = part.get().data.getHighlightTip(item, result);
         }
         return result;
@@ -224,7 +211,7 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
 
         List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
-            slot.getPartRegistry().get().data.inventoryTick(
+            slot.getPartEntry().get().data.inventoryTick(
                     stack, level, entity, slotId, isSelected
             );
         }
@@ -266,7 +253,7 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
                 return false; // make sure in bounds
             }
             selectedToolSlot = selectedToolSlot % slots.size();
-            var out = tryRemovingMechanicalPart(stack, player, access);
+            var out = tryRemovingMechanicalPart(stack, access, selectedToolSlot);
             switch (out.type) {
                 case SUCCESS -> {
                     selectedToolSlot = -1;
@@ -292,52 +279,12 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
     protected static int selectedToolSlot = -1;
     protected static int showErrorToolSlot = -1;
 
-    protected RemovingPartResult tryRemovingMechanicalPart(@NotNull ItemStack stack, @NotNull Player player, @NotNull SlotAccess access) {
-        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
-        if (slots.isEmpty())
-            return RemovingPartResult.impossible();
-
-        // find part to remove
-        var len = slots.size();
-        Optional<FilledToolSlot> partToRemove = Optional.empty();
-        for (int i = 0; i < len; i++) {
-            if (i == selectedToolSlot) {
-                partToRemove = Optional.of(slots.get(i));
-            }
-        }
-        if (partToRemove.isEmpty()) // should be guarded above but just to make sure
-            return RemovingPartResult.impossible();
-
-        // make sure no part is child of
-        for (int i = 0; i < len; i++) {
-            var slot = slots.get(i);
-            if (slot.parent().isEmpty())
-                continue;
-            if (slot.parent().get() == partToRemove.get().part())
-                return RemovingPartResult.isParentOf(i);
-        }
-
-        // TODO: let parts block removal of other part maybe?
-
-        ArrayList<FilledToolSlot> newSlots = new ArrayList<>(slots);
-        newSlots.remove(selectedToolSlot);
-        var removedPart = partToRemove.get().getPartRegistry().get();
-        removedPart.data.onRemoved(stack);
-        stack.set(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.copyOf(newSlots));
-
-        recalculateTotalWeight(stack);
-        var item = removedPart.getItemRegistry().get().getDefaultInstance();
-        access.set(item);
-
-        return RemovingPartResult.success();
-    }
-
     protected boolean tryMechanicalPartsHandlingStackOnMe(@NotNull ItemStack stack, @NotNull ItemStack other,
                                                           @NotNull Slot slot, @NotNull ClickAction action,
                                                           @NotNull Player player, @NotNull SlotAccess access) {
         List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var tool_slot : slots) {
-            var part = tool_slot.getPartRegistry();
+            var part = tool_slot.getPartEntry();
             var handled = part.get().data.tryHandlingStackedOnMe(stack, other, slot, action, player, access);
             if (handled)
                 return true;
@@ -357,14 +304,11 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         if (maybe_part.isEmpty())
             return false;
         var insertingPart = maybe_part.get();
-        var insertingPartSlot = insertingPart.get().getOriginSlot().getKey();
-
-        var filledSlot = new FilledToolSlot(insertingPartSlot, insertingPart.getKey(), Optional.empty());
 
         Optional<Boolean> override = Optional.empty();
         List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
-            var result = slot.getPartRegistry().get().data.overrideInsertingPart(stack, other, player, access, filledSlot);
+            var result = slot.getPartEntry().get().data.overrideInsertingPart(stack, other, player, access, insertingPart);
             if (result.isPresent()) {
                 override = result;
                 break;
@@ -374,14 +318,19 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
             return override.get();
 
 
-        var old = insertFilledToolSlot(stack, filledSlot);
-        if (old == filledSlot)
-            return false;
+        RegistryEntry<MechanicalPart, MechanicalPart> old = null;
+        if (!tryInsertingMechanicalPart(stack, insertingPart)) {
+            var out = MechanicalItem.tryReplacingMechanicalPart(stack, insertingPart);
+            if (out.isEmpty())
+                return false;
+            old = out.get();
+        }
+
         recalculateTotalWeight(stack);
         other.shrink(1);
         if (old == null)
             return true;
-        var item = old.getPartRegistry().get().getItemRegistry().get().getDefaultInstance();
+        var item = old.get().getItemRegistry().get().getDefaultInstance();
         access.set(item);
 
         return true;
@@ -450,21 +399,21 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         }
 
         for (FilledToolSlot slot : slots) {
-            var part = slot.getPartRegistry();
+            var part = slot.getPartEntry();
             part.get().data.appendHoverText(stack, context, tooltip, flagIn);
         }
 
         // TODO: explain mechanic of removing / selecting parts (only if player in creative)
         boolean more = false;
         for (FilledToolSlot slot : slots) {
-            more = more || slot.getPartRegistry().get().data.hasExtraTooltip(stack, context, tooltip, flagIn);
+            more = more || slot.getPartEntry().get().data.hasExtraTooltip(stack, context, tooltip, flagIn);
         }
         if (more) {
             if (!flagIn.hasShiftDown())
                 tooltip.add(CMETranslations.EXTRA_TOOLTIP_INFO.resolveComponent());
             else {
                 for (FilledToolSlot slot : slots) {
-                    slot.getPartRegistry().get().data.appendExtraTooltip(stack, context, tooltip, flagIn);
+                    slot.getPartEntry().get().data.appendExtraTooltip(stack, context, tooltip, flagIn);
                 }
             }
         }
@@ -476,7 +425,7 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         var item = context.getItemInHand();
         List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
-            var part = slot.getPartRegistry();
+            var part = slot.getPartEntry();
             var result = part.get().data.useOn(context);
             if (result != InteractionResult.PASS)
                 return result;
@@ -498,7 +447,7 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         var duration = 0;
         List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
-            var part = slot.getPartRegistry();
+            var part = slot.getPartEntry();
             duration = Math.max(duration, part.get().data.getUseDuration(stack, entity));
         }
         return duration;
@@ -508,7 +457,7 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
     public void onUseTick(@NotNull Level level, @NotNull LivingEntity livingEntity, @NotNull ItemStack stack, int remainingUseDuration) {
         List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
-            var part = slot.getPartRegistry();
+            var part = slot.getPartEntry();
             var data = part.get().data;
             var duration = data.getUseDuration(stack, livingEntity);
             if(duration == 0)
@@ -522,7 +471,7 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
     public int getBarWidth(@NotNull ItemStack stack) {
         List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
-            var data = slot.getPartRegistry().get().data;
+            var data = slot.getPartEntry().get().data;
             if(!data.overridesBar(stack))
                 continue;
             return data.getBarWidth(stack);
@@ -534,7 +483,7 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
     public int getBarColor(@NotNull ItemStack stack) {
         List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
-            var data = slot.getPartRegistry().get().data;
+            var data = slot.getPartEntry().get().data;
             if(!data.overridesBar(stack))
                 continue;
             return data.getBarColor(stack);
@@ -568,7 +517,7 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
 
         List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
-            var part = slot.getPartRegistry();
+            var part = slot.getPartEntry();
             boolean result = false;
             if (state != null)
                 result = part.get().data.canAbsorbDurability(stack, state, amount);

@@ -1,7 +1,6 @@
 package com.mirandnyan.cme.content.equipment.mechanical_parts;
 
 import com.mirandnyan.cme.*;
-import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.*;
 import com.mojang.serialization.Codec;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
@@ -13,12 +12,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.registries.RegistryBuilder;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static com.mirandnyan.cme.CreateMechanicallyEnhanced.REGISTRATE;
 
@@ -75,10 +74,15 @@ public class MechanicalPart {
     }
 
     public RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> getOriginSlot() {
-        return REGISTRATE.get(slotDefinitions.origin.slot().location().getPath(), slotDefinitions.origin.slot().registryKey());
+        return REGISTRATE.get(slotDefinitions.fitsInto.location().getPath(), slotDefinitions.fitsInto.registryKey());
     }
 
-    public MechanicalPartSlotDefs slots() {
+    public Stream<FilledToolSlot.SlotId> supportingSlots(ResourceKey<MechanicalToolSlot> slotType) {
+        return slotDefinitions().supportingSlots(slotType);
+    }
+
+
+    public MechanicalPartSlotDefs slotDefinitions() {
         return slotDefinitions;
     }
 
@@ -92,7 +96,7 @@ public class MechanicalPart {
     public boolean isIn(ItemStack stack) {
         List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
-            if (slot.getPartRegistry().get() != this)
+            if (slot.getPartEntry().get() != this)
                 continue;
             return true;
         }

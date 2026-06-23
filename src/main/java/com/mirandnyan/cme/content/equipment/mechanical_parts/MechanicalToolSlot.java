@@ -20,7 +20,7 @@ public record MechanicalToolSlot(CMETranslations.LangEntry lang) {
     public static final Codec<ResourceKey<MechanicalToolSlot>> CODEC = ResourceKey.codec(REGISTRY);
     public static final StreamCodec<ByteBuf, ResourceKey<MechanicalToolSlot>> STREAM_CODEC = ResourceKey.streamCodec(REGISTRY);
 
-    public static final RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> GRIP_SLOT = register("grip",
+    public static final RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> ROOT = register("grip",
             CMETranslations.GRIP_TOOL_SLOT);
     public static final RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> COG_SLOT = register("cog",
             CMETranslations.COG_TOOL_SLOT);

@@ -18,15 +18,15 @@ public class MechanicalToolRenderer extends CustomRenderedItemModelRenderer {
     private void renderSlot(FilledToolSlot filledToolSlot, List<FilledToolSlot> filledToolSlots,
                             ItemStack stack, PartialItemModelRenderer renderer, ItemDisplayContext transformType,
                             PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-        MechanicalPart part = filledToolSlot.getPartRegistry().get();
-        var origin = part.slots().getOriginTransform();
+        MechanicalPart part = filledToolSlot.getPartEntry().get();
+        var origin = part.slotDefinitions().getOriginTransform();
 
         origin.apply(ms);
         part.data.render(stack, filledToolSlot, filledToolSlots, part, renderer, transformType, ms, buffer, light, overlay);
         for (var child : filledToolSlots) {
             if (child.parent().isEmpty() || child.parent().get() != filledToolSlot.part())
                 continue;
-            var attachmentTrans = part.slots().getTransform(child.slot());
+            var attachmentTrans = part.slotDefinitions().getTransform(child.slot());
             ms.pushPose();
             attachmentTrans.ifPresent(p -> p.apply(ms));
             renderSlot(child, filledToolSlots, stack, renderer, transformType, ms, buffer, light, overlay);

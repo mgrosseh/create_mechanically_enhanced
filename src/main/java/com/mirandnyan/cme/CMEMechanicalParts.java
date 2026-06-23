@@ -47,7 +47,7 @@ public class CMEMechanicalParts {
     // -------- Grips
     public static final RegistryEntry<MechanicalPart, MechanicalPart> WOODEN_GRIP = new MechanicalPartBuilder("wooden_grip")
             .material(CMEMaterials.WOOD)
-            .origin(new AffineTransform().translate(0, -0.5, 2), MechanicalToolSlot.GRIP_SLOT)
+            .origin(new AffineTransform().translate(0, -0.5, 2), MechanicalToolSlot.ROOT)
             .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 5f), MechanicalToolSlot.COG_SLOT)
             .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 3f), MechanicalToolSlot.ACCELERATOR_SLOT)
             .item(CMEItems.WOODEN_GRIP)
@@ -58,7 +58,7 @@ public class CMEMechanicalParts {
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> NETHERITE_GRIP = new MechanicalPartBuilder("netherite_grip")
             .material(CMEMaterials.NETHERITE)
-            .origin(new AffineTransform().translate(0, -0.5, 2), MechanicalToolSlot.GRIP_SLOT)
+            .origin(new AffineTransform().translate(0, -0.5, 2), MechanicalToolSlot.ROOT)
             .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 9f, 5f), MechanicalToolSlot.COG_SLOT)
             .item(CMEItems.NETHERITE_GRIP)
             .data(new MechanicalGripPartData(1300, 0.6f) {
@@ -406,7 +406,7 @@ public class CMEMechanicalParts {
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> BLASTING_REFINER = new MechanicalPartBuilder("blasting_refiner")
             .subpart(MINING_REFINER_BASE)
-            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.TIP_SLOT) // TODO: slot tag system then use REFINER SLOT
+            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.TIP_SLOT) // TODO: type tag system then use REFINER SLOT
             .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 1f, 8f), MechanicalToolSlot.TIP_SLOT)
             .item(CMEItems.BLASTING_MINING_REFINER)
             .data(new MechanicalPartData(0) {})

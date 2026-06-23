@@ -23,7 +23,8 @@ public class MechanicalPartBuilder {
     private MechanicalPartData data = null;
     private final ArrayList<ResourceLocation> models;
     private final ArrayList<MechanicalSubpart> subparts;
-    private MechanicalPartSlotDefs.SlotDefinition origin = null;
+    private AffineTransform origin = null;
+    private ResourceKey<MechanicalToolSlot> fitsInto  = null;
     private final ArrayList<MechanicalPartSlotDefs.SlotDefinition> slots;
     private ResourceKey<CMEMaterial> material;
 
@@ -73,14 +74,25 @@ public class MechanicalPartBuilder {
         return origin(new AffineTransform(), slot); // TODO: maybe different value for tool origin
     }
     public MechanicalPartBuilder origin(AffineTransform transform, ResourceKey<MechanicalToolSlot> slot) {
-        this.origin = new MechanicalPartSlotDefs.SlotDefinition(transform, slot);
+        this.origin = transform;
+        this.fitsInto = slot;
         return this;
     }
     public MechanicalPartBuilder origin(AffineTransform transform, RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> slot) {
         return origin(transform, slot.getKey());
     }
-    public MechanicalPartBuilder slot(AffineTransform transform, ResourceKey<MechanicalToolSlot> slot) {
-        slots.add(new MechanicalPartSlotDefs.SlotDefinition(transform, slot));
+
+    private int nextOrdinal(ResourceKey<MechanicalToolSlot> slotType) {
+        return slots.stream()
+                .filter(f -> f.slot().type() == slotType)
+                .map(f -> f.slot().ordinal())
+                .max(Integer::compareTo)
+                .map(i -> i + 1)
+                .orElse(0);
+    }
+
+    public MechanicalPartBuilder slot(AffineTransform transform, ResourceKey<MechanicalToolSlot> slotType) {
+        slots.add(new MechanicalPartSlotDefs.SlotDefinition(transform, new FilledToolSlot.SlotId(slotType, nextOrdinal(slotType))));
         return this;
     }
     public MechanicalPartBuilder slot(AffineTransform transform, RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> slot) {
@@ -114,10 +126,10 @@ public class MechanicalPartBuilder {
         var pixelToBlock = new AffineTransform().scale(1 / 16f).translate(-0.5f);
         var blockToPixel = pixelToBlock.inverse();
 
-        var originTrans = pixelToBlock.copy().mul(origin.transform()).mul(blockToPixel);
-        origin = new MechanicalPartSlotDefs.SlotDefinition(originTrans.inverse(), origin.slot());
+        var originTrans = pixelToBlock.copy().mul(origin).mul(blockToPixel);
+        origin = originTrans.inverse();
 
-        var defs = new MechanicalPartSlotDefs(origin, slots.stream()
+        var defs = new MechanicalPartSlotDefs(origin, fitsInto, slots.stream()
                 .map(def -> new MechanicalPartSlotDefs.SlotDefinition(
                         pixelToBlock.copy().mul(def.transform()).mul(blockToPixel),
                         def.slot()))
