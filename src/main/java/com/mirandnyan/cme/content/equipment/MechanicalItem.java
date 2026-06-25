@@ -10,7 +10,6 @@ import com.mirandnyan.cme.util.ItemAttributeModifiersRebuilder;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -72,9 +71,12 @@ public abstract class MechanicalItem extends Item {
         var targetAsParent = Optional.of(replaceTarget.part());
         var newAsParent = Optional.of(insertingPart.getKey());
 
+        //noinspection OptionalGetWithoutIsPresent // we know replaceTarget is in filled tool slots, so we always have a value
+        var replaceSlot = filledToolSlots.stream().filter(s -> s == replaceTarget).map(FilledToolSlot::slot).findAny().get();
+
         var newList = filledToolSlots.stream()
                 .map(s -> {
-                    if (s == maybe_replaceTarget.get()) {
+                    if (s == replaceTarget) {
                         return new FilledToolSlot(s.slot(), insertingPart.getKey(), s.parent());
                     }
                     if (s.parent().equals(targetAsParent)) {
@@ -83,8 +85,8 @@ public abstract class MechanicalItem extends Item {
                     return s;
                 }).toList();
         stack.set(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, newList);
-        replaceTarget.getPart().data.onRemoved(stack);
-        insertingPart.get().data.onInserted(stack);
+        replaceTarget.getPart().data.onRemoved(replaceSlot, stack);
+        insertingPart.get().data.onInserted(replaceSlot, stack);
 
         return Optional.of(replaceTarget.getPartEntry());
     }
@@ -93,14 +95,14 @@ public abstract class MechanicalItem extends Item {
         ArrayList<FilledToolSlot> filledSlots = new ArrayList<>(stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of()));
         filledSlots.add(new FilledToolSlot(entry.id(), part.getKey(), entry.parent()));
         stack.set(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.copyOf(filledSlots));
-        part.get().data.onInserted(stack);
+        part.get().data.onInserted(entry.id(), stack);
     }
 
     private static void removeMechanicalPart(ItemStack stack, FilledToolSlot filledToolSlot) {
         ArrayList<FilledToolSlot> filledSlots = new ArrayList<>(stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of()));
         filledSlots.remove(filledToolSlot);
         stack.set(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.copyOf(filledSlots));
-        filledToolSlot.getPart().data.onRemoved(stack);
+        filledToolSlot.getPart().data.onRemoved(filledToolSlot.slot(), stack);
     }
 
     protected static boolean tryInsertingMechanicalPart(ItemStack stack, RegistryEntry<MechanicalPart, MechanicalPart> toInsert) {
@@ -158,7 +160,7 @@ public abstract class MechanicalItem extends Item {
 
         ArrayList<FilledToolSlot> newSlots = new ArrayList<>(slots);
         newSlots.remove(selectedToolSlot);
-        removedPart.data.onRemoved(stack);
+        removedPart.data.onRemoved(toolSlotToRemove.slot(), stack);
         stack.set(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.copyOf(newSlots));
 
         recalculateTotalWeight(stack);
@@ -186,4 +188,5 @@ public abstract class MechanicalItem extends Item {
                 .build()
         );
     }
+
 }

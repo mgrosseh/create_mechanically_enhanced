@@ -1,11 +1,9 @@
-package com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton;
+package com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.mechanical_cat;
 
 import com.mirandnyan.cme.*;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.MechanicalPartUtil;
-import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.mechanical_cat.MechanicalCatBonusType;
-import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.mechanical_cat.MechanicalCatGiftType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -36,7 +34,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@EventBusSubscriber
 public class MechanicalCatPartData extends MechanicalPartData {
 
     /*
@@ -69,7 +66,7 @@ public class MechanicalCatPartData extends MechanicalPartData {
     }
 
     @Override
-    public void onRemoved(ItemStack tool) {
+    public void onRemoved(FilledToolSlot.SlotId replaceSlot, ItemStack tool) {
         MechanicalPartUtil.removeEnchantment(tool, MechanicalPartUtil.getLocalHolder(Enchantments.FORTUNE));
         removeBonus(tool, null);
     }
@@ -92,8 +89,6 @@ public class MechanicalCatPartData extends MechanicalPartData {
         playCatSound(level, player.position(), SoundEvents.CAT_STRAY_AMBIENT);
         if (!player.isCreative())
             food.shrink(1);
-        if (level.isClientSide)
-            return true;
         var bonus = getRandomBonus(player.level().getRandom(), valueSkew);
         stack.set(CMEDataComponents.MECHANICAL_CAT_BONUS, bonus);
         stack.set(CMEDataComponents.MECHANICAL_CAT_APPLY_BONUS, Unit.INSTANCE);
@@ -205,25 +200,33 @@ public class MechanicalCatPartData extends MechanicalPartData {
         }
     }
 
-    @SubscribeEvent
-    public static void modifyBlockDropsAfterBreak(BlockDropsEvent event) {
-        if (!(event.getBreaker() instanceof ServerPlayer player) || !player.getMainHandItem().has(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE))
-            return;
-        var item = player.getMainHandItem();
-
+    @Override
+    public void blockDropEvent(FilledToolSlot.SlotId slot, ServerPlayer player, ItemStack item, BlockDropsEvent event) {
         if (!item.has(CMEDataComponents.MECHANICAL_CAT_GIVE_GIFT))
             return;
-
-        List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
-        for (FilledToolSlot slot : slots) {
-            var part = slot.getPartEntry();
-            if (part != CMEMechanicalParts.CAT_AUTOMATON)
-                continue;
-            var data = (MechanicalCatPartData) part.get().data;
-            //noinspection DataFlowIssue // cant be null since item.has guard
-            data.handleGifts(player, item, item.get(CMEDataComponents.MECHANICAL_CAT_GIVE_GIFT), event);
-        }
+        //noinspection DataFlowIssue // cant be null since item.has guard
+        handleGifts(player, item, item.get(CMEDataComponents.MECHANICAL_CAT_GIVE_GIFT), event);
     }
+//
+//    @SubscribeEvent
+//    public static void modifyBlockDropsAfterBreak(BlockDropsEvent event) {
+//        if (!(event.getBreaker() instanceof ServerPlayer player) || !player.getMainHandItem().has(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE))
+//            return;
+//        var item = player.getMainHandItem();
+//
+//        if (!item.has(CMEDataComponents.MECHANICAL_CAT_GIVE_GIFT))
+//            return;
+//
+//        List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+//        for (FilledToolSlot slot : slots) {
+//            var part = slot.getPartEntry();
+//            if (part != CMEMechanicalParts.CAT_AUTOMATON)
+//                continue;
+//            var data = (MechanicalCatPartData) part.get().data;
+//            //noinspection DataFlowIssue // cant be null since item.has guard
+//            data.handleGifts(player, item, item.get(CMEDataComponents.MECHANICAL_CAT_GIVE_GIFT), event);
+//        }
+//    }
 
     protected void handleGifts(@NotNull ServerPlayer player, @NotNull ItemStack item, @NotNull MechanicalCatGiftType gift,
                                BlockDropsEvent event) {

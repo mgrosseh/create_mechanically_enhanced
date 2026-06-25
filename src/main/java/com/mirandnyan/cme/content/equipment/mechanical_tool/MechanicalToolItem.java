@@ -8,6 +8,7 @@ import com.mirandnyan.cme.content.equipment.MechanicalItem;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalToolSlot;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.mechanical_cat.MechanicalCatPartData;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.foundation.item.CustomArmPoseItem;
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
@@ -34,6 +35,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.event.level.BlockDropsEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import org.jetbrains.annotations.NotNull;
@@ -76,14 +78,9 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
     Tag defines two slots on grip: cog + gearbox
     Each type stores position offset on tool
 
-    In render we find grip, render; then find attached parts, offset to their slots offset, render;
-    then find their attached parts etc
-
     On trying to rightClick, for each part try inserting a valid part onto it recursively, the tool facilitates figuring
     out if it is a MechanicalPart and then calls tryInsertingTool on gripPart.data.
     It sees if one of its slots fits the Part, if not for each part it calls part.data.tryInsertingTool.
-
-    it may still be best to store all parts linearly and use a map for structure of where it is
      */
 
     @SafeVarargs
@@ -158,6 +155,19 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
             slot.getPartEntry().get().data.brokeBlock(player, item, event);
+        }
+    }
+
+    @SubscribeEvent
+    public static void modifyBlockDropsAfterBreak(BlockDropsEvent event) {
+        if (!(event.getBreaker() instanceof ServerPlayer player) || !player.getMainHandItem().has(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE))
+            return;
+        var item = player.getMainHandItem();
+
+        List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        for (FilledToolSlot slot : slots) {
+            var part = slot.getPart();
+            part.data.blockDropEvent(slot.slot(), player, item, event);
         }
     }
 
@@ -546,6 +556,14 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
 
     @Override
     public void postHurtEnemy(ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
+        target.setRemainingFireTicks(60);
+
+        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        for (var slot : slots) {
+            var part = slot.getPart();
+            if (part.data.postHurtEnemy(slot.slot(), stack, attacker, target))
+                return;
+        }
         stack.hurtAndBreak(ENTITY_ATTACK_DURABILITY_USE, attacker, EquipmentSlot.MAINHAND);
     }
 }

@@ -22,6 +22,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.event.level.BlockDropsEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,8 +42,8 @@ public abstract class MechanicalPartData {
         this.parent = parent;
     }
 
-    public void onInserted(ItemStack tool) { }
-    public void onRemoved(ItemStack tool) { }
+    public void onInserted(FilledToolSlot.SlotId replaceSlot, ItemStack tool) { }
+    public void onRemoved(FilledToolSlot.SlotId replaceSlot, ItemStack tool) { }
 
     public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity, int slotId, boolean isSelected) { }
 
@@ -128,4 +129,12 @@ public abstract class MechanicalPartData {
         return 0;
     }
 
+    /** return to block consuming durability */
+    public boolean postHurtEnemy(FilledToolSlot.@NotNull SlotId part, @NotNull ItemStack stack, @NotNull LivingEntity attacker, @NotNull LivingEntity target) {
+        return false;
+    }
+
+    public void blockDropEvent(FilledToolSlot.SlotId slot, ServerPlayer player, ItemStack item, BlockDropsEvent event) {
+
+    }
 }

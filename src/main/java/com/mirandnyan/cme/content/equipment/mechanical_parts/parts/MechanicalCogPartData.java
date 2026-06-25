@@ -1,6 +1,7 @@
 package com.mirandnyan.cme.content.equipment.mechanical_parts.parts;
 
 import com.mirandnyan.cme.CreateMechanicallyEnhanced;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPartData;
 import com.mirandnyan.cme.util.ItemAttributeModifiersRebuilder;
@@ -16,7 +17,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
-import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 public class MechanicalCogPartData extends MechanicalPartData {
@@ -42,7 +42,7 @@ public class MechanicalCogPartData extends MechanicalPartData {
     }
 
     @Override
-    public void onInserted(ItemStack tool) {
+    public void onInserted(FilledToolSlot.SlotId replaceSlot, ItemStack tool) {
         tool.set(DataComponents.ATTRIBUTE_MODIFIERS,
                 new ItemAttributeModifiersRebuilder(tool.getAttributeModifiers())
                         .takeAll()
@@ -51,7 +51,7 @@ public class MechanicalCogPartData extends MechanicalPartData {
         );
     }
     @Override
-    public void onRemoved(ItemStack tool) {
+    public void onRemoved(FilledToolSlot.SlotId replaceSlot, ItemStack tool) {
         tool.set(DataComponents.ATTRIBUTE_MODIFIERS,
                 new ItemAttributeModifiersRebuilder(tool.getAttributeModifiers())
                         .filter(e -> !e.equals(cogBoost))

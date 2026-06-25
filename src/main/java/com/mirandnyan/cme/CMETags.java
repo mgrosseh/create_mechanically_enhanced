@@ -10,7 +10,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.neoforged.neoforge.common.Tags;
 
 
 public class CMETags {
@@ -22,11 +24,20 @@ public class CMETags {
 
 
     public static class Items {
+        public static final TagKey<Item> WOOL = common("wool");
+
         public static final TagKey<Item> STONES = common("stones");
+        public static final TagKey<Item> CROPS = common("crops");
+
+        public static final TagKey<Item> ALL_BLACKSTONE = common("all_blackstone");
 
         public static final TagKey<Item> LOW_LIKED_MECHANICAL_CAT_FOOD = custom("low_liked_mechanical_cat_food");
         public static final TagKey<Item> MID_LIKED_MECHANICAL_CAT_FOOD = custom("mid_liked_mechanical_cat_food");
         public static final TagKey<Item> HIGH_LIKED_MECHANICAL_CAT_FOOD = custom("high_liked_mechanical_cat_food");
+
+
+        public static final TagKey<Item> BURN_UP_IMMUNE = custom("burn_up_immune");
+        public static final TagKey<Item> BURN_UP_HIGH_LIKELIHOOD = custom("burn_up_high_liekelihood");
 
         public static TagKey<Item> common(String name) {
             return tag(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath("c", name));
@@ -34,8 +45,30 @@ public class CMETags {
         public static TagKey<Item> custom(String name) {
             return tag(BuiltInRegistries.ITEM, CreateMechanicallyEnhanced.asResource(name));
         }
+        public static TagKey<Item> minecraft(String name) {
+            return tag(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath("minecraft", name));
+        }
 
         public static void genTags(RegistrateItemTagsProvider prov) {
+            prov.addTag(ALL_BLACKSTONE)
+                    .add(net.minecraft.world.item.Items.BLACKSTONE)
+                    .add(net.minecraft.world.item.Items.BLACKSTONE_SLAB)
+                    .add(net.minecraft.world.item.Items.BLACKSTONE_STAIRS)
+                    .add(net.minecraft.world.item.Items.BLACKSTONE_WALL)
+                    .add(net.minecraft.world.item.Items.POLISHED_BLACKSTONE)
+                    .add(net.minecraft.world.item.Items.POLISHED_BLACKSTONE_BRICK_SLAB)
+                    .add(net.minecraft.world.item.Items.POLISHED_BLACKSTONE_BRICKS)
+                    .add(net.minecraft.world.item.Items.POLISHED_BLACKSTONE_BRICK_STAIRS)
+                    .add(net.minecraft.world.item.Items.POLISHED_BLACKSTONE_BUTTON)
+                    .add(net.minecraft.world.item.Items.POLISHED_BLACKSTONE_SLAB)
+                    .add(net.minecraft.world.item.Items.POLISHED_BLACKSTONE_BRICK_WALL)
+                    .add(net.minecraft.world.item.Items.POLISHED_BLACKSTONE_PRESSURE_PLATE)
+                    .add(net.minecraft.world.item.Items.POLISHED_BLACKSTONE_STAIRS)
+                    .add(net.minecraft.world.item.Items.POLISHED_BLACKSTONE_WALL)
+                    .add(net.minecraft.world.item.Items.CRACKED_POLISHED_BLACKSTONE_BRICKS)
+                    .add(net.minecraft.world.item.Items.CHISELED_POLISHED_BLACKSTONE)
+                    .add(net.minecraft.world.item.Items.GILDED_BLACKSTONE);
+
             prov.addTag(LOW_LIKED_MECHANICAL_CAT_FOOD)
                     .add(CMEItems.MINTED_COPPER_COIN.asItem())
                     .add(CMEItems.MINTED_IRON_COIN.asItem())
@@ -50,6 +83,27 @@ public class CMETags {
                     .add(CMEItems.MINTED_BRASS_COIN_DIAMOND.asItem())
                     .add(CMEItems.MINTED_BRASS_COIN_EMERALD.asItem())
                     .add(CMEItems.MINTED_BRASS_COIN_EXPERIENCE.asItem());
+
+
+            prov.addTag(BURN_UP_IMMUNE)
+                    .addTag(Tags.Items.OBSIDIANS)
+                    .addTag(Tags.Items.NETHER_STARS)
+                    .addTag(Tags.Items.NETHERRACKS)
+                    .addTag(Tags.Items.BRICKS_NETHER)
+                    .addTag(Tags.Items.END_STONES)
+                    .addTag(Tags.Items.GEMS)
+                    .addTag(Tags.Items.INGOTS)
+                    .addTag(Tags.Items.NUGGETS)
+                    .addTag(Tags.Items.RODS_BLAZE)
+                    .addTag(Tags.Items.SANDSTONE_BLOCKS)
+                    .addTag(Tags.Items.STONES)
+                    .addTag(Tags.Items.SHULKER_BOXES)
+                    .addTag(ALL_BLACKSTONE)
+            ;
+
+            prov.addTag(BURN_UP_HIGH_LIKELIHOOD) // not that many blocks are furnace fuel and skipped
+                    .addTag(CROPS)
+            ;
         }
     }
 

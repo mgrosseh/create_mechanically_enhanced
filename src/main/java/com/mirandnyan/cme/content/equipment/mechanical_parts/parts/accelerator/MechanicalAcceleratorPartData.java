@@ -1,6 +1,7 @@
 package com.mirandnyan.cme.content.equipment.mechanical_parts.parts.accelerator;
 
 import com.mirandnyan.cme.CreateMechanicallyEnhanced;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPartData;
 import com.mirandnyan.cme.util.ItemAttributeModifiersRebuilder;
@@ -38,7 +39,7 @@ public class MechanicalAcceleratorPartData extends MechanicalPartData {
     }
 
     @Override
-    public void onInserted(ItemStack tool) {
+    public void onInserted(FilledToolSlot.SlotId replaceSlot, ItemStack tool) {
         tool.set(DataComponents.ATTRIBUTE_MODIFIERS,
                 new ItemAttributeModifiersRebuilder(tool.getAttributeModifiers())
                         .takeAll()
@@ -47,7 +48,7 @@ public class MechanicalAcceleratorPartData extends MechanicalPartData {
         );
     }
     @Override
-    public void onRemoved(ItemStack tool) {
+    public void onRemoved(FilledToolSlot.SlotId replaceSlot, ItemStack tool) {
         tool.set(DataComponents.ATTRIBUTE_MODIFIERS,
                 new ItemAttributeModifiersRebuilder(tool.getAttributeModifiers())
                         .filter(e -> !e.equals(acceleratorBoost))

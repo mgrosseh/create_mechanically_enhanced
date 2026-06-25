@@ -20,14 +20,14 @@ public class MechanicalSimpleAcceleratorPartData extends MechanicalAcceleratorPa
     }
 
     @Override
-    public void onInserted(ItemStack tool) {
-        super.onInserted(tool);
+    public void onInserted(FilledToolSlot.SlotId replaceSlot, ItemStack tool) {
+        super.onInserted(replaceSlot, tool);
         tool.set(CMEDataComponents.EXPLOSION_IMMUNE, Unit.INSTANCE);
     }
 
     @Override
-    public void onRemoved(ItemStack tool) {
-        super.onRemoved(tool);
+    public void onRemoved(FilledToolSlot.SlotId replaceSlot, ItemStack tool) {
+        super.onRemoved(replaceSlot, tool);
         tool.remove(CMEDataComponents.EXPLOSION_IMMUNE);
     }
 

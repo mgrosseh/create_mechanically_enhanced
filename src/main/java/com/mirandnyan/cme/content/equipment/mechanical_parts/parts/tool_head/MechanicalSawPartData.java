@@ -2,6 +2,7 @@ package com.mirandnyan.cme.content.equipment.mechanical_parts.parts.tool_head;
 
 import com.mirandnyan.cme.CMEDataComponents;
 import com.mirandnyan.cme.CMETranslations;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPartData;
 import com.mirandnyan.cme.util.ItemAttributeModifiersRebuilder;
@@ -66,22 +67,22 @@ public class MechanicalSawPartData extends MechanicalPartData {
     }
 
     @Override
-    public void onInserted(ItemStack tool) {
+    public void onInserted(FilledToolSlot.SlotId replaceSlot, ItemStack tool) {
         tool.set(DataComponents.TOOL, this.tool);
         tool.set(DataComponents.ATTRIBUTE_MODIFIERS, new ItemAttributeModifiersRebuilder(tool.getAttributeModifiers())
                 .takeAll()
                 .add(sawDamage)
                 .build());
-        super.onInserted(tool);
+        super.onInserted(replaceSlot, tool);
     }
 
     @Override
-    public void onRemoved(ItemStack tool) {
+    public void onRemoved(FilledToolSlot.SlotId replaceSlot, ItemStack tool) {
         tool.remove(DataComponents.TOOL);
         tool.set(DataComponents.ATTRIBUTE_MODIFIERS, new ItemAttributeModifiersRebuilder(tool.getAttributeModifiers())
                 .removing(sawDamage)
                 .build());
-        super.onRemoved(tool);
+        super.onRemoved(replaceSlot, tool);
     }
 
     @Override

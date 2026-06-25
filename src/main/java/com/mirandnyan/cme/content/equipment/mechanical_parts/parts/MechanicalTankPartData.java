@@ -2,6 +2,7 @@ package com.mirandnyan.cme.content.equipment.mechanical_parts.parts;
 
 import com.mirandnyan.cme.CMEDataComponents;
 import com.mirandnyan.cme.CMETranslations;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_tool.MechanicalToolItem;
 import com.simibubi.create.content.equipment.armor.BacktankUtil;
@@ -31,7 +32,7 @@ public class MechanicalTankPartData extends MechanicalPartData {
     }
 
     @Override
-    public void onInserted(ItemStack tool) {
+    public void onInserted(FilledToolSlot.SlotId replaceSlot, ItemStack tool) {
         var air = tool.getOrDefault(CMEDataComponents.PRESSURIZED_AIR, 0);
         var maxAir = tool.getOrDefault(CMEDataComponents.PRESSURIZED_AIR_CAPACITY, 0);
         var newMaxAir = maxAir + this.capacity;
@@ -41,7 +42,7 @@ public class MechanicalTankPartData extends MechanicalPartData {
     }
 
     @Override
-    public void onRemoved(ItemStack tool) {
+    public void onRemoved(FilledToolSlot.SlotId replaceSlot, ItemStack tool) {
         var air = tool.getOrDefault(CMEDataComponents.PRESSURIZED_AIR, 0);
         var maxAir = tool.getOrDefault(CMEDataComponents.PRESSURIZED_AIR_CAPACITY, 0);
         var newMaxAir = Math.max(maxAir - this.capacity, 0);

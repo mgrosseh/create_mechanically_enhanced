@@ -2,13 +2,11 @@ package com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton;
 
 import com.mirandnyan.cme.CMEDataComponents;
 import com.mirandnyan.cme.CreateMechanicallyEnhanced;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPartData;
-import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.MechanicalPartUtil;
-import com.mirandnyan.cme.util.AttributeHelpers;
 import com.mirandnyan.cme.util.ItemAttributeModifiersRebuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.api.data.datamaps.BlazeBurnerFuel;
 import com.simibubi.create.api.registry.CreateDataMaps;
@@ -23,7 +21,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -234,7 +231,7 @@ public class MechanicalBlazePartData extends MechanicalPartData {
     }
 
     @Override
-    public void onRemoved(ItemStack tool) {
+    public void onRemoved(FilledToolSlot.SlotId replaceSlot, ItemStack tool) {
         tool.set(DataComponents.ATTRIBUTE_MODIFIERS, new ItemAttributeModifiersRebuilder(tool.getAttributeModifiers())
                 .removing(superheatedBoost, heatedBoost)
                 .build()

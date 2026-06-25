@@ -1,6 +1,7 @@
 package com.mirandnyan.cme.content.equipment.mechanical_parts.parts.accelerator;
 
 import com.mirandnyan.cme.CMEDataComponents;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -16,14 +17,14 @@ public class MechanicalStarAcceleratorPartData extends MechanicalAcceleratorPart
     }
 
     @Override
-    public void onInserted(ItemStack tool) {
-        super.onInserted(tool);
+    public void onInserted(FilledToolSlot.SlotId replaceSlot, ItemStack tool) {
+        super.onInserted(replaceSlot, tool);
         tool.set(CMEDataComponents.EXPLOSION_IMMUNE, Unit.INSTANCE);
     }
 
     @Override
-    public void onRemoved(ItemStack tool) {
-        super.onRemoved(tool);
+    public void onRemoved(FilledToolSlot.SlotId replaceSlot, ItemStack tool) {
+        super.onRemoved(replaceSlot, tool);
         tool.remove(CMEDataComponents.EXPLOSION_IMMUNE);
     }
 

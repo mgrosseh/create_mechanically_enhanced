@@ -1,13 +1,7 @@
 package com.mirandnyan.cme;
 
-import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
-import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPartBuilder;
-import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPartData;
-import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalToolSlot;
-import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.MechanicalCogPartData;
-import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.MechanicalGearboxPartData;
-import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.MechanicalGripPartData;
-import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.MechanicalTankPartData;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.*;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.*;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.accelerator.MechanicalAcceleratorPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.accelerator.MechanicalSimpleAcceleratorPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.accelerator.MechanicalStarAcceleratorPartData;
@@ -15,7 +9,7 @@ import com.mirandnyan.cme.content.equipment.mechanical_parts.subparts.AutoMateri
 import com.mirandnyan.cme.content.equipment.mechanical_parts.subparts.AutomatonBaseSubpart;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.ConduitPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.MechanicalBlazePartData;
-import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.MechanicalCatPartData;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.mechanical_cat.MechanicalCatPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.pumpkin.MechanicalPumpkinPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.tool_head.MechanicalDrillPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.tool_head.MechanicalSawPartData;
@@ -63,14 +57,14 @@ public class CMEMechanicalParts {
             .item(CMEItems.NETHERITE_GRIP)
             .data(new MechanicalGripPartData(1300, 0.6f) {
                 @Override
-                public void onInserted(ItemStack tool) {
+                public void onInserted(FilledToolSlot.SlotId replaceSlot, ItemStack tool) {
                     tool.set(DataComponents.FIRE_RESISTANT, Unit.INSTANCE);
-                    super.onInserted(tool);
+                    super.onInserted(replaceSlot, tool);
                 }
                 @Override
-                public void onRemoved(ItemStack tool) {
+                public void onRemoved(FilledToolSlot.SlotId replaceSlot, ItemStack tool) {
                     tool.remove(DataComponents.FIRE_RESISTANT);
-                    super.onInserted(tool);
+                    super.onInserted(replaceSlot, tool);
                 }
             })
             .defaultModel("tool_grip")
@@ -409,7 +403,7 @@ public class CMEMechanicalParts {
             .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.TIP_SLOT) // TODO: type tag system then use REFINER SLOT
             .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 1f, 8f), MechanicalToolSlot.TIP_SLOT)
             .item(CMEItems.BLASTING_MINING_REFINER)
-            .data(new MechanicalPartData(0) {})
+            .data(new BlastingRefinerPartData(0))
             .customModel("mining_refiner", "blasting", "fans")
             .customModel("mining_refiner", "blasting", "fire_effect")
             .build();

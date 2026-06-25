@@ -3,29 +3,15 @@ package com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.pu
 import com.mirandnyan.cme.CMEAttributes;
 import com.mirandnyan.cme.CreateMechanicallyEnhanced;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
-import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.MechanicalPartUtil;
-import com.mirandnyan.cme.util.AttributeHelpers;
 import com.mirandnyan.cme.util.ItemAttributeModifiersRebuilder;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
-import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.Level;
-import net.neoforged.fml.common.EventBusSubscriber;
-import org.jetbrains.annotations.NotNull;
 
 public class MechanicalPumpkinPartData extends MechanicalPartData {
 
@@ -48,7 +34,7 @@ public class MechanicalPumpkinPartData extends MechanicalPartData {
     }
 
     @Override
-    public void onInserted(ItemStack tool) {
+    public void onInserted(FilledToolSlot.SlotId replaceSlot, ItemStack tool) {
         MechanicalPartUtil.addEnchantment(tool, MechanicalPartUtil.getLocalHolder(Enchantments.SILK_TOUCH), 1);
         tool.set(DataComponents.ATTRIBUTE_MODIFIERS,
                 new ItemAttributeModifiersRebuilder(tool.getAttributeModifiers())
@@ -58,7 +44,7 @@ public class MechanicalPumpkinPartData extends MechanicalPartData {
     }
 
     @Override
-    public void onRemoved(ItemStack tool) {
+    public void onRemoved(FilledToolSlot.SlotId replaceSlot, ItemStack tool) {
         MechanicalPartUtil.removeEnchantment(tool, MechanicalPartUtil.getLocalHolder(Enchantments.SILK_TOUCH));
         tool.set(DataComponents.ATTRIBUTE_MODIFIERS,
                 new ItemAttributeModifiersRebuilder(tool.getAttributeModifiers())

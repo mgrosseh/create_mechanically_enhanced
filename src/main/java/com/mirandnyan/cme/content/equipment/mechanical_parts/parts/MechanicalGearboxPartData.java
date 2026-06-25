@@ -1,6 +1,7 @@
 package com.mirandnyan.cme.content.equipment.mechanical_parts.parts;
 
 import com.mirandnyan.cme.CMEDataComponents;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPartData;
 import net.minecraft.world.item.ItemStack;
 
@@ -12,12 +13,12 @@ public class MechanicalGearboxPartData extends MechanicalPartData {
     }
 
     @Override
-    public void onInserted(ItemStack tool) {
+    public void onInserted(FilledToolSlot.SlotId replaceSlot, ItemStack tool) {
         tool.set(CMEDataComponents.AIR_TRANSFER_RATIO, airTransferRatio);
     }
 
     @Override
-    public void onRemoved(ItemStack tool) {
+    public void onRemoved(FilledToolSlot.SlotId replaceSlot, ItemStack tool) {
         tool.remove(CMEDataComponents.AIR_TRANSFER_RATIO);
     }
 }
