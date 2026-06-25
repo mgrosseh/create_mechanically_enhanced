@@ -1,4 +1,4 @@
-package com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.mechanical_cat;
+package com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.cat;
 
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;

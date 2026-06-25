@@ -5,6 +5,7 @@ import com.mirandnyan.cme.CMETranslations;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPartData;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.SimpleMiningCheckPartData;
 import com.mirandnyan.cme.util.ItemAttributeModifiersRebuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
@@ -27,7 +28,7 @@ import java.util.Optional;
 import java.util.WeakHashMap;
 
 
-public class MechanicalSawPartData extends MechanicalPartData {
+public class MechanicalSawPartData extends SimpleMiningCheckPartData {
 
     private static final int SAW_OFF = 0;
     private static final int SAW_ON = 1;
@@ -35,27 +36,6 @@ public class MechanicalSawPartData extends MechanicalPartData {
     @SuppressWarnings("FieldCanBeLocal") // can be used in quering player for this, so it is useful
     private final AttributeModifier sawDamageModifier;
     private final ItemAttributeModifiers.Entry sawDamage;
-
-    private static class ClientData {
-        int lastAir = 0;
-        int lastDamage = 0;
-        int active;
-        static WeakHashMap<String, ClientData> clientData = new WeakHashMap<>();
-
-        static ClientData of(String name) {
-            return clientData.computeIfAbsent(name, s -> new ClientData());
-        }
-
-        static ClientData of(Player player) {
-            return of(player.getName().getString());
-        }
-        static Optional<ClientData> of(ItemStack stack) {
-            var name = stack.get(CMEDataComponents.LAST_TOOL_HOLDER_NAME);
-            if (name == null)
-                return Optional.empty();
-            return Optional.of(of(name));
-        }
-    }
 
     Tool tool;
 
@@ -86,30 +66,6 @@ public class MechanicalSawPartData extends MechanicalPartData {
     }
 
     @Override
-    public void playerTick(Player player, ItemStack stack) {
-        //noinspection DuplicatedCode
-        if (!(player.level() instanceof ClientLevel clevel))
-            return;
-
-        var data = ClientData.of(player);
-
-
-        var air = stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR, 0);
-        var damage = stack.getOrDefault(DataComponents.DAMAGE, 0);
-        var mining = clevel.levelRenderer.destroyingBlocks.containsKey(player.getId())
-                || air < data.lastAir
-                || damage > data.lastDamage;
-        data.lastAir = air;
-        data.lastDamage = damage;
-        if (mining)
-            data.active = 20;
-
-        if (data.active > 0) {
-            data.active--;
-        }
-    }
-
-    @Override
     public Component getHighlightTip(@NotNull ItemStack item, @NotNull Component displayName) {
         return Component.empty().append(displayName).append(CMETranslations.MECHANICAL_TOOL_SAW_TYPE.resolveComponent());
     }
@@ -117,13 +73,6 @@ public class MechanicalSawPartData extends MechanicalPartData {
     @Override
     public void render(ItemStack stack, MechanicalPart part, PartialItemModelRenderer renderer, ItemDisplayContext transformType,
                        PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-        var active = switch (transformType) {
-            case THIRD_PERSON_LEFT_HAND, THIRD_PERSON_RIGHT_HAND, // can only be mining in someone's hand
-                 FIRST_PERSON_LEFT_HAND, FIRST_PERSON_RIGHT_HAND -> ClientData.of(stack).map(d -> d.active).orElse(0);
-            case NONE, HEAD, GUI, GROUND, FIXED -> 0;
-        };
-        ms.pushPose();
-        renderer.render(part.models[active > 0 ? SAW_ON : SAW_OFF].get(), light);
-        ms.popPose();
+        renderer.render(part.models[getActive(stack, transformType) ? SAW_ON : SAW_OFF].get(), light);
     }
 }

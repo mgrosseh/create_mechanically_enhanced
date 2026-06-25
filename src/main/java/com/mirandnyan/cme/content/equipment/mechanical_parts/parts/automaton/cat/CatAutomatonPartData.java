@@ -1,4 +1,4 @@
-package com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.mechanical_cat;
+package com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.cat;
 
 import com.mirandnyan.cme.*;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
@@ -24,8 +24,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MechanicalCatPartData extends MechanicalPartData {
+public class CatAutomatonPartData extends MechanicalPartData {
 
     /*
     TODO:
@@ -43,7 +41,7 @@ public class MechanicalCatPartData extends MechanicalPartData {
     - Maybe make gifts effect probability depend on block strength of block
      */
 
-    public MechanicalCatPartData() {
+    public CatAutomatonPartData() {
         super(0.3f);
     }
 

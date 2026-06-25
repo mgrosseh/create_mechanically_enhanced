@@ -13,14 +13,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.Enchantments;
 
-public class MechanicalPumpkinPartData extends MechanicalPartData {
+public class PumpkinAutomatonPartData extends MechanicalPartData {
 
     // TODO: on hit enemy: make them levitate shortly
     // TODO: maybe catch once every few mins when taking fall damage
 
     private final ItemAttributeModifiers.Entry pumpkinAttribute;
 
-    public MechanicalPumpkinPartData() {
+    public PumpkinAutomatonPartData() {
         super(0.3f);
 
         AttributeModifier acceleratorBoostModifier =

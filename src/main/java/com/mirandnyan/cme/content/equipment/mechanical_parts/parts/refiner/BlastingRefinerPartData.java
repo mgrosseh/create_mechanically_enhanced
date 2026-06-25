@@ -1,14 +1,19 @@
-package com.mirandnyan.cme.content.equipment.mechanical_parts.parts;
+package com.mirandnyan.cme.content.equipment.mechanical_parts.parts.refiner;
 
 import com.mirandnyan.cme.CMETags;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
-import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPartData;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.SimpleMiningCheckPartData;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.kinetics.fan.processing.AllFanProcessingTypes;
+import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
 import net.neoforged.neoforge.registries.datamaps.builtin.NeoForgeDataMaps;
@@ -17,7 +22,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-public class BlastingRefinerPartData extends MechanicalPartData {
+public class BlastingRefinerPartData extends SimpleMiningCheckPartData {
+
+    public static int i = 0;
+    public static final int FANS = i++;
+    public static final int FIRE_EFFECT = i++;
 
     public BlastingRefinerPartData() {
         this(0.1f);
@@ -71,5 +80,14 @@ public class BlastingRefinerPartData extends MechanicalPartData {
     public boolean postHurtEnemy(FilledToolSlot.@NotNull SlotId part, @NotNull ItemStack stack, @NotNull LivingEntity attacker, @NotNull LivingEntity target) {
         target.setRemainingFireTicks(120);
         return false;
+    }
+
+    @Override
+    public void render(ItemStack stack, MechanicalPart part, PartialItemModelRenderer renderer, ItemDisplayContext transformType,
+                       PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
+        super.render(stack, part, renderer, transformType, ms, buffer, light, overlay);
+        if (getActive(stack, transformType)) {
+            renderer.render(part.models[FIRE_EFFECT].get(), light);
+        }
     }
 }
