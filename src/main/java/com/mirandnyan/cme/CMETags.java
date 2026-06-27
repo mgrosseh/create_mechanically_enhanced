@@ -99,6 +99,8 @@ public class CMETags {
                     .addTag(Tags.Items.STONES)
                     .addTag(Tags.Items.SHULKER_BOXES)
                     .addTag(ALL_BLACKSTONE)
+            // TODO: add all metals
+            // TODO: add all copper
             ;
 
             prov.addTag(BURN_UP_HIGH_LIKELIHOOD) // not that many blocks are furnace fuel and skipped

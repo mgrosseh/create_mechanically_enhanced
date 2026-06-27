@@ -32,6 +32,11 @@ public class CreateMechanicallyEnhanced {
     - Part Trading villager (takes cat coins)
     - Coin Stack Block
 
+    # remodels:
+    - pumpkin automaton
+    - blasting refiner may look too big
+    - grips
+
 
     # Mechanical Tool
     BUG: refilling air can cause use anim in offhand item (which isn't a tool)

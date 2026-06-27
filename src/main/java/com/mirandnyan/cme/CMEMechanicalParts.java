@@ -83,8 +83,8 @@ public class CMEMechanicalParts {
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> ANDESITE_COG = new MechanicalPartBuilder("andesite_cog")
             .material(CMEMaterials.ANDESITE)
-            .origin(new AffineTransform().rotateXDegrees(90f).translate(8f, 4f, 10f), MechanicalToolSlot.COG_SLOT)
-            .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 4f, 6f), MechanicalToolSlot.ACCELERATOR_SLOT)
+            .origin(new AffineTransform().rotateXDegrees(90f).translate(8f, 4f, 9f), MechanicalToolSlot.COG_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 4f, 7f), MechanicalToolSlot.ACCELERATOR_SLOT)
             .item(CMEItems.SMALL_ANDESITE_COG)
             .data(new MechanicalCogPartData(3, new Vector3f(0f, -4f, 0f)))
             .defaultModel("cog")
@@ -371,6 +371,9 @@ public class CMEMechanicalParts {
             .data(new CatAutomatonPartData())
             .subpart(AUTOMATON_BASE)
             .customModel("automaton", "cat", "base")
+            .customModel("automaton", "cat", "left_ear")
+            .customModel("automaton", "cat", "right_ear")
+            .customModel("automaton", "cat", "eye_stars")
             .build();
 
     public static final RegistryEntry<MechanicalPart, MechanicalPart> PUMPKIN_AUTOMATON = new MechanicalPartBuilder("pumpkin_automaton")

@@ -2,8 +2,14 @@ package com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.ca
 
 import com.mirandnyan.cme.*;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.MechanicalPartUtil;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
+import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
+import net.createmod.catnip.animation.AnimationTickHolder;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -19,6 +25,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -33,6 +40,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CatAutomatonPartData extends MechanicalPartData {
+
+    private static int i = 0;
+
+    private static final int HEAD = i++;
+    private static final int LEFT_EAR = i++;
+    private static final int RIGHT_EAR = i++;
+    private static final int EYE_STARS = i++;
 
     /*
     TODO:
@@ -305,5 +319,26 @@ public class CatAutomatonPartData extends MechanicalPartData {
             case BLOCK_INTERACTION_RANGE -> CMETranslations.MECHANICAL_CAT_BONUS_INTERACTION_RANGE.resolveComponentMutable();
         };
         tooltip.add(CMETranslations.MECHANICAL_CAT_ACTIVE_BONUS.resolveComponentMutable().append(component));
+    }
+
+    @Override
+    public void render(ItemStack stack, MechanicalPart part, PartialItemModelRenderer renderer, ItemDisplayContext transformType, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
+        renderer.renderSolid(part.models[HEAD].get(), light);
+
+        if (stack.has(CMEDataComponents.MECHANICAL_CAT_BONUS))
+            renderer.render(part.models[EYE_STARS].get(), light);
+
+        float animTime = Math.abs((AnimationTickHolder.getRenderTime() * 0.02f) % 2f - 1);
+        float angle = Mth.lerp(animTime, -30f, 25f);
+
+        ms.pushPose();
+        ms.rotateAround(Axis.ZP.rotationDegrees(angle), 10.125f / 16f - 0.5f, 8.75f / 16f - 0.5f, 7.25f / 16f - 0.5f);
+        renderer.renderSolid(part.models[LEFT_EAR].get(), light);
+        ms.popPose();
+        ms.pushPose();
+        ms.rotateAround(Axis.ZN.rotationDegrees(angle), 5.875f / 16f - 0.5f, 8.75f / 16f -0.5f, 7.25f / 16f -0.5f);
+        renderer.renderSolid(part.models[RIGHT_EAR].get(), light);
+        ms.popPose();
+
     }
 }
