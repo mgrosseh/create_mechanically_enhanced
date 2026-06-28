@@ -34,17 +34,21 @@ public class CreateMechanicallyEnhanced {
 
     # remodels:
     - pumpkin automaton
-    - blasting refiner may look too big
+    - blasting refiner may look too big, needs particles instead of bad fire graphic
     - grips
 
 
     # Mechanical Tool
     BUG: refilling air can cause use anim in offhand item (which isn't a tool)
 
+    add slot tag system
+
     # Mechanical Parts:
+    ## conduit
+    - on R click boost forward
+
     ## mechanical cat:
     TODO:
-    - make ears rotate with cogs
     - range blessing broken
 
     ## Mechanical Chicken

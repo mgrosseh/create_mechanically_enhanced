@@ -6,7 +6,8 @@ import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.accelerator.M
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.accelerator.MechanicalSimpleAcceleratorPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.accelerator.MechanicalStarAcceleratorPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.pumpkin.PumpkinAutomatonPartData;
-import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.refiner.BlastingRefinerPartData;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.mining_refiner.BlastingRefinerPartData;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.mining_refiner.SilkBrushRefinerPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.subparts.AutoMaterialSubpart;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.subparts.AutomatonBaseSubpart;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.ConduitPartData;
@@ -14,8 +15,10 @@ import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.Mec
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.cat.CatAutomatonPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.tool_head.MechanicalDrillPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.tool_head.MechanicalSawPartData;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.subparts.SilkBrushSubpart;
 import com.mirandnyan.cme.content.equipment.mechanical_tool.MechanicalToolItem;
 import com.mirandnyan.cme.util.AffineTransform;
+import com.mojang.math.Axis;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceKey;
@@ -26,6 +29,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.component.Tool;
 import org.jetbrains.annotations.ApiStatus;
+import org.joml.Matrix3f;
 import org.joml.Vector3f;
 
 import java.util.List;
@@ -410,6 +414,58 @@ public class CMEMechanicalParts {
             .data(new BlastingRefinerPartData(0))
             .customModel("mining_refiner", "blasting", "fans")
             .customModel("mining_refiner", "blasting", "fire_effect")
+            .build();
+
+
+    public static final SilkBrushSubpart.Builder SILK_BRUSH_REFINER_SUBPART = new SilkBrushSubpart.Builder("mining_refiner", "silk_brush")
+            .casing(CMEMaterials.ANDESITE.getKey(), "andesite_brush")
+            .casing(CMEMaterials.COPPER.getKey(), "copper_brush")
+            .casing(CMEMaterials.BRASS.getKey(), "brass_brush")
+            .casing(CMEMaterials.NETHERITE.getKey(), "netherite_brush");
+
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> SILK_BRUSH_REFINER = new MechanicalPartBuilder("silk_brush_refiner")
+            .subpart(MINING_REFINER_BASE)
+            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.TIP_SLOT) // TODO: type tag system then use REFINER SLOT
+            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 1f, 8f), MechanicalToolSlot.TIP_SLOT)
+            .item(CMEItems.SILK_BRUSH_MINING_REFINER)
+            .data(new SilkBrushRefinerPartData(0))
+            // TODO: clean this up (generalize somehow)
+            .subpart(SILK_BRUSH_REFINER_SUBPART.withOrigin(
+                    angle -> new AffineTransform()
+                            .translateBack(2, 2, 8)
+                            .rotateAround(Axis.YP.rotationDegrees(angle), 2, 2, 8)
+                            .rotateAround(Axis.XP.rotationDegrees(30), 2, 2, 8)
+                            .rotateAround(Axis.ZP.rotationDegrees(45), 2, 2, 8)
+                            .scale(0.7f)
+                            .translate(8f, 6.1f, 0.4f)
+                            .convertToBlockSpace()))
+            .subpart(SILK_BRUSH_REFINER_SUBPART.withOrigin(
+                    angle -> new AffineTransform()
+                            .translateBack(2, 2, 8)
+                            .rotateAround(Axis.YP.rotationDegrees(angle), 2, 2, 8)
+                            .rotateAround(Axis.XN.rotationDegrees(30), 2, 2, 8)
+                            .rotateAround(Axis.ZP.rotationDegrees(45), 2, 2, 8)
+                            .scale(0.7f)
+                            .translate(8f, 6.1f, 15.6f)
+                            .convertToBlockSpace()))
+            .subpart(SILK_BRUSH_REFINER_SUBPART.withOrigin(
+                    angle -> new AffineTransform()
+                            .translateBack(2, 2, 8)
+                            .rotateAround(Axis.YP.rotationDegrees(angle - 90), 2, 2, 8)
+                            .rotateAround(Axis.XN.rotationDegrees(30), 2, 2, 8)
+                            .rotateAround(Axis.ZP.rotationDegrees(45), 2, 2, 8)
+                            .scale(0.7f)
+                            .translate(0.4f, 6.1f, 8f)
+                            .convertToBlockSpace()))
+            .subpart(SILK_BRUSH_REFINER_SUBPART.withOrigin(
+                    angle -> new AffineTransform()
+                            .translateBack(2, 2, 8)
+                            .rotateAround(Axis.YP.rotationDegrees(angle + 90), 2, 2, 8)
+                            .rotateAround(Axis.XN.rotationDegrees(30), 2, 2, 8)
+                            .rotateAround(Axis.ZP.rotationDegrees(45), 2, 2, 8)
+                            .scale(0.7f)
+                            .translate(15.6f, 6.1f, 8f)
+                            .convertToBlockSpace()))
             .build();
 
 

@@ -123,8 +123,8 @@ public class MechanicalPartBuilder {
             defaultModel();
 
         // Annoying model space to hand space offsets
-        var pixelToBlock = new AffineTransform().scale(1 / 16f).translate(-0.5f);
-        var blockToPixel = pixelToBlock.inverse();
+        var pixelToBlock = AffineTransform.modelToBlock();
+        var blockToPixel = AffineTransform.blockToModel();
 
         var originTrans = pixelToBlock.copy().mul(origin).mul(blockToPixel);
         origin = originTrans.inverse();

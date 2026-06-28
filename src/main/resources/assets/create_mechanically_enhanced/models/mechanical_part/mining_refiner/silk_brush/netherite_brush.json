@@ -1,0 +1,6 @@
+{
+  "parent": "item/brush",
+  "textures": {
+    "layer0": "create_mechanically_enhanced:item/mechanical_part/mining_refiner/silk_brush/netherite"
+  }
+}

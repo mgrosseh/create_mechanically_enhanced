@@ -219,26 +219,6 @@ public class CatAutomatonPartData extends MechanicalPartData {
         //noinspection DataFlowIssue // cant be null since item.has guard
         handleGifts(player, item, item.get(CMEDataComponents.MECHANICAL_CAT_GIVE_GIFT), event);
     }
-//
-//    @SubscribeEvent
-//    public static void modifyBlockDropsAfterBreak(BlockDropsEvent event) {
-//        if (!(event.getBreaker() instanceof ServerPlayer player) || !player.getMainHandItem().has(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE))
-//            return;
-//        var item = player.getMainHandItem();
-//
-//        if (!item.has(CMEDataComponents.MECHANICAL_CAT_GIVE_GIFT))
-//            return;
-//
-//        List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
-//        for (FilledToolSlot slot : slots) {
-//            var part = slot.getPartEntry();
-//            if (part != CMEMechanicalParts.CAT_AUTOMATON)
-//                continue;
-//            var data = (MechanicalCatPartData) part.get().data;
-//            //noinspection DataFlowIssue // cant be null since item.has guard
-//            data.handleGifts(player, item, item.get(CMEDataComponents.MECHANICAL_CAT_GIVE_GIFT), event);
-//        }
-//    }
 
     protected void handleGifts(@NotNull ServerPlayer player, @NotNull ItemStack item, @NotNull MechanicalCatGiftType gift,
                                BlockDropsEvent event) {

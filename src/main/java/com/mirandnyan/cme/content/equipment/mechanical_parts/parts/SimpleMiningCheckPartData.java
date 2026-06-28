@@ -12,6 +12,8 @@ import java.util.Optional;
 import java.util.WeakHashMap;
 
 public class SimpleMiningCheckPartData extends MechanicalPartData {
+    // TODO: mining is considered happening when switching tools
+    // TODO: armor stands may have mining animation when holding players tool
 
     protected SimpleMiningCheckPartData(float weight) {
         super(weight);

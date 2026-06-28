@@ -86,8 +86,8 @@ public class CMEItems {
     public static final ItemEntry<Item> PUMPKIN_AUTOMATON = inTab(part("automaton_pumpkin").lang("Pumpkin Automaton").register());
     public static final ItemEntry<Item> CONDUIT_AUTOMATON = inTab(part("automaton_conduit").lang("Conduit Automaton").register());
 
-
     public static final ItemEntry<Item> BLASTING_MINING_REFINER = inTab(part("mining_refiner_blasting").lang("Blasting Refiner").register());
+    public static final ItemEntry<Item> SILK_BRUSH_MINING_REFINER = inTab(part("mining_refiner_silk_brush").lang("Silk Brush Refiner").register());
 
     public static final ItemEntry<CatCoinDieItem> CAT_COIN_DIE = inTab(REGISTRATE.item("cat_coin_die", CatCoinDieItem::new)
             .defaultModel()
@@ -274,7 +274,18 @@ public class CMEItems {
                                         CMEMechanicalParts.NETHERITE_DRILL_HEAD,
                                         CMEMechanicalParts.BLAZE_AUTOMATON
                                 ));
-                                output.accept(CMEBlocks.FOOD_REPLICATOR);
+
+                                output.accept(MechanicalToolItem.newStackWithParts(
+                                        CMEMechanicalParts.NETHERITE_GRIP,
+                                        CMEMechanicalParts.NETHERITE_COG,
+                                        CMEMechanicalParts.NETHER_STAR_ACCELERATOR,
+                                        CMEMechanicalParts.NETHERITE_GEARBOX,
+                                        CMEMechanicalParts.NETHERITE_TANK,
+                                        CMEMechanicalParts.SILK_BRUSH_REFINER,
+                                        CMEMechanicalParts.NETHERITE_DRILL_HEAD,
+                                        CMEMechanicalParts.BLAZE_AUTOMATON
+                                ));
+
                                 for (var x : creativeModeItem) {
                                     output.accept(x);
                                 }
