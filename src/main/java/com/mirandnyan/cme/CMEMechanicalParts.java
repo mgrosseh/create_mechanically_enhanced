@@ -10,6 +10,8 @@ import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.mining_refine
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.mining_refiner.SilkBrushRefinerPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.tank.CardboardTankPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.tank.MechanicalTankPartData;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.tool_head.CardboardDrillPartData;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.tool_head.CardboardSawPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.subparts.AutoMaterialSubpart;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.subparts.AutomatonBaseSubpart;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.ConduitPartData;
@@ -293,7 +295,7 @@ public class CMEMechanicalParts {
             .material(CMEMaterials.CARDBOARD)
             .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.TIP_SLOT)
             .item(CMEItems.CARDBOARD_DRILL_HEAD)
-            .data(new MechanicalDrillPartData(0 + CMETiers.CARDBOARD.getAttackDamageBonus(),
+            .data(new CardboardDrillPartData(0 + CMETiers.CARDBOARD.getAttackDamageBonus(),
                     new Tool(List.of(
                             Tool.Rule.deniesDrops(BlockTags.INCORRECT_FOR_WOODEN_TOOL),
                             Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_SHOVEL, CMETiers.CARDBOARD.getSpeed())),
@@ -356,7 +358,7 @@ public class CMEMechanicalParts {
             .material(CMEMaterials.CARDBOARD)
             .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.TIP_SLOT)
             .item(CMEItems.CARDBOARD_SAW_HEAD)
-            .data(new MechanicalSawPartData(0 + CMETiers.CARDBOARD.getAttackDamageBonus(),
+            .data(new CardboardSawPartData(0 + CMETiers.CARDBOARD.getAttackDamageBonus(),
                     new Tool(List.of(
                             Tool.Rule.deniesDrops(BlockTags.INCORRECT_FOR_WOODEN_TOOL),
                             Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_HOE, CMETiers.CARDBOARD.getSpeed())),

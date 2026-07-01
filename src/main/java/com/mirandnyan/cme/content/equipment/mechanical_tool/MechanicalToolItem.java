@@ -7,23 +7,34 @@ import com.mirandnyan.cme.CMETranslations;
 import com.mirandnyan.cme.content.equipment.MechanicalItem;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
+import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.content.equipment.tool.KnockbackPacket;
 import com.simibubi.create.foundation.item.CustomArmPoseItem;
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import com.tterrag.registrate.util.entry.RegistryEntry;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
@@ -32,6 +43,8 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
@@ -509,10 +522,10 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         return 0.00001f;
     }
 
-    protected boolean canAbsorbDurability(@NotNull ItemStack stack, @NotNull BlockState state) {
+    protected static boolean canAbsorbDurability(@NotNull ItemStack stack, @NotNull BlockState state) {
         return canAbsorbDurability(stack, BLOCK_BREAK_DURABILITY_USE, state, null, null);
     }
-    protected boolean canAbsorbDurability(@NotNull ItemStack stack, @NotNull LivingEntity attacker, @NotNull Entity target) {
+    protected static boolean canAbsorbDurability(@NotNull ItemStack stack, @NotNull LivingEntity attacker, @NotNull Entity target) {
         return canAbsorbDurability(stack, ENTITY_ATTACK_DURABILITY_USE, null, attacker, target);
     }
 
@@ -540,6 +553,35 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         if (canAbsorbDurability(stack, player, entity))
             return super.onLeftClickEntity(stack, player, entity);
         return true;
+    }
+
+    @SubscribeEvent
+    public static void leftClick(PlayerInteractEvent.LeftClickBlock event) {
+        ItemStack item = event.getItemStack();
+        List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        for (FilledToolSlot slot : slots) {
+            var part = slot.getPart();
+            part.data.leftClick(slot.slot(), event.getEntity(), item, event);
+        }
+    }
+
+    // We set priority to highest just so we catch this before anyone does anything else
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void leftClickEntity(AttackEntityEvent event) {
+        Player attacker = event.getEntity();
+        if (!(event.getTarget() instanceof LivingEntity target))
+            return;
+        ItemStack item = attacker.getItemInHand(InteractionHand.MAIN_HAND);
+
+        boolean cancel = !canAbsorbDurability(item, target, attacker);
+
+        List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        for (FilledToolSlot slot : slots) {
+            var part = slot.getPart();
+            part.data.leftClickEntity(slot.slot(), attacker, item, target, event, cancel);
+        }
+        if (cancel)
+            event.setCanceled(true);
     }
 
     // DIGGER ITEM

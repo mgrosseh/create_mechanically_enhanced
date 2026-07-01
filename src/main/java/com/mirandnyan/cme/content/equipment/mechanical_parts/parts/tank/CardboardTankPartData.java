@@ -21,10 +21,10 @@ public class CardboardTankPartData extends MechanicalTankPartData {
             return;
 
         int air = stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR, 0);
-        if (air > 0)
+        if (air > 0) {
             stack.set(CMEDataComponents.PRESSURIZED_AIR, air - 1);
-        level.playSound(null, entity.getX(), entity.getY() + 1f, entity.getZ(),
-                AllSoundEvents.STEAM.getMainEvent(), SoundSource.PLAYERS, 0.28f, 1.5f);
-
+            level.playSound(null, entity.getX(), entity.getY() + 1f, entity.getZ(),
+                    AllSoundEvents.STEAM.getMainEvent(), SoundSource.PLAYERS, 0.28f, 1.5f);
+        }
     }
 }

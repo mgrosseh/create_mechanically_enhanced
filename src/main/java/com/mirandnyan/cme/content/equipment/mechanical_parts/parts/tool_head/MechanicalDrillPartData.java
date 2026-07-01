@@ -61,7 +61,10 @@ public class MechanicalDrillPartData extends MechanicalPartData {
     Tool tool;
 
     public MechanicalDrillPartData(float attackDamage, Tool toolProperties) {
-        super(1.2f);
+        this(1.2f, attackDamage, toolProperties);
+    }
+    public MechanicalDrillPartData(float weight, float attackDamage, Tool toolProperties) {
+        super(weight);
         drillDamageModifier = new AttributeModifier(Item.BASE_ATTACK_DAMAGE_ID, attackDamage, AttributeModifier.Operation.ADD_VALUE);
         drillDamage = new ItemAttributeModifiers.Entry(Attributes.ATTACK_DAMAGE, drillDamageModifier, EquipmentSlotGroup.MAINHAND);
         this.tool = toolProperties;
@@ -113,7 +116,7 @@ public class MechanicalDrillPartData extends MechanicalPartData {
         return Component.empty().append(displayName).append(CMETranslations.MECHANICAL_TOOL_DRILL_TYPE.resolveComponent());
     }
 
-    private float getAngle(ItemStack stack) {
+    protected float getAngle(ItemStack stack) {
         return ClientData.of(stack)
                 .map(d -> d.pAngle.getValue(AnimationTickHolder.getPartialTicks()) % 360)
                 .orElse(0f);

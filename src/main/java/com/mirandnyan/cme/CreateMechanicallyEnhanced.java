@@ -33,6 +33,7 @@ public class CreateMechanicallyEnhanced {
     - Coin Stack Block
 
     TODO: make cardboard tools obtainable with paper and wood or something for early game
+    TODO: leftClick
     # TODO Registry of tool actions
     - grip handles triggering these
     - cardboard material action: changes tool with data if any part is cardboard

@@ -1,17 +1,22 @@
 package com.mirandnyan.cme.content.equipment.mechanical_parts;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.content.equipment.tool.KnockbackPacket;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.tterrag.registrate.util.entry.RegistryEntry;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.SlotAccess;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
@@ -20,8 +25,12 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.NotNull;
@@ -137,4 +146,12 @@ public abstract class MechanicalPartData {
     public void blockDropEvent(FilledToolSlot.SlotId slot, ServerPlayer player, ItemStack item, BlockDropsEvent event) {
 
     }
+
+    public void leftClick(FilledToolSlot.SlotId slot, Player entity, ItemStack item, boolean client, PlayerInteractEvent.LeftClickBlock event) { }
+    public void leftClick(FilledToolSlot.SlotId slot, Player entity, ItemStack item, PlayerInteractEvent.LeftClickBlock event) {
+        leftClick(slot, entity, item, event.getSide() == LogicalSide.CLIENT, event);
+    }
+
+
+    public void leftClickEntity(FilledToolSlot.SlotId slot, Player attacker, ItemStack item, LivingEntity target, AttackEntityEvent event, boolean noDurabilityCancel) { }
 }

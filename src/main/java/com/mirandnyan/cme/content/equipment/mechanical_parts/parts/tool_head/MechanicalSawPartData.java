@@ -33,7 +33,10 @@ public class MechanicalSawPartData extends SimpleMiningCheckPartData {
     Tool tool;
 
     public MechanicalSawPartData(float attackDamage, Tool toolProperties) {
-        super(1.6f);
+        this(1.6f, attackDamage, toolProperties);
+    }
+    public MechanicalSawPartData(float weight, float attackDamage, Tool toolProperties) {
+        super(weight);
         sawDamageModifier = new AttributeModifier(Item.BASE_ATTACK_DAMAGE_ID, attackDamage, AttributeModifier.Operation.ADD_VALUE);
         sawDamage = new ItemAttributeModifiers.Entry(Attributes.ATTACK_DAMAGE, sawDamageModifier, EquipmentSlotGroup.MAINHAND);
         this.tool = toolProperties;
