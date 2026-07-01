@@ -8,6 +8,8 @@ import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.accelerator.M
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.pumpkin.PumpkinAutomatonPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.mining_refiner.BlastingRefinerPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.mining_refiner.SilkBrushRefinerPartData;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.tank.CardboardTankPartData;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.tank.MechanicalTankPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.subparts.AutoMaterialSubpart;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.subparts.AutomatonBaseSubpart;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.automaton.ConduitPartData;
@@ -28,12 +30,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.component.Tool;
+import net.minecraft.world.level.block.Block;
+import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.ApiStatus;
 import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -76,6 +79,15 @@ public class CMEMechanicalParts {
             .build();
 
     // -------- Cogs
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> CARDBOARD_COG = new MechanicalPartBuilder("cardboard_cog")
+            .material(CMEMaterials.CARDBOARD)
+            .origin(new AffineTransform().rotateXDegrees(90f).translate(8f, 4f, 9f), MechanicalToolSlot.COG_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 4f, 7f), MechanicalToolSlot.ACCELERATOR_SLOT)
+            .item(CMEItems.SMALL_CARDBOARD_COG)
+            .data(new MechanicalCogPartData(0.05f, 0, new Vector3f(0f, -4f, 0f)))
+            .defaultModel("cog")
+            .build();
+
     public static final RegistryEntry<MechanicalPart, MechanicalPart> WOODEN_COG = new MechanicalPartBuilder("wooden_cog")
             .material(CMEMaterials.WOOD)
             .origin(new AffineTransform().rotateXDegrees(90f).translate(8f, 4f, 9f), MechanicalToolSlot.COG_SLOT)
@@ -132,6 +144,16 @@ public class CMEMechanicalParts {
             .defaultModel("accelerator")
             .build();
 
+
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> CARDBOARD_CASING_ACCELERATOR = new MechanicalPartBuilder("cardboard_casing_accelerator")
+            .material(CMEMaterials.CARDBOARD)
+            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.ACCELERATOR_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 3f, 8f), MechanicalToolSlot.GEARBOX_SLOT)
+            .item(CMEItems.CARDBOARD_CASING_ACCELERATOR)
+            .data(new MechanicalAcceleratorPartData(0.0f, 0))
+            .customModel("accelerator", "cardboard_casing")
+            .build();
+
     public static final RegistryEntry<MechanicalPart, MechanicalPart> ANDESITE_CASING_ACCELERATOR = new MechanicalPartBuilder("andesite_casing_accelerator")
             .material(CMEMaterials.ANDESITE)
             .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.ACCELERATOR_SLOT)
@@ -186,13 +208,24 @@ public class CMEMechanicalParts {
             .build();
 
     // -------- Gearboxes
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> CARDBOARD_GEARBOX = new MechanicalPartBuilder("cardboard_gearbox")
+            .material(CMEMaterials.CARDBOARD)
+            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 1f, 8f), MechanicalToolSlot.GEARBOX_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(270f).translate(8f, 4f, 12f), MechanicalToolSlot.AUTOMATON_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 4f, 4f), MechanicalToolSlot.TANK_SLOT)
+            .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 8f, 8f), MechanicalToolSlot.TIP_SLOT)
+            .item(CMEItems.SMALL_CARDBOARD_GEARBOX)
+            .data(new MechanicalGearboxPartData(MechanicalToolItem.DEFAULT_TRANSFER_RATIO * 20))
+            .defaultModel("gearbox")
+            .build();
+
     public static final RegistryEntry<MechanicalPart, MechanicalPart> ANDESITE_GEARBOX = new MechanicalPartBuilder("andesite_gearbox")
             .material(CMEMaterials.ANDESITE)
             .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 1f, 8f), MechanicalToolSlot.GEARBOX_SLOT)
             .slot(new AffineTransform().rotateXDegrees(270f).translate(8f, 4f, 12f), MechanicalToolSlot.AUTOMATON_SLOT)
             .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 4f, 4f), MechanicalToolSlot.TANK_SLOT)
             .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 8f, 8f), MechanicalToolSlot.TIP_SLOT)
-            .item(CMEItems.SMALL_ANDESITE_VERTICAL_GEARBOX)
+            .item(CMEItems.SMALL_ANDESITE_GEARBOX)
             .data(new MechanicalGearboxPartData(MechanicalToolItem.DEFAULT_TRANSFER_RATIO))
             .defaultModel("gearbox")
             .build();
@@ -225,12 +258,20 @@ public class CMEMechanicalParts {
             .slot(new AffineTransform().rotateXDegrees(270f).translate(8f, 4f, 12f), MechanicalToolSlot.AUTOMATON_SLOT)
             .slot(new AffineTransform().rotateXDegrees(90f).translate(8f, 4f, 4f), MechanicalToolSlot.TANK_SLOT)
             .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 8f, 8f), MechanicalToolSlot.TIP_SLOT)
-            .item(CMEItems.SMALL_BRASS_VERTICAL_GEARBOX)
+            .item(CMEItems.SMALL_BRASS_GEARBOX)
             .data(new MechanicalGearboxPartData(MechanicalToolItem.DEFAULT_TRANSFER_RATIO / 2))
             .defaultModel("gearbox")
             .build();
 
     // -------- Tanks
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> CARDBOARD_TANK = new MechanicalPartBuilder("cardboard_tank")
+            .material(CMEMaterials.CARDBOARD)
+            .origin(new AffineTransform().translate(8f, 8f, 8f), MechanicalToolSlot.TANK_SLOT)
+            .item(CMEItems.SMALL_CARDBOARD_TANK)
+            .data(new CardboardTankPartData(100))
+            .defaultModel("tank")
+            .build();
+
     public static final RegistryEntry<MechanicalPart, MechanicalPart> COPPER_TANK = new MechanicalPartBuilder("copper_tank")
             .material(CMEMaterials.COPPER)
             .origin(new AffineTransform().translate(8f, 8f, 8f), MechanicalToolSlot.TANK_SLOT)
@@ -248,6 +289,21 @@ public class CMEMechanicalParts {
             .build();
 
     // -------- Drill Heads
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> CARDBOARD_DRILL_HEAD = new MechanicalPartBuilder("cardboard_drill_head")
+            .material(CMEMaterials.CARDBOARD)
+            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.TIP_SLOT)
+            .item(CMEItems.CARDBOARD_DRILL_HEAD)
+            .data(new MechanicalDrillPartData(0 + CMETiers.CARDBOARD.getAttackDamageBonus(),
+                    new Tool(List.of(
+                            Tool.Rule.deniesDrops(BlockTags.INCORRECT_FOR_WOODEN_TOOL),
+                            Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_SHOVEL, CMETiers.CARDBOARD.getSpeed())),
+                            0.9F,
+                            0
+                    )
+            ))
+            .defaultModel("drill")
+            .build();
+
     public static final RegistryEntry<MechanicalPart, MechanicalPart> IRON_DRILL_HEAD = new MechanicalPartBuilder("iron_drill_head")
             .material(CMEMaterials.IRON)
             .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.TIP_SLOT)
@@ -295,6 +351,23 @@ public class CMEMechanicalParts {
 
 
     // -------- Saw Heads
+    // TODO: cardboard attack should bonk (drill too)
+    public static final RegistryEntry<MechanicalPart, MechanicalPart> CARDBOARD_SAW_HEAD = new MechanicalPartBuilder("cardboard_saw_head")
+            .material(CMEMaterials.CARDBOARD)
+            .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.TIP_SLOT)
+            .item(CMEItems.CARDBOARD_SAW_HEAD)
+            .data(new MechanicalSawPartData(0 + CMETiers.CARDBOARD.getAttackDamageBonus(),
+                    new Tool(List.of(
+                            Tool.Rule.deniesDrops(BlockTags.INCORRECT_FOR_WOODEN_TOOL),
+                            Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_HOE, CMETiers.CARDBOARD.getSpeed())),
+                            0.8F,
+                            0
+                    )
+            ))
+            .customModel("saw", "cardboard_saw_off")
+            .customModel("saw", "cardboard_saw_on")
+            .build();
+
     public static final RegistryEntry<MechanicalPart, MechanicalPart> IRON_SAW_HEAD = new MechanicalPartBuilder("iron_saw_head")
             .material(CMEMaterials.IRON)
             .origin(new AffineTransform().rotateXDegrees(180f).translate(8f, 0f, 8f), MechanicalToolSlot.TIP_SLOT)
@@ -345,10 +418,12 @@ public class CMEMechanicalParts {
 
     // -------- Automatons
     public static final AutomatonBaseSubpart AUTOMATON_BASE = new AutomatonBaseSubpart.Builder("automaton")
+            .casing(CMEMaterials.CARDBOARD.getKey(), "cardboard_base")
             .casing(CMEMaterials.ANDESITE.getKey(), "andesite_base")
             .casing(CMEMaterials.COPPER.getKey(), "copper_base")
             .casing(CMEMaterials.BRASS.getKey(), "brass_base")
             .casing(CMEMaterials.NETHERITE.getKey(), "netherite_base")
+            .cog(CMEMaterials.CARDBOARD.getKey(), "cardboard_cog")
             .cog(CMEMaterials.NETHERITE.getKey(), "netherite_cog")
             .build();
 
@@ -400,6 +475,7 @@ public class CMEMechanicalParts {
 
     // -------- Mining Refiners
     public static final AutoMaterialSubpart MINING_REFINER_BASE = new AutoMaterialSubpart.GenericBuilder("mining_refiner")
+            .casing(CMEMaterials.CARDBOARD.getKey(), "cardboard_base")
             .casing(CMEMaterials.ANDESITE.getKey(), "andesite_base")
             .casing(CMEMaterials.COPPER.getKey(), "copper_base")
             .casing(CMEMaterials.BRASS.getKey(), "brass_base")

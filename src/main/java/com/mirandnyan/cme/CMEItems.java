@@ -40,11 +40,13 @@ public class CMEItems {
             .model(getExisting("default"))
             .register();
 
+    // TODO: add cardboard grip
     public static final ItemEntry<Item> WOODEN_GRIP = inTab(part("grip_wooden").lang("Wooden Grip").register());
     public static final ItemEntry<Item> NETHERITE_GRIP = inTab(part("grip_netherite").lang("Netherite Grip").register());
 
     public static final ItemEntry<Item> SIMPLE_ANDESITE_ACCELERATOR = inTab(part("accelerator_simple_andesite").lang("Simple Connector").register());
     public static final ItemEntry<Item> STONE_ACCELERATOR = inTab(part("accelerator_stone").lang("Stone Accelerator").register());
+    public static final ItemEntry<Item> CARDBOARD_CASING_ACCELERATOR = inTab(part("accelerator_cardboard_casing").lang("Cardboard Encased Accelerator").register());
     public static final ItemEntry<Item> ANDESITE_CASING_ACCELERATOR = inTab(part("accelerator_andesite_casing").lang("Andesite Encased Accelerator").register());
     public static final ItemEntry<Item> COPPER_CASING_ACCELERATOR = inTab(part("accelerator_copper_casing").lang("Copper Encased Accelerator").register());
     public static final ItemEntry<Item> BRASS_CASING_ACCELERATOR = inTab(part("accelerator_brass_casing").lang("Brass Encased Accelerator").register());
@@ -60,23 +62,28 @@ public class CMEItems {
                     .lang("Nether Star Accelerator")
                     .register());
 
+    public static final ItemEntry<Item> SMALL_CARDBOARD_COG = inTab(part("small_cog_cardboard").register());
     public static final ItemEntry<Item> SMALL_WOODEN_COG = inTab(part("small_cog_wooden").register());
     public static final ItemEntry<Item> SMALL_ANDESITE_COG = inTab(part("small_cog_andesite").register());
     public static final ItemEntry<Item> SMALL_BRASS_COG = inTab(part("small_cog_brass").register());
     public static final ItemEntry<Item> SMALL_NETHERITE_COG = inTab(part("small_cog_netherite").register());
 
-    public static final ItemEntry<Item> SMALL_ANDESITE_VERTICAL_GEARBOX = inTab(part("small_gearbox_andesite").register());
+    public static final ItemEntry<Item> SMALL_CARDBOARD_GEARBOX = inTab(part("small_gearbox_cardboard").register());
+    public static final ItemEntry<Item> SMALL_ANDESITE_GEARBOX = inTab(part("small_gearbox_andesite").register());
     public static final ItemEntry<Item> SMALL_COPPER_GEARBOX = inTab(part("small_gearbox_copper").register());
-    public static final ItemEntry<Item> SMALL_BRASS_VERTICAL_GEARBOX = inTab(part("small_gearbox_brass").register());
+    public static final ItemEntry<Item> SMALL_BRASS_GEARBOX = inTab(part("small_gearbox_brass").register());
     public static final ItemEntry<Item> SMALL_NETHERITE_GEARBOX = inTab(part("small_gearbox_netherite").register());
 
+    public static final ItemEntry<Item> SMALL_CARDBOARD_TANK = inTab(part("tank_cardboard").register()); // TODO: tooltip: may leak air
     public static final ItemEntry<Item> SMALL_COPPER_TANK = inTab(part("tank_copper").register());
     public static final ItemEntry<Item> SMALL_NETHERITE_TANK = inTab(part("tank_netherite").register());
 
+    public static final ItemEntry<Item> CARDBOARD_DRILL_HEAD = inTab(part("drill_head_cardboard").lang("Cardboard Drill Head").register());
     public static final ItemEntry<Item> IRON_DRILL_HEAD = inTab(part("drill_head_iron").lang("Iron Drill Head").register());
     public static final ItemEntry<Item> DIAMOND_DRILL_HEAD = inTab(part("drill_head_diamond").lang("Diamond Drill Head").register());
     public static final ItemEntry<Item> NETHERITE_DRILL_HEAD = inTab(part("drill_head_netherite").lang("Netherite Drill Head").register());
 
+    public static final ItemEntry<Item> CARDBOARD_SAW_HEAD = inTab(part("saw_head_cardboard").lang("Cardboard Saw head").register());
     public static final ItemEntry<Item> IRON_SAW_HEAD = inTab(part("saw_head_iron").lang("Iron Saw head").register());
     public static final ItemEntry<Item> COPPER_SAW_HEAD = inTab(part("saw_head_copper").lang("Copper Saw head").register());
     public static final ItemEntry<Item> NETHERITE_SAW_HEAD = inTab(part("saw_head_netherite").lang("Netherite Saw Head").register());
@@ -230,12 +237,22 @@ public class CMEItems {
                     () -> CreativeModeTab.builder()
                             .title(CMETranslations.CREATIVE_MODE_TAB.resolveComponent())
                             .withTabsBefore(AllCreativeModeTabs.BASE_CREATIVE_TAB.getId())
-                            .icon(SMALL_BRASS_VERTICAL_GEARBOX::asStack)
+                            .icon(SMALL_BRASS_GEARBOX::asStack)
                             .displayItems((parameters, output) -> {
                                 output.accept(MechanicalToolItem.newStackWithParts(
                                         CMEMechanicalParts.WOODEN_GRIP,
                                         CMEMechanicalParts.WOODEN_COG,
                                         CMEMechanicalParts.SIMPLE_ANDESITE_ACCELERATOR
+                                ));
+
+
+                                output.accept(MechanicalToolItem.newStackWithParts(
+                                        CMEMechanicalParts.WOODEN_GRIP, // TODO
+                                        CMEMechanicalParts.CARDBOARD_COG,
+                                        CMEMechanicalParts.CARDBOARD_CASING_ACCELERATOR,
+                                        CMEMechanicalParts.CARDBOARD_GEARBOX,
+                                        CMEMechanicalParts.CARDBOARD_TANK,
+                                        CMEMechanicalParts.CARDBOARD_DRILL_HEAD
                                 ));
 
                                 output.accept(MechanicalToolItem.newStackWithParts(
@@ -256,6 +273,15 @@ public class CMEItems {
                                         CMEMechanicalParts.BLAZE_AUTOMATON
                                 ));
 
+
+                                output.accept(MechanicalToolItem.newStackWithParts(
+                                        CMEMechanicalParts.WOODEN_GRIP,
+                                        CMEMechanicalParts.CARDBOARD_COG,
+                                        CMEMechanicalParts.CARDBOARD_CASING_ACCELERATOR,
+                                        CMEMechanicalParts.CARDBOARD_GEARBOX,
+                                        CMEMechanicalParts.CARDBOARD_TANK,
+                                        CMEMechanicalParts.CARDBOARD_SAW_HEAD
+                                ));
 
                                 output.accept(MechanicalToolItem.newStackWithParts(
                                         CMEMechanicalParts.WOODEN_GRIP,

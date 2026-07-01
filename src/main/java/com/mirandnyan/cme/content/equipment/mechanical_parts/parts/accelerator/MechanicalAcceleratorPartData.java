@@ -18,16 +18,14 @@ import net.minecraft.world.item.component.ItemAttributeModifiers;
 
 public class MechanicalAcceleratorPartData extends MechanicalPartData {
 
-    private final AttributeModifier acceleratorBoostModifier;
     private final ItemAttributeModifiers.Entry acceleratorBoost;
 
     int speedModifier;
-    protected MechanicalAcceleratorPartData(float weight, int speedModifier) {
+    public MechanicalAcceleratorPartData(float weight, int speedModifier) {
         super(weight);
         this.speedModifier = speedModifier;
-        acceleratorBoostModifier =
-                new AttributeModifier(CreateMechanicallyEnhanced.asResource("accelerator_mining_boost"),
-                        speedModifier, AttributeModifier.Operation.ADD_VALUE);
+        AttributeModifier acceleratorBoostModifier = new AttributeModifier(CreateMechanicallyEnhanced.asResource("accelerator_mining_boost"),
+                speedModifier, AttributeModifier.Operation.ADD_VALUE);
         acceleratorBoost = new ItemAttributeModifiers.Entry(
                 Attributes.MINING_EFFICIENCY,
                 acceleratorBoostModifier,
@@ -35,7 +33,7 @@ public class MechanicalAcceleratorPartData extends MechanicalPartData {
         );
     }
     public MechanicalAcceleratorPartData(int speedModifier) {
-        this(0.0f, speedModifier);
+        this(0.05f, speedModifier);
     }
 
     @Override

@@ -1,63 +1,7 @@
 {
-	"format_version": "1.9.0",
-	"credit": "Made with Blockbench",
-	"ambientocclusion": false,
+	"parent": "create_mechanically_enhanced:mechanical_part/accelerator/cardboard_casing",
 	"textures": {
-		"top": "create_mechanically_enhanced:item/mechanical_part/casing/netherite_copper",
-		"particle": "create_mechanically_enhanced:item/mechanical_part/casing/netherite_copper_halfs",
-		"side": "create_mechanically_enhanced:item/mechanical_part/casing/netherite_copper_halfs"
-	},
-	"elements": [
-		{
-			"name": "Cap",
-			"from": [5, 0, 5],
-			"to": [11, 3, 11],
-			"rotation": {"angle": 0, "axis": "x", "origin": [8, 1, 8]},
-			"faces": {
-				"north": {"uv": [0, 9, 6, 12], "rotation": 180, "texture": "#side"},
-				"east": {"uv": [0, 9, 6, 12], "rotation": 180, "texture": "#side"},
-				"south": {"uv": [0, 9, 6, 12], "rotation": 180, "texture": "#side"},
-				"west": {"uv": [0, 9, 6, 12], "rotation": 180, "texture": "#side"},
-				"up": {"uv": [0, 0, 6, 6], "rotation": 180, "texture": "#top"},
-				"down": {"uv": [0, 0, 6, 6], "rotation": 180, "texture": "#top"}
-			},
-			"visibility": true
-		}
-	],
-	"display": {
-		"thirdperson_righthand": {
-			"rotation": [75, 45, 0],
-			"translation": [0, 0.5, 2.5],
-			"scale": [0.375, 0.375, 0.375]
-		},
-		"thirdperson_lefthand": {
-			"rotation": [75, 45, 0],
-			"translation": [0, 0.5, 2.5],
-			"scale": [0.375, 0.375, 0.375]
-		},
-		"firstperson_righthand": {
-			"rotation": [0, 45, 0],
-			"translation": [0, 2.75, 0],
-			"scale": [0.4, 0.4, 0.4]
-		},
-		"firstperson_lefthand": {
-			"rotation": [0, 45, 0],
-			"translation": [0, 2.75, 0],
-			"scale": [0.4, 0.4, 0.4]
-		},
-		"ground": {
-			"translation": [0, 1.5, 0],
-			"scale": [0.25, 0.25, 0.25]
-		},
-		"gui": {
-			"rotation": [30, -135, 0],
-			"translation": [0, 5.75, 0]
-		},
-		"head": {
-			"translation": [0, 14, 0]
-		},
-		"fixed": {
-			"scale": [0.5, 0.5, 0.5]
-		}
+		"casing": "create_mechanically_enhanced:item/mechanical_part/casing/netherite",
+		"particle": "create_mechanically_enhanced:item/mechanical_part/casing/netherite"
 	}
 }

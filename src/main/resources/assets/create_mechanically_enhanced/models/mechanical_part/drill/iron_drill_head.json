@@ -1,9 +1,8 @@
 {
-	"parent": "create_mechanically_enhanced:mechanical_part/drill/diamond_drill_head",
+	"parent": "create_mechanically_enhanced:mechanical_part/drill/cardboard_drill_head",
 	"textures": {
-		"drill_material": "block/anvil",
-		"drill_fixation": "create:block/andesite_casing_very_short",
-		"particle": "block/anvil",
-		"drill_back": "block/anvil"
+		"fixation": "create_mechanically_enhanced:item/mechanical_part/drill/fixation_andesite",
+		"material": "block/anvil",
+		"particle": "block/anvil"
 	}
 }

@@ -1,0 +1,7 @@
+{
+	"parent": "create_mechanically_enhanced:mechanical_part/automaton/andesite_base",
+	"textures": {
+		"casing": "create_mechanically_enhanced:item/mechanical_part/casing/cardboard",
+		"particle": "create_mechanically_enhanced:item/mechanical_part/casing/cardboard"
+	}
+}

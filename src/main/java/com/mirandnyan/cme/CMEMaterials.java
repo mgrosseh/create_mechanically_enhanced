@@ -13,6 +13,7 @@ public class CMEMaterials {
     public static final ResourceKey<Registry<CMEMaterial>> REGISTRY =
             REGISTRATE.makeRegistry("cme_material", RegistryBuilder::new);
 
+    public static final RegistryEntry<CMEMaterial, CMEMaterial> CARDBOARD = register("cardboard", "Cardboard");
     public static final RegistryEntry<CMEMaterial, CMEMaterial> WOOD = register("wood", "Wood");
     public static final RegistryEntry<CMEMaterial, CMEMaterial> STONE = register("stone", "Stone");
     public static final RegistryEntry<CMEMaterial, CMEMaterial> IRON = register("iron", "Iron");

@@ -1,8 +1,7 @@
 {
-	"parent": "create_mechanically_enhanced:mechanical_part/accelerator/netherite_casing",
+	"parent": "create_mechanically_enhanced:mechanical_part/accelerator/cardboard_casing",
 	"textures": {
-		"top": "create_mechanically_enhanced:item/mechanical_part/casing/andesite_brass",
-		"side": "create_mechanically_enhanced:item/mechanical_part/casing/andesite_brass_halfs",
-		"particle": "create_mechanically_enhanced:item/mechanical_part/casing/andesite_brass"
+		"casing": "create_mechanically_enhanced:item/mechanical_part/casing/andesite",
+		"particle": "create_mechanically_enhanced:item/mechanical_part/casing/andesite"
 	}
 }

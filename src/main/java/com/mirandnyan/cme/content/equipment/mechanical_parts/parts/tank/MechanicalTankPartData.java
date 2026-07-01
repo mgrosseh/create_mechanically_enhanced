@@ -1,4 +1,4 @@
-package com.mirandnyan.cme.content.equipment.mechanical_parts.parts;
+package com.mirandnyan.cme.content.equipment.mechanical_parts.parts.tank;
 
 import com.mirandnyan.cme.CMEDataComponents;
 import com.mirandnyan.cme.CMETranslations;
@@ -27,7 +27,10 @@ public class MechanicalTankPartData extends MechanicalPartData {
 
     int capacity;
     public MechanicalTankPartData(int capacity) {
-        super(0.4f);
+        this(0.4f, capacity);
+    }
+    public MechanicalTankPartData(float weight, int capacity) {
+        super(weight);
         this.capacity = capacity;
     }
 
@@ -106,7 +109,7 @@ public class MechanicalTankPartData extends MechanicalPartData {
         var air = item.getOrDefault(CMEDataComponents.PRESSURIZED_AIR, 0);
         if (air >= amount) {
             item.set(CMEDataComponents.PRESSURIZED_AIR,
-                    air - item.getOrDefault(CMEDataComponents.AIR_TRANSFER_RATIO, MechanicalToolItem.DEFAULT_TRANSFER_RATIO));
+                    Math.max(0, air - item.getOrDefault(CMEDataComponents.AIR_TRANSFER_RATIO, MechanicalToolItem.DEFAULT_TRANSFER_RATIO)));
             return true;
         }
         return false;

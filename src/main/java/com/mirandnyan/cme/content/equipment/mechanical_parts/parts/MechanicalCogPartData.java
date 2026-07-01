@@ -29,7 +29,10 @@ public class MechanicalCogPartData extends MechanicalPartData {
         this(speedModifier, new Vector3f(0f, 0f, 0f));
     }
     public MechanicalCogPartData(int speedModifier, Vector3f rotationOffset) {
-        super(0.1f);
+        this(0.1f, speedModifier, rotationOffset);
+    }
+    public MechanicalCogPartData(float weight, int speedModifier, Vector3f rotationOffset) {
+        super(weight);
         this.rotationOffset = rotationOffset;
         this.speedModifier = speedModifier;
         AttributeModifier cogBoostModifier = new AttributeModifier(CreateMechanicallyEnhanced.asResource("cog_mining_boost"),

@@ -32,11 +32,17 @@ public class CreateMechanicallyEnhanced {
     - Part Trading villager (takes cat coins)
     - Coin Stack Block
 
+    TODO: make cardboard tools obtainable with paper and wood or something for early game
+    # TODO Registry of tool actions
+    - grip handles triggering these
+    - cardboard material action: changes tool with data if any part is cardboard
+    - netherite material action: if any part is netherite, make unburnable
+    - nether star material action: if any part is nether star, make unexplodable
+
     # remodels:
     - pumpkin automaton
     - blasting refiner may look too big, needs particles instead of bad fire graphic
     - grips
-
 
     # Mechanical Tool
     BUG: refilling air can cause use anim in offhand item (which isn't a tool)
@@ -44,6 +50,9 @@ public class CreateMechanicallyEnhanced {
     add slot tag system
 
     # Mechanical Parts:
+    ## blasting refiner
+    - add particles
+
     ## conduit
     - on R click boost forward
 
