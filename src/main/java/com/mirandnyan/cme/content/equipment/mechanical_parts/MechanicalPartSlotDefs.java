@@ -1,7 +1,7 @@
 package com.mirandnyan.cme.content.equipment.mechanical_parts;
 
 
-import com.mirandnyan.cme.util.AffineTransform;
+import com.mirandnyan.cme.util.math.AffineTransform;
 import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.NotNull;
 

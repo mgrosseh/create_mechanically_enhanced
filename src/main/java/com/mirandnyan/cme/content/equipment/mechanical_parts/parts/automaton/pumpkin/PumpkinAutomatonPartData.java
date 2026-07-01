@@ -5,7 +5,7 @@ import com.mirandnyan.cme.CreateMechanicallyEnhanced;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.MechanicalPartUtil;
-import com.mirandnyan.cme.util.ItemAttributeModifiersRebuilder;
+import com.mirandnyan.cme.util.neoforge_helpers.ItemAttributeModifiersRebuilder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;

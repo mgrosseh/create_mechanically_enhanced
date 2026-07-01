@@ -17,7 +17,7 @@ import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.tool_head.Mec
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.tool_head.MechanicalSawPartData;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.subparts.SilkBrushSubpart;
 import com.mirandnyan.cme.content.equipment.mechanical_tool.MechanicalToolItem;
-import com.mirandnyan.cme.util.AffineTransform;
+import com.mirandnyan.cme.util.math.AffineTransform;
 import com.mojang.math.Axis;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.core.component.DataComponents;
@@ -29,11 +29,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.component.Tool;
 import org.jetbrains.annotations.ApiStatus;
-import org.joml.Matrix3f;
 import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -429,7 +429,6 @@ public class CMEMechanicalParts {
             .slot(new AffineTransform().rotateXDegrees(180f).translate(8f, 1f, 8f), MechanicalToolSlot.TIP_SLOT)
             .item(CMEItems.SILK_BRUSH_MINING_REFINER)
             .data(new SilkBrushRefinerPartData(0))
-            // TODO: clean this up (generalize somehow)
             .subpart(SILK_BRUSH_REFINER_SUBPART.withOrigin(
                     angle -> new AffineTransform()
                             .translateBack(2, 2, 8)

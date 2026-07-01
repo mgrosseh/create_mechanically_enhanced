@@ -1,11 +1,9 @@
 package com.mirandnyan.cme.content.equipment.mechanical_parts.subparts;
 
 import com.mirandnyan.cme.CMEMaterials;
-import com.mirandnyan.cme.CMEMechanicalParts;
-import com.mirandnyan.cme.CreateMechanicallyEnhanced;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.*;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.MechanicalPartUtil;
-import com.mirandnyan.cme.util.AttributeHelpers;
+import com.mirandnyan.cme.util.neoforge_helpers.AttributeHelpers;
 import com.mirandnyan.cme.util.java_helpers.VarArgs;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -14,7 +12,6 @@ import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemDisplayContext;

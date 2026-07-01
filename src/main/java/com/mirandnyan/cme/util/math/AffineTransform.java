@@ -1,9 +1,8 @@
-package com.mirandnyan.cme.util;
+package com.mirandnyan.cme.util.math;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.engine_room.flywheel.lib.transform.Affine;
 import org.joml.*;
-import org.joml.Math;
 
 public class AffineTransform implements Affine<AffineTransform> {
     Matrix3f matrix;

@@ -5,7 +5,7 @@ import com.mirandnyan.cme.CreateMechanicallyEnhanced;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPartData;
-import com.mirandnyan.cme.util.ItemAttributeModifiersRebuilder;
+import com.mirandnyan.cme.util.neoforge_helpers.ItemAttributeModifiersRebuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.api.data.datamaps.BlazeBurnerFuel;

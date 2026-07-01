@@ -6,7 +6,7 @@ import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalToolSlot;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.SlotEntry;
 import com.mirandnyan.cme.content.equipment.mechanical_tool.RemovingPartResult;
-import com.mirandnyan.cme.util.ItemAttributeModifiersRebuilder;
+import com.mirandnyan.cme.util.neoforge_helpers.ItemAttributeModifiersRebuilder;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceKey;

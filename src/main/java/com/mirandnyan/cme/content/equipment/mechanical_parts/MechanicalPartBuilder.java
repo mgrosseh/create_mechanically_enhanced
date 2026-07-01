@@ -1,8 +1,7 @@
 package com.mirandnyan.cme.content.equipment.mechanical_parts;
 
-import com.mirandnyan.cme.CMEMaterials;
 import com.mirandnyan.cme.CreateMechanicallyEnhanced;
-import com.mirandnyan.cme.util.AffineTransform;
+import com.mirandnyan.cme.util.math.AffineTransform;
 import com.mirandnyan.cme.util.java_helpers.VarArgs;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;

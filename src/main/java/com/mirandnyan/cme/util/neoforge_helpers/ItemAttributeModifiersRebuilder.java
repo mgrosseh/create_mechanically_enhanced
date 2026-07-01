@@ -1,4 +1,4 @@
-package com.mirandnyan.cme.util;
+package com.mirandnyan.cme.util.neoforge_helpers;
 
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.EquipmentSlotGroup;
