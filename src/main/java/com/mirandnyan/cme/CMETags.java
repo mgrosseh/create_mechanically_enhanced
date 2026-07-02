@@ -105,12 +105,12 @@ public class CMETags {
 
             prov.addTag(NOT_CARDBOARD_BINDING)
                     .addTag(Tags.Items.NUGGETS_IRON)
-                    .add(CLAY);
+                    .add(CLAY_BALL);
 
             prov.addTag(CARDBOARD_PLATES); // TODO: I guess somehow I have to make create load before me here? idk why it doesn't
             prov.addTag(CARDBOARD_LIKE)
-                    .addTag(CARDBOARD_PLATES)
-                    .add(CMEItems.NOT_CARDBOARD.getKey());
+                    .add(CMEItems.NOT_CARDBOARD.getKey())
+                    .addTag(CARDBOARD_PLATES);
 
 
             prov.addTag(BURN_UP_IMMUNE)
