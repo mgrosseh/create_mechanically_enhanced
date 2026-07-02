@@ -14,6 +14,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.Panda;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +40,7 @@ public class AutoMaterialSubpart extends MechanicalSubpart {
         return casings.get(material);
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void render(ItemStack stack, FilledToolSlot filledToolSlot, List<FilledToolSlot> filledToolSlots, MechanicalPart part,
                        MechanicalSubpart subpart, PartialItemModelRenderer renderer, ItemDisplayContext transformType,

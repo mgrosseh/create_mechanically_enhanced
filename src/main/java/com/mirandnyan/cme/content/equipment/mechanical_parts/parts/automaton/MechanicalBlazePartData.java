@@ -34,6 +34,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -199,13 +201,13 @@ public class MechanicalBlazePartData extends MechanicalPartData {
     @Override
     public void playerTick(Player player, ItemStack stack) {
         //noinspection DuplicatedCode
-        if (!(player.level() instanceof ClientLevel clevel))
+        if (!(player.level().isClientSide) || !(player.level() instanceof ClientLevel clientLevel))
             return;
         // animation
         var data = ClientData.of(player);
         var air = stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR, 0);
         var damage = stack.getOrDefault(DataComponents.DAMAGE, 0);
-        var mining = clevel.levelRenderer.destroyingBlocks.containsKey(player.getId())
+        var mining = clientLevel.levelRenderer.destroyingBlocks.containsKey(player.getId())
                 || air < data.lastAir
                 || damage > data.lastDamage;
         data.lastAir = air;
@@ -270,6 +272,7 @@ public class MechanicalBlazePartData extends MechanicalPartData {
             );
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void render(ItemStack stack, MechanicalPart part, PartialItemModelRenderer renderer, ItemDisplayContext transformType, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
         long time = stack.getOrDefault(CMEDataComponents.BLAZE_BURNING_TIME, 0L);

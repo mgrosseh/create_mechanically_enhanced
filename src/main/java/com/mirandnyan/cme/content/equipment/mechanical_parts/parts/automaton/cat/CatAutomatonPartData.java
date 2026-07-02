@@ -31,6 +31,8 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.NotNull;
@@ -301,6 +303,7 @@ public class CatAutomatonPartData extends MechanicalPartData {
         tooltip.add(CMETranslations.MECHANICAL_CAT_ACTIVE_BONUS.resolveComponentMutable().append(component));
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void render(ItemStack stack, MechanicalPart part, PartialItemModelRenderer renderer, ItemDisplayContext transformType, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
         renderer.renderSolid(part.models[HEAD].get(), light);

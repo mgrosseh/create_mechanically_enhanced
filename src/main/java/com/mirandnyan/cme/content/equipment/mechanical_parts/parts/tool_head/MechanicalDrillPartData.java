@@ -24,6 +24,8 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -107,12 +109,12 @@ public class MechanicalDrillPartData extends MechanicalPartData {
 
     @Override
     public void playerTick(Player player, ItemStack stack) {
-        if (!(player.level() instanceof ClientLevel clevel))
+        if (!(player.level().isClientSide) || !(player.level() instanceof ClientLevel clientLevel))
             return;
 
         var data = ClientData.of(player);
 
-        var mining = clevel.levelRenderer.destroyingBlocks.containsKey(player.getId());
+        var mining = clientLevel.levelRenderer.destroyingBlocks.containsKey(player.getId());
         if (mining)
             data.pAngle.bump(5.5);
 
@@ -130,6 +132,7 @@ public class MechanicalDrillPartData extends MechanicalPartData {
                 .orElse(0f);
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void render(ItemStack stack, MechanicalPart part, PartialItemModelRenderer renderer, ItemDisplayContext transformType,
                        PoseStack ms, MultiBufferSource buffer, int light, int overlay) {

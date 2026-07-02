@@ -15,6 +15,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class MechanicalAcceleratorPartData extends MechanicalPartData {
 
@@ -54,6 +56,7 @@ public class MechanicalAcceleratorPartData extends MechanicalPartData {
         );
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void render(ItemStack stack, MechanicalPart part, PartialItemModelRenderer renderer, ItemDisplayContext transformType, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
         super.render(stack, part, renderer, transformType, ms, buffer, light, overlay);

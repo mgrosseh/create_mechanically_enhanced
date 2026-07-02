@@ -40,8 +40,9 @@ public class CMEBlocks {
                     )
             )
             .item()
-            .model((c, p) -> p.withExistingParent("part_crafter",
-                    CreateMechanicallyEnhanced.asResource("block", "part_crafter")))
+            // TODO
+//            .model((c, p) -> p.withExistingParent("part_crafter",
+//                    CreateMechanicallyEnhanced.asResource("block", "part_crafter")))
             .recipe((ctx, prov) ->
                     ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
                             .pattern("CC")

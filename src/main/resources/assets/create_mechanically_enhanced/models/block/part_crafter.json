@@ -1,0 +1,40 @@
+{
+	"format_version": "1.21.11",
+	"credit": "Made with Blockbench",
+	"parent": "minecraft:block/cube_bottom_top",
+	"textures": {
+		"3": "create_mechanically_enhanced:block/part_crafter/front",
+		"bottom": "create_mechanically_enhanced:block/part_crafter/bottom",
+		"side": "create_mechanically_enhanced:block/part_crafter/side",
+		"top": "create_mechanically_enhanced:block/part_crafter/top",
+		"particle": "create_mechanically_enhanced:block/part_crafter/front"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 13, 16],
+			"faces": {
+				"north": {"uv": [0, 3, 16, 16], "texture": "#3"},
+				"east": {"uv": [0, 3, 16, 16], "texture": "#side"},
+				"south": {"uv": [0, 3, 16, 16], "texture": "#side"},
+				"west": {"uv": [0, 3, 16, 16], "texture": "#side"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#top"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#bottom"}
+			},
+			"visibility": true
+		},
+		{
+			"from": [0, 13, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 3], "texture": "#3"},
+				"east": {"uv": [0, 0, 16, 3], "texture": "#side"},
+				"south": {"uv": [0, 0, 16, 3], "texture": "#side"},
+				"west": {"uv": [0, 0, 16, 3], "texture": "#side"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#top"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#bottom"}
+			},
+			"visibility": true
+		}
+	]
+}

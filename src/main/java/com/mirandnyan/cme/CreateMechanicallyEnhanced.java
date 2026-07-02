@@ -32,6 +32,8 @@ public class CreateMechanicallyEnhanced {
     - Part Trading villager (takes cat coins)
     - Coin Stack Block
 
+    TODO: smoothing of animation in brush subpart
+
     TODO: make cardboard tools obtainable with paper and wood or something for early game
     TODO: leftClick
     # TODO Registry of tool actions

@@ -18,6 +18,8 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -66,6 +68,7 @@ public class MechanicalSawPartData extends SimpleMiningCheckPartData {
         return Component.empty().append(displayName).append(CMETranslations.MECHANICAL_TOOL_SAW_TYPE.resolveComponent());
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void render(ItemStack stack, MechanicalPart part, PartialItemModelRenderer renderer, ItemDisplayContext transformType,
                        PoseStack ms, MultiBufferSource buffer, int light, int overlay) {

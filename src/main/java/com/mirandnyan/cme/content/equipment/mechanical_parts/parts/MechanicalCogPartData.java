@@ -17,6 +17,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.joml.Vector3f;
 
 public class MechanicalCogPartData extends MechanicalPartData {
@@ -62,6 +64,7 @@ public class MechanicalCogPartData extends MechanicalPartData {
         );
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void render(ItemStack stack, MechanicalPart part, PartialItemModelRenderer renderer, ItemDisplayContext transformType, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
         float angle = AnimationTickHolder.getRenderTime() * -1 * 2.5f * (float) (speedModifier * MechanicalPartUtil.MINING_EFFICIENCY_TO_COG_SPEED);

@@ -10,9 +10,12 @@ import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.List;
 
+@OnlyIn(Dist.CLIENT)
 public class MechanicalToolRenderer extends CustomRenderedItemModelRenderer {
 
     private void renderSlot(FilledToolSlot filledToolSlot, List<FilledToolSlot> filledToolSlots,

@@ -7,47 +7,22 @@ import com.mirandnyan.cme.CMETranslations;
 import com.mirandnyan.cme.content.equipment.MechanicalItem;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPart;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
-import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.content.equipment.tool.KnockbackPacket;
 import com.simibubi.create.foundation.item.CustomArmPoseItem;
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import com.tterrag.registrate.util.entry.RegistryEntry;
-import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.EntityTypeTags;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.event.level.BlockDropsEvent;
-import net.neoforged.neoforge.event.level.BlockEvent;
-import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,12 +30,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-@EventBusSubscriber
 public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseItem {
-
-    public static final int DEFAULT_TRANSFER_RATIO = 2;
-    public static final int BLOCK_BREAK_DURABILITY_USE = 1;
-    public static final int ENTITY_ATTACK_DURABILITY_USE = 2;
 
     // TODO: pose is weird (crossing) when in offhand: extendo grip, crossbow, other mechanical tool
     // TODO: enchants: unbreaking (for when no air)
@@ -109,133 +79,6 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
         super(properties.rarity(Rarity.UNCOMMON).stacksTo(1));
     }
 
-
-    @SubscribeEvent
-    public static void entityTick(EntityTickEvent.Post event) {
-        if (!(event.getEntity() instanceof Player player))
-            return;
-        ItemStack stack = player.getMainHandItem(); // TODO offhand too with boolean
-
-        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
-        for (var slot : slots) {
-            slot.getPartEntry().get().data.playerTick(
-                    player, stack
-            );
-        }
-    }
-    // -- Breaking Blocks with Item --
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void consumeDurabilityOnBlockBreak(BlockEvent.BreakEvent event) {
-        findAndDamageItem(event.getPlayer());
-        notifyPartsOfBlockBreak(event);
-    }
-
-    protected static void findAndDamageItem(@NotNull Player player) {
-        if (player.level().isClientSide)
-            return;
-        EquipmentSlot equipmentSlot = EquipmentSlot.MAINHAND;
-        ItemStack item = player.getMainHandItem();
-        if (!CMEItems.MECHANICAL_TOOL.isIn(item)) {
-            item = player.getOffhandItem();
-            equipmentSlot = EquipmentSlot.OFFHAND;
-        }
-        if (!CMEItems.MECHANICAL_TOOL.isIn(item))
-            return;
-
-        List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
-        for (var slot : slots) {
-            var part = slot.getPartEntry();
-            var data = part.get().data;
-            var absorbed = data.tryAbsorbDamage(player, item, equipmentSlot, BLOCK_BREAK_DURABILITY_USE);
-            if (absorbed)
-                return;
-        }
-        item.hurtAndBreak(BLOCK_BREAK_DURABILITY_USE, player, equipmentSlot);
-    }
-
-
-    @SubscribeEvent
-    protected static void notifyPartsOfBlockBreak(BlockEvent.BreakEvent event) {
-        ServerPlayer player = (ServerPlayer) event.getPlayer();
-        var item = player.getMainHandItem();
-        if (!CMEItems.MECHANICAL_TOOL.isIn(item))
-            return;
-
-        List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
-        for (var slot : slots) {
-            slot.getPartEntry().get().data.brokeBlock(player, item, event);
-        }
-    }
-
-    @SubscribeEvent
-    public static void modifyBlockDropsAfterBreak(BlockDropsEvent event) {
-        if (!(event.getBreaker() instanceof ServerPlayer player) || !player.getMainHandItem().has(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE))
-            return;
-        var item = player.getMainHandItem();
-
-        List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
-        for (FilledToolSlot slot : slots) {
-            var part = slot.getPart();
-            part.data.blockDropEvent(slot.slot(), player, item, event);
-        }
-    }
-
-    @Override
-    public @NotNull InteractionResult interactLivingEntity(
-            ItemStack stack, @NotNull Player player,
-            @NotNull LivingEntity interactionTarget, @NotNull InteractionHand usedHand) {
-        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
-        for (var slot : slots) {
-            var part = slot.getPartEntry();
-            var result = part.get().data.interactLivingEntity(stack, player, interactionTarget, usedHand);
-            if (result != InteractionResult.PASS)
-                return result;
-        }
-        return super.interactLivingEntity(stack, player, interactionTarget, usedHand);
-    }
-
-    @Override
-    public boolean onDroppedByPlayer(ItemStack item, @NotNull Player player) {
-        List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
-        var result = true;
-        for (var slot : slots) {
-            var part = slot.getPartEntry();
-            result = result && part.get().data.onDroppedByPlayer(item, player);
-        }
-        return result && super.onDroppedByPlayer(item, player);
-    }
-
-    @Override
-    public @NotNull Component getHighlightTip(@NotNull ItemStack item, @NotNull Component displayName) {
-        List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
-        var result = super.getHighlightTip(item, displayName);
-        for (var slot : slots) {
-            var part = slot.getPartEntry();
-            result = part.get().data.getHighlightTip(item, result);
-        }
-        return result;
-    }
-
-    // -- Parts --
-    protected void setLastToolHolder(ItemStack stack, Entity entity, boolean isSelected) {
-        if (!(entity instanceof Player player) || !isSelected)
-            return;
-        // TODO: use ID
-        var name = player.getName().getString();
-        stack.set(CMEDataComponents.LAST_TOOL_HOLDER_NAME, name);
-    }
-    @Override
-    public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity, int slotId, boolean isSelected) {
-        setLastToolHolder(stack, entity, isSelected);
-
-        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
-        for (var slot : slots) {
-            slot.getPartEntry().get().data.inventoryTick(
-                    stack, level, entity, slotId, isSelected
-            );
-        }
-        super.inventoryTick(stack, level, entity, slotId, isSelected);
-    }
 
     // Change parts
     @OnlyIn(Dist.CLIENT)
@@ -389,9 +232,10 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
     }
 
     // make look nice in third person
+    @OnlyIn(Dist.CLIENT)
     @Override
     @Nullable
-    public HumanoidModel.ArmPose getArmPose(ItemStack stack, AbstractClientPlayer player, InteractionHand hand) {
+    public HumanoidModel.ArmPose getArmPose(final ItemStack stack, final AbstractClientPlayer player, final InteractionHand hand) {
         return HumanoidModel.ArmPose.CROSSBOW_HOLD;
     }
 
@@ -437,179 +281,5 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
             }
         }
         super.appendHoverText(stack, context, tooltip, flagIn);
-    }
-
-    @Override
-    public @NotNull InteractionResult useOn(UseOnContext context) {
-        var item = context.getItemInHand();
-        List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
-        for (var slot : slots) {
-            var part = slot.getPartEntry();
-            var result = part.get().data.useOn(context);
-            if (result != InteractionResult.PASS)
-                return result;
-        }
-        return super.useOn(context);
-    }
-    @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand usedHand) {
-        var item = player.getItemInHand(usedHand);
-        if (getUseDuration(item, player) > 0) {
-            player.startUsingItem(usedHand);
-            return InteractionResultHolder.success(item);
-        }
-        return InteractionResultHolder.pass(player.getItemInHand(usedHand));
-    }
-
-    @Override
-    public int getUseDuration(@NotNull ItemStack stack, @NotNull LivingEntity entity) {
-        var duration = 0;
-        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
-        for (var slot : slots) {
-            var part = slot.getPartEntry();
-            duration = Math.max(duration, part.get().data.getUseDuration(stack, entity));
-        }
-        return duration;
-    }
-
-    @Override
-    public void onUseTick(@NotNull Level level, @NotNull LivingEntity livingEntity, @NotNull ItemStack stack, int remainingUseDuration) {
-        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
-        for (var slot : slots) {
-            var part = slot.getPartEntry();
-            var data = part.get().data;
-            var duration = data.getUseDuration(stack, livingEntity);
-            if(duration == 0)
-                continue;
-            data.onUseTick(level, livingEntity, stack, duration);
-        }
-    }
-
-    // Bar
-    @Override
-    public int getBarWidth(@NotNull ItemStack stack) {
-        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
-        for (var slot : slots) {
-            var data = slot.getPartEntry().get().data;
-            if(!data.overridesBar(stack))
-                continue;
-            return data.getBarWidth(stack);
-        }
-        return super.getBarWidth(stack);
-    }
-
-    @Override
-    public int getBarColor(@NotNull ItemStack stack) {
-        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
-        for (var slot : slots) {
-            var data = slot.getPartEntry().get().data;
-            if(!data.overridesBar(stack))
-                continue;
-            return data.getBarColor(stack);
-        }
-        return super.getBarColor(stack);
-    }
-    @Override
-    public boolean isBarVisible(@NotNull ItemStack stack) {
-        return true;
-    }
-
-    // -- Other Functions --
-    @Override
-    public float getDestroySpeed(@NotNull ItemStack stack, @NotNull BlockState state) {
-        if (canAbsorbDurability(stack, state))
-            return super.getDestroySpeed(stack, state);
-        return 0.00001f;
-    }
-
-    protected static boolean canAbsorbDurability(@NotNull ItemStack stack, @NotNull BlockState state) {
-        return canAbsorbDurability(stack, BLOCK_BREAK_DURABILITY_USE, state, null, null);
-    }
-    protected static boolean canAbsorbDurability(@NotNull ItemStack stack, @NotNull LivingEntity attacker, @NotNull Entity target) {
-        return canAbsorbDurability(stack, ENTITY_ATTACK_DURABILITY_USE, null, attacker, target);
-    }
-
-    protected static boolean canAbsorbDurability(@NotNull ItemStack stack, int amount, @Nullable BlockState state,
-                                                 @Nullable LivingEntity attacker, @Nullable Entity target) {
-        if (stack.getDamageValue() < stack.getMaxDamage() - amount)
-            return true;
-
-        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
-        for (var slot : slots) {
-            var part = slot.getPartEntry();
-            boolean result = false;
-            if (state != null)
-                result = part.get().data.canAbsorbDurability(stack, state, amount);
-            else if (attacker != null && target != null)
-                result = part.get().data.canAbsorbDurability(stack, attacker, target, amount);
-            if (result)
-                return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean onLeftClickEntity(@NotNull ItemStack stack, @NotNull Player player, @NotNull Entity entity) {
-        if (canAbsorbDurability(stack, player, entity))
-            return super.onLeftClickEntity(stack, player, entity);
-        return true;
-    }
-
-    @SubscribeEvent
-    public static void leftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
-        ItemStack item = event.getItemStack();
-        List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
-        for (FilledToolSlot slot : slots) {
-            var part = slot.getPart();
-            part.data.leftClickBlock(slot.slot(), event.getEntity(), item, event);
-        }
-    }
-
-    @SubscribeEvent
-    public static void leftClickEmpty(PlayerInteractEvent.LeftClickEmpty event) {
-        ItemStack item = event.getItemStack();
-        List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
-        for (FilledToolSlot slot : slots) {
-            var part = slot.getPart();
-            part.data.leftClickEmpty(slot.slot(), event.getEntity(), item, event);
-        }
-    }
-
-    // We set priority to highest just so we catch this before anyone does anything else
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void leftClickEntity(AttackEntityEvent event) {
-        Player attacker = event.getEntity();
-        if (!(event.getTarget() instanceof LivingEntity target))
-            return;
-        ItemStack item = attacker.getItemInHand(InteractionHand.MAIN_HAND);
-
-        boolean cancel = !canAbsorbDurability(item, target, attacker);
-
-        List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
-        for (FilledToolSlot slot : slots) {
-            var part = slot.getPart();
-            part.data.leftClickEntity(slot.slot(), attacker, item, target, event, cancel);
-        }
-        if (cancel)
-            event.setCanceled(true);
-    }
-
-    // DIGGER ITEM
-    // TODO: if it doesn't have durability, it takes damage, but if not still does damage but then takes no damage
-
-    @Override
-    public boolean hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
-        return canAbsorbDurability(stack, target, attacker);
-    }
-
-    @Override
-    public void postHurtEnemy(ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
-        List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
-        for (var slot : slots) {
-            var part = slot.getPart();
-            if (part.data.postHurtEnemy(slot.slot(), stack, attacker, target))
-                return;
-        }
-        stack.hurtAndBreak(ENTITY_ATTACK_DURABILITY_USE, attacker, EquipmentSlot.MAINHAND);
     }
 }

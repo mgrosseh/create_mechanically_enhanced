@@ -19,6 +19,8 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -47,6 +49,7 @@ public abstract class MechanicalPartData {
 
     public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity, int slotId, boolean isSelected) { }
 
+    @OnlyIn(Dist.CLIENT)
     public void render(ItemStack stack, FilledToolSlot slot, List<FilledToolSlot> filledToolSlots, MechanicalPart part,
                        PartialItemModelRenderer renderer, ItemDisplayContext transformType,
                        PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
@@ -55,6 +58,7 @@ public abstract class MechanicalPartData {
             subpart.render(stack, slot, filledToolSlots, part, subpart, renderer, transformType, ms, buffer, light, overlay);
         }
     }
+    @OnlyIn(Dist.CLIENT)
     public void render(ItemStack stack, MechanicalPart part, PartialItemModelRenderer renderer, ItemDisplayContext transformType,
                        PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
         renderer.render(part.models[0].get(), light);

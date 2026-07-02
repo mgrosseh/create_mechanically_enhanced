@@ -72,12 +72,12 @@ public class SimpleMiningCheckPartData extends MechanicalPartData {
 
     @Override
     public void playerTick(Player player, ItemStack stack) {
-        if (!(player.level() instanceof ClientLevel clevel))
+        if (!player.level().isClientSide || !(player.level() instanceof ClientLevel clientLevel))
             return;
 
         var data = ClientData.of(player);
 
-        var mining = clevel.levelRenderer.destroyingBlocks.containsKey(player.getId());
+        var mining = clientLevel.levelRenderer.destroyingBlocks.containsKey(player.getId());
         if (mining)
             data.active = 20;
 

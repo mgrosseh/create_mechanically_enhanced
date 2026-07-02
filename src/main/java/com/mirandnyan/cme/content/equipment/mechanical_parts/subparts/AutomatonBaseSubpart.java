@@ -16,6 +16,8 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +37,7 @@ public final class AutomatonBaseSubpart extends AutoMaterialSubpart {
         return cogs.get(material);
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void render(ItemStack stack, FilledToolSlot filledToolSlot, List<FilledToolSlot> filledToolSlots, MechanicalPart part,
                        MechanicalSubpart subpart, PartialItemModelRenderer renderer, ItemDisplayContext transformType,

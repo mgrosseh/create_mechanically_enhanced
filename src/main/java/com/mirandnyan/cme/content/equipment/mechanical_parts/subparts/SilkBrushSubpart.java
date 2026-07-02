@@ -15,6 +15,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +30,7 @@ public final class SilkBrushSubpart extends AutoMaterialSubpart {
         this.origin = origin;
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void render(ItemStack stack, FilledToolSlot filledToolSlot, List<FilledToolSlot> filledToolSlots, MechanicalPart part,
                        MechanicalSubpart subpart, PartialItemModelRenderer renderer, ItemDisplayContext transformType,
