@@ -1,0 +1,6 @@
+{
+  "values": [
+    "#c:plates/cardboard",
+    "create_mechanically_enhanced:not_cardboard"
+  ]
+}

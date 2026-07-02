@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_cardboard_like": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#create_mechanically_enhanced:cardboard_like"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "create_mechanically_enhanced:part_crafter"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_cardboard_like"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "create_mechanically_enhanced:part_crafter"
+    ]
+  }
+}

@@ -16,8 +16,8 @@ public class CardboardSawPartData extends MechanicalSawPartData implements Cardb
     }
 
     @Override
-    public void leftClick(FilledToolSlot.SlotId slot, Player entity, ItemStack item, boolean client, PlayerInteractEvent.LeftClickBlock event) {
-        super.leftClick(slot, entity, item, client, event);
+    public void leftClickBlock(FilledToolSlot.SlotId slot, Player entity, ItemStack item, boolean client, PlayerInteractEvent.LeftClickBlock event) {
+        super.leftClickBlock(slot, entity, item, client, event);
         doLeftClick(client, event);
     }
 

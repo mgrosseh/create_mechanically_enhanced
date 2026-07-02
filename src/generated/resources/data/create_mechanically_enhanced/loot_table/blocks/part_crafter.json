@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "create_mechanically_enhanced:food_replicator"
+          "name": "create_mechanically_enhanced:part_crafter"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "create_mechanically_enhanced:blocks/food_replicator"
+  "random_sequence": "create_mechanically_enhanced:blocks/part_crafter"
 }

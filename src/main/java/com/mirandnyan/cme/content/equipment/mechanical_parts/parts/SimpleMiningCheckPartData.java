@@ -1,18 +1,23 @@
 package com.mirandnyan.cme.content.equipment.mechanical_parts.parts;
 
 import com.mirandnyan.cme.CMEDataComponents;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.FilledToolSlot;
 import com.mirandnyan.cme.content.equipment.mechanical_parts.MechanicalPartData;
+import com.mirandnyan.cme.content.equipment.mechanical_parts.parts.tool_head.MechanicalDrillPartData;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.core.component.DataComponents;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
 
 import java.util.Optional;
 import java.util.WeakHashMap;
 
 public class SimpleMiningCheckPartData extends MechanicalPartData {
-    // TODO: mining is considered happening when switching tools
+    // TODO: use custom package to e.g. make breaking block work
+    // TODO: maybe find system to not double run this if multiple parts all inherit from this
     // TODO: armor stands may have mining animation when holding players tool
 
     protected SimpleMiningCheckPartData(float weight) {
@@ -20,8 +25,6 @@ public class SimpleMiningCheckPartData extends MechanicalPartData {
     }
 
     protected static class ClientData {
-        public int lastAir = 0;
-        public int lastDamage = 0;
         public int active;
         static WeakHashMap<String, ClientData> clientData = new WeakHashMap<>();
 
@@ -48,23 +51,33 @@ public class SimpleMiningCheckPartData extends MechanicalPartData {
         } > 0;
     }
 
+    @Override
+    public void leftClickBlock(FilledToolSlot.SlotId slot, Player entity, ItemStack item, boolean client, PlayerInteractEvent.LeftClickBlock event) {
+        super.leftClickBlock(slot, entity, item, client, event);
+        if (!client)
+            return;
+        var data = ClientData.of(entity);
+        data.active = 20;
+    }
+
+
+    @Override
+    public void leftClickEmpty(FilledToolSlot.SlotId slot, Player entity, ItemStack item, boolean client, PlayerInteractEvent.LeftClickEmpty event) {
+        super.leftClickEmpty(slot, entity, item, client, event);
+        if (!client)
+            return;
+        var data = ClientData.of(entity);
+        data.active = 20;
+    }
 
     @Override
     public void playerTick(Player player, ItemStack stack) {
-        //noinspection DuplicatedCode
         if (!(player.level() instanceof ClientLevel clevel))
             return;
 
         var data = ClientData.of(player);
 
-
-        var air = stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR, 0);
-        var damage = stack.getOrDefault(DataComponents.DAMAGE, 0);
-        var mining = clevel.levelRenderer.destroyingBlocks.containsKey(player.getId())
-                || air < data.lastAir
-                || damage > data.lastDamage;
-        data.lastAir = air;
-        data.lastDamage = damage;
+        var mining = clevel.levelRenderer.destroyingBlocks.containsKey(player.getId());
         if (mining)
             data.active = 20;
 

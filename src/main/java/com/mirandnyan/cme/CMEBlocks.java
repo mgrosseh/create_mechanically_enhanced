@@ -1,47 +1,59 @@
 package com.mirandnyan.cme;
 
-import com.mirandnyan.cme.content.blocks.food_replicator.FoodReplicatorBlock;
-import com.mirandnyan.cme.content.blocks.food_replicator.FoodReplicatorBlockEntity;
-import com.simibubi.create.AllBlocks;
+import com.mirandnyan.cme.content.blocks.part_crafter.PartCrafterBlock;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.builders.BlockEntityBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
+import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.common.Tags;
 
 import static com.mirandnyan.cme.CreateMechanicallyEnhanced.REGISTRATE;
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
 
 public class CMEBlocks {
 
-    public static final BlockEntry<FoodReplicatorBlock> FOOD_REPLICATOR = REGISTRATE.block("food_replicator", FoodReplicatorBlock::new)
-            .initialProperties(AllBlocks.BRASS_CASING)
+    public static final BlockEntry<PartCrafterBlock> PART_CRAFTER = REGISTRATE.block("part_crafter", PartCrafterBlock::new)
+            .initialProperties(() -> Blocks.SMITHING_TABLE)
+            //.properties(p -> p)
             .blockstate((ctx, prov) ->
-                    prov.horizontalBlock(ctx.get(), getExisting(ctx, prov)))
-            .properties(prop -> prop
-                    .strength(8.0f, 9.0f)
-                    .sound(SoundType.NETHERITE_BLOCK)
-                    .requiresCorrectToolForDrops())
+                    prov.simpleBlock(ctx.get(), prov.models()
+                                    .cubeBottomTop("part_crafter",
+                                            CreateMechanicallyEnhanced.asResource("block", "part_crafter", "side"),
+                                            CreateMechanicallyEnhanced.asResource("block", "part_crafter", "bottom"),
+                                            CreateMechanicallyEnhanced.asResource("block", "part_crafter", "top")
+                                    )
+                    )
+            )
             .item()
-            // TODO: recipe
-            .model(AssetLookup::customItemModel)
+            .model((c, p) -> p.withExistingParent("part_crafter",
+                    CreateMechanicallyEnhanced.asResource("block", "part_crafter")))
+            .recipe((ctx, prov) ->
+                    ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+                            .pattern("CC")
+                            .pattern("WW")
+                            .pattern("WW")
+                            .define('C', CMETags.Items.CARDBOARD_LIKE)
+                            .define('W', CMETags.Items.PLANKS)
+                            .unlockedBy("has_cardboard_like", RegistrateRecipeProvider.has(CMETags.Items.CARDBOARD_LIKE))
+                            .save(prov)
+            )
             .build()
             .register();
-    public static final BlockEntityEntry<FoodReplicatorBlockEntity> FOOD_REPLICATOR_BLOCK_ENTITY = blockEntityOf(FOOD_REPLICATOR, FoodReplicatorBlockEntity::new)
-            //.visual(() -> FoodReplicatorVisual::new, false)
-            //.renderer(() -> FoodReplicatorRenderer::new)
-            .register();
-
-
 
     protected static <T extends Block> ModelFile getExisting(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov) {
         return prov.models().getExistingFile(CreateMechanicallyEnhanced.asResource("block/" + ctx.getName() + "/block"));

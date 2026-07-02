@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "tag": "create_mechanically_enhanced:cardboard_like"
+    },
+    "W": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "pattern": [
+    "CC",
+    "WW",
+    "WW"
+  ],
+  "result": {
+    "count": 1,
+    "id": "create_mechanically_enhanced:part_crafter"
+  }
+}

@@ -1,6 +1,6 @@
 {
   "attribute.create_mechanically_enhanced.player.coyote_time": "Coyote Time",
-  "block.create_mechanically_enhanced.food_replicator": "Food Replicator",
+  "block.create_mechanically_enhanced.part_crafter": "Part Crafter",
   "create_mechanically_enhanced.cat_coin.tier_0": "For crafting only",
   "create_mechanically_enhanced.cat_coin.tier_1": "Tier 1",
   "create_mechanically_enhanced.cat_coin.tier_2": "Tier 2",
@@ -46,6 +46,7 @@
   "create_mechanically_enhanced.tooltip.mechanical_tool.air.prefix": "Air: ",
   "create_mechanically_enhanced.tooltip.mechanical_tool.no_air": "No Tank",
   "create_mechanically_enhanced.tooltip.nether_star_accelerator": "Immune to explosions",
+  "create_mechanically_enhanced.tooltip.not_cardboard": "Something seems off",
   "create_mechanically_enhanced.tooltip.used_while_sneaking": "When used while sneaking",
   "effect.create_mechanically_enhanced.hunger_regeneration": "Hunger Regeneration",
   "effect.create_mechanically_enhanced.range_blessing": "Range Blessing",
@@ -85,6 +86,7 @@
   "item.create_mechanically_enhanced.mechanical_tool": "Mechanical Tool",
   "item.create_mechanically_enhanced.mining_refiner_blasting": "Blasting Refiner",
   "item.create_mechanically_enhanced.mining_refiner_silk_brush": "Silk Brush Refiner",
+  "item.create_mechanically_enhanced.not_cardboard": "Cardboard?",
   "item.create_mechanically_enhanced.saw_head_cardboard": "Cardboard Saw head",
   "item.create_mechanically_enhanced.saw_head_copper": "Copper Saw head",
   "item.create_mechanically_enhanced.saw_head_iron": "Iron Saw head",

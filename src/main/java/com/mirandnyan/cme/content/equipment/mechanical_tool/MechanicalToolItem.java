@@ -556,12 +556,22 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
     }
 
     @SubscribeEvent
-    public static void leftClick(PlayerInteractEvent.LeftClickBlock event) {
+    public static void leftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
         ItemStack item = event.getItemStack();
         List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (FilledToolSlot slot : slots) {
             var part = slot.getPart();
-            part.data.leftClick(slot.slot(), event.getEntity(), item, event);
+            part.data.leftClickBlock(slot.slot(), event.getEntity(), item, event);
+        }
+    }
+
+    @SubscribeEvent
+    public static void leftClickEmpty(PlayerInteractEvent.LeftClickEmpty event) {
+        ItemStack item = event.getItemStack();
+        List<FilledToolSlot> slots = item.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
+        for (FilledToolSlot slot : slots) {
+            var part = slot.getPart();
+            part.data.leftClickEmpty(slot.slot(), event.getEntity(), item, event);
         }
     }
 
@@ -594,8 +604,6 @@ public class MechanicalToolItem extends MechanicalItem implements CustomArmPoseI
 
     @Override
     public void postHurtEnemy(ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
-        target.setRemainingFireTicks(60);
-
         List<FilledToolSlot> slots = stack.getOrDefault(CMEDataComponents.TOOL_SLOTS_COMPONENT_TYPE, List.of());
         for (var slot : slots) {
             var part = slot.getPart();

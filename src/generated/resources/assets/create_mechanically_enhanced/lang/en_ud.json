@@ -1,6 +1,6 @@
 {
   "attribute.create_mechanically_enhanced.player.coyote_time": "ǝɯı⟘ ǝʇoʎoƆ",
-  "block.create_mechanically_enhanced.food_replicator": "ɹoʇɐɔıןdǝᴚ pooℲ",
+  "block.create_mechanically_enhanced.part_crafter": "ɹǝʇɟɐɹƆ ʇɹɐԀ",
   "create_mechanically_enhanced.cat_coin.tier_0": "ʎןuo buıʇɟɐɹɔ ɹoℲ",
   "create_mechanically_enhanced.cat_coin.tier_1": "Ɩ ɹǝı⟘",
   "create_mechanically_enhanced.cat_coin.tier_2": "ᄅ ɹǝı⟘",
@@ -46,6 +46,7 @@
   "create_mechanically_enhanced.tooltip.mechanical_tool.air.prefix": " :ɹıⱯ",
   "create_mechanically_enhanced.tooltip.mechanical_tool.no_air": "ʞuɐ⟘ oN",
   "create_mechanically_enhanced.tooltip.nether_star_accelerator": "suoısoןdxǝ oʇ ǝunɯɯI",
+  "create_mechanically_enhanced.tooltip.not_cardboard": "ɟɟo sɯǝǝs buıɥʇǝɯoS",
   "create_mechanically_enhanced.tooltip.used_while_sneaking": "buıʞɐǝus ǝןıɥʍ pǝsn uǝɥM",
   "effect.create_mechanically_enhanced.hunger_regeneration": "uoıʇɐɹǝuǝbǝᴚ ɹǝbunH",
   "effect.create_mechanically_enhanced.range_blessing": "buıssǝןᗺ ǝbuɐᴚ",
@@ -85,6 +86,7 @@
   "item.create_mechanically_enhanced.mechanical_tool": "ןoo⟘ ןɐɔıuɐɥɔǝW",
   "item.create_mechanically_enhanced.mining_refiner_blasting": "ɹǝuıɟǝᴚ buıʇsɐןᗺ",
   "item.create_mechanically_enhanced.mining_refiner_silk_brush": "ɹǝuıɟǝᴚ ɥsnɹᗺ ʞןıS",
+  "item.create_mechanically_enhanced.not_cardboard": "¿pɹɐoqpɹɐƆ",
   "item.create_mechanically_enhanced.saw_head_cardboard": "pɐǝɥ ʍɐS pɹɐoqpɹɐƆ",
   "item.create_mechanically_enhanced.saw_head_copper": "pɐǝɥ ʍɐS ɹǝddoƆ",
   "item.create_mechanically_enhanced.saw_head_iron": "pɐǝɥ ʍɐS uoɹI",

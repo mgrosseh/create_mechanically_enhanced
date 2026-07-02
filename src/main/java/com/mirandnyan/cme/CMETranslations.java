@@ -81,14 +81,16 @@ public class CMETranslations {
     public static final LangEntry CAT_COIN_TIER_3 = new StyledLangEntry("cat_coin.tier_3", "Tier 3",
             c -> c.withStyle(ChatFormatting.GRAY));
 
-    public static final LangEntry NETHER_STAR_ACCELERATOR_TOOLTIP = new StyledLangEntry("tooltip.nether_star_accelerator",
-            "Immune to explosions",
-            c -> c.withStyle(ChatFormatting.GRAY));
-
     public static final LangEntry MECHANICAL_TOOL_DRILL_TYPE = new LangEntry("mechanical_tool.type.drill", " (Drill)");
     public static final LangEntry MECHANICAL_TOOL_SAW_TYPE = new LangEntry("mechanical_tool.type.saw", " (Saw)");
 
 
+    public static final LangEntry NETHER_STAR_ACCELERATOR_TOOLTIP = simpleTooltip("tooltip.nether_star_accelerator", "Immune to explosions");
+    public static final LangEntry NOT_CARDBOARD_TOOLTIP = simpleTooltip("tooltip.not_cardboard", "Something seems off");
+
+    protected static LangEntry simpleTooltip(String key, String textEnglish) {
+        return new StyledLangEntry(key, textEnglish, c -> c.withStyle(ChatFormatting.GRAY));
+    }
 
     protected static LangEntry toolSlot(String key, String textEnglish) {
         return new StyledLangEntry(CreateMechanicallyEnhanced.MOD_ID + ".tool_slot", key, textEnglish,

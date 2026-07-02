@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "create_mechanically_enhanced:not_cardboard_binding"
+    },
+    {
+      "tag": "c:rods/wooden"
+    },
+    {
+      "tag": "c:rods/wooden"
+    },
+    {
+      "tag": "create_mechanically_enhanced:not_cardboard_base"
+    },
+    {
+      "tag": "c:buckets/water"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "create_mechanically_enhanced:not_cardboard"
+  }
+}

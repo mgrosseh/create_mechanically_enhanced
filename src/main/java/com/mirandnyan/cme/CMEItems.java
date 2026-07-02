@@ -6,6 +6,7 @@ import com.mirandnyan.cme.content.items.cat_coin_die.CatCoinDieItem;
 import com.mirandnyan.cme.recipes.CreateRecipeUtil;
 import com.simibubi.create.AllCreativeModeTabs;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.kinetics.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.kinetics.press.PressingRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeBuilder;
@@ -17,6 +18,9 @@ import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -95,6 +99,24 @@ public class CMEItems {
 
     public static final ItemEntry<Item> BLASTING_MINING_REFINER = inTab(part("mining_refiner_blasting").lang("Blasting Refiner").register());
     public static final ItemEntry<Item> SILK_BRUSH_MINING_REFINER = inTab(part("mining_refiner_silk_brush").lang("Silk Brush Refiner").register());
+
+    public static final ItemEntry<TooltipItem> NOT_CARDBOARD = inTab(
+            tooltip("not_cardboard", CMETranslations.NOT_CARDBOARD_TOOLTIP)
+                    .lang("Cardboard?")
+                    .defaultModel()
+                    .recipe((ctx, prov) ->
+                                    ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get())
+                                            .requires(CMETags.Items.NOT_CARDBOARD_BINDING)
+                                            .requires(CMETags.Items.WOODEN_RODS)
+                                            .requires(CMETags.Items.WOODEN_RODS)
+                                            .requires(CMETags.Items.NOT_CARDBOARD_BASE)
+                                            .requires(CMETags.Items.WATER_BUCKETS)
+                                            .unlockedBy("has_cardboard_base", RegistrateRecipeProvider.has(CMETags.Items.NOT_CARDBOARD_BASE))
+                                            .save(prov)
+                    )
+                    .tag(AllTags.AllItemTags.PULPIFIABLE.tag)
+                    .register()
+    );
 
     public static final ItemEntry<CatCoinDieItem> CAT_COIN_DIE = inTab(REGISTRATE.item("cat_coin_die", CatCoinDieItem::new)
             .defaultModel()
@@ -203,6 +225,10 @@ public class CMEItems {
         return REGISTRATE.item(name, Item::new)
                 .properties(p -> p.stacksTo(1))
                 .model(CMEItems::getExisting);
+    }
+
+    private static ItemBuilder<TooltipItem, CreateRegistrate> tooltip(String id, CMETranslations.LangEntry tooltip) {
+        return REGISTRATE.item(id, p -> new TooltipItem(p, tooltip::resolveComponent));
     }
 
     private static <T extends Item> ItemEntry<T> inTab(ItemEntry<T> entry) {

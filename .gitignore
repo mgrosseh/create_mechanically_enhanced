@@ -42,3 +42,4 @@ run/
 **/src/generated/**/.cache/
 repo/
 !**/src/**/repo/
+/asset_creation/old/

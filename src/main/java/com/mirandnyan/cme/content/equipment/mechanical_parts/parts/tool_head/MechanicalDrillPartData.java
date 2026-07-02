@@ -24,6 +24,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -38,8 +39,6 @@ public class MechanicalDrillPartData extends MechanicalPartData {
     private final ItemAttributeModifiers.Entry drillDamage;
 
     private static class ClientData {
-        int lastAir = 0;
-        int lastDamage = 0;
         PhysicalFloat pAngle = new PhysicalFloat(1).withDrag(0.1);
         static WeakHashMap<String, ClientData> clientData = new WeakHashMap<>();
 
@@ -90,21 +89,30 @@ public class MechanicalDrillPartData extends MechanicalPartData {
     }
 
     @Override
+    public void leftClickBlock(FilledToolSlot.SlotId slot, Player entity, ItemStack item, boolean client, PlayerInteractEvent.LeftClickBlock event) {
+        super.leftClickBlock(slot, entity, item, client, event);
+        if (!client)
+            return;
+        var data = ClientData.of(entity);
+        data.pAngle.bump(5.5);
+    }
+    @Override
+    public void leftClickEmpty(FilledToolSlot.SlotId slot, Player entity, ItemStack item, boolean client, PlayerInteractEvent.LeftClickEmpty event) {
+        super.leftClickEmpty(slot, entity, item, client, event);
+        if (!client)
+            return;
+        var data = ClientData.of(entity);
+        data.pAngle.bump(5.5);
+    }
+
+    @Override
     public void playerTick(Player player, ItemStack stack) {
-        //noinspection DuplicatedCode
         if (!(player.level() instanceof ClientLevel clevel))
             return;
 
         var data = ClientData.of(player);
 
-
-        var air = stack.getOrDefault(CMEDataComponents.PRESSURIZED_AIR, 0);
-        var damage = stack.getOrDefault(DataComponents.DAMAGE, 0);
-        var mining = clevel.levelRenderer.destroyingBlocks.containsKey(player.getId())
-                || air < data.lastAir
-                || damage > data.lastDamage;
-        data.lastAir = air;
-        data.lastDamage = damage;
+        var mining = clevel.levelRenderer.destroyingBlocks.containsKey(player.getId());
         if (mining)
             data.pAngle.bump(5.5);
 

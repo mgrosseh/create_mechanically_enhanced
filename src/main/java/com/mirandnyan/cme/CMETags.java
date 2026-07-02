@@ -1,5 +1,6 @@
 package com.mirandnyan.cme;
 
+import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.providers.RegistrateItemTagsProvider;
@@ -14,6 +15,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
 
+import static net.minecraft.world.item.Items.*;
+
 
 public class CMETags {
     private static final CreateRegistrate REGISTRATE = CreateMechanicallyEnhanced.REGISTRATE;
@@ -24,8 +27,12 @@ public class CMETags {
 
 
     public static class Items {
+        public static final TagKey<Item> PLANKS = minecraft("planks");
+
         public static final TagKey<Item> WOOL = common("wool");
 
+        public static final TagKey<Item> WOODEN_RODS = common("rods/wooden");
+        public static final TagKey<Item> WATER_BUCKETS = common("buckets/water");
         public static final TagKey<Item> STONES = common("stones");
         public static final TagKey<Item> CROPS = common("crops");
 
@@ -35,6 +42,12 @@ public class CMETags {
         public static final TagKey<Item> MID_LIKED_MECHANICAL_CAT_FOOD = custom("mid_liked_mechanical_cat_food");
         public static final TagKey<Item> HIGH_LIKED_MECHANICAL_CAT_FOOD = custom("high_liked_mechanical_cat_food");
 
+
+        public static final TagKey<Item> NOT_CARDBOARD_BASE = custom("not_cardboard_base");
+        public static final TagKey<Item> NOT_CARDBOARD_BINDING = custom("not_cardboard_binding");
+
+        public static final TagKey<Item> CARDBOARD_PLATES = common("plates/cardboard");
+        public static final TagKey<Item> CARDBOARD_LIKE = custom("cardboard_like");
 
         public static final TagKey<Item> BURN_UP_IMMUNE = custom("burn_up_immune");
         public static final TagKey<Item> BURN_UP_HIGH_LIKELIHOOD = custom("burn_up_high_liekelihood");
@@ -51,23 +64,23 @@ public class CMETags {
 
         public static void genTags(RegistrateItemTagsProvider prov) {
             prov.addTag(ALL_BLACKSTONE)
-                    .add(net.minecraft.world.item.Items.BLACKSTONE)
-                    .add(net.minecraft.world.item.Items.BLACKSTONE_SLAB)
-                    .add(net.minecraft.world.item.Items.BLACKSTONE_STAIRS)
-                    .add(net.minecraft.world.item.Items.BLACKSTONE_WALL)
-                    .add(net.minecraft.world.item.Items.POLISHED_BLACKSTONE)
-                    .add(net.minecraft.world.item.Items.POLISHED_BLACKSTONE_BRICK_SLAB)
-                    .add(net.minecraft.world.item.Items.POLISHED_BLACKSTONE_BRICKS)
-                    .add(net.minecraft.world.item.Items.POLISHED_BLACKSTONE_BRICK_STAIRS)
-                    .add(net.minecraft.world.item.Items.POLISHED_BLACKSTONE_BUTTON)
-                    .add(net.minecraft.world.item.Items.POLISHED_BLACKSTONE_SLAB)
-                    .add(net.minecraft.world.item.Items.POLISHED_BLACKSTONE_BRICK_WALL)
-                    .add(net.minecraft.world.item.Items.POLISHED_BLACKSTONE_PRESSURE_PLATE)
-                    .add(net.minecraft.world.item.Items.POLISHED_BLACKSTONE_STAIRS)
-                    .add(net.minecraft.world.item.Items.POLISHED_BLACKSTONE_WALL)
-                    .add(net.minecraft.world.item.Items.CRACKED_POLISHED_BLACKSTONE_BRICKS)
-                    .add(net.minecraft.world.item.Items.CHISELED_POLISHED_BLACKSTONE)
-                    .add(net.minecraft.world.item.Items.GILDED_BLACKSTONE);
+                    .add(BLACKSTONE)
+                    .add(BLACKSTONE_SLAB)
+                    .add(BLACKSTONE_STAIRS)
+                    .add(BLACKSTONE_WALL)
+                    .add(POLISHED_BLACKSTONE)
+                    .add(POLISHED_BLACKSTONE_BRICK_SLAB)
+                    .add(POLISHED_BLACKSTONE_BRICKS)
+                    .add(POLISHED_BLACKSTONE_BRICK_STAIRS)
+                    .add(POLISHED_BLACKSTONE_BUTTON)
+                    .add(POLISHED_BLACKSTONE_SLAB)
+                    .add(POLISHED_BLACKSTONE_BRICK_WALL)
+                    .add(POLISHED_BLACKSTONE_PRESSURE_PLATE)
+                    .add(POLISHED_BLACKSTONE_STAIRS)
+                    .add(POLISHED_BLACKSTONE_WALL)
+                    .add(CRACKED_POLISHED_BLACKSTONE_BRICKS)
+                    .add(CHISELED_POLISHED_BLACKSTONE)
+                    .add(GILDED_BLACKSTONE);
 
             prov.addTag(LOW_LIKED_MECHANICAL_CAT_FOOD)
                     .add(CMEItems.MINTED_COPPER_COIN.asItem())
@@ -83,6 +96,21 @@ public class CMETags {
                     .add(CMEItems.MINTED_BRASS_COIN_DIAMOND.asItem())
                     .add(CMEItems.MINTED_BRASS_COIN_EMERALD.asItem())
                     .add(CMEItems.MINTED_BRASS_COIN_EXPERIENCE.asItem());
+
+            prov.addTag(NOT_CARDBOARD_BASE)
+                    .add(PAPER)
+                    .add(KELP)
+                    .add(LILY_PAD)
+                    .add(BAMBOO);
+
+            prov.addTag(NOT_CARDBOARD_BINDING)
+                    .addTag(Tags.Items.NUGGETS_IRON)
+                    .add(CLAY);
+
+            prov.addTag(CARDBOARD_PLATES); // TODO: I guess somehow I have to make create load before me here? idk why it doesn't
+            prov.addTag(CARDBOARD_LIKE)
+                    .addTag(CARDBOARD_PLATES)
+                    .add(CMEItems.NOT_CARDBOARD.getKey());
 
 
             prov.addTag(BURN_UP_IMMUNE)
