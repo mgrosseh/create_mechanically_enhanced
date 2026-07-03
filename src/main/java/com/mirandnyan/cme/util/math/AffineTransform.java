@@ -6,6 +6,9 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.joml.*;
 
+import java.util.Objects;
+
+// TODO: make record
 public class AffineTransform implements Affine<AffineTransform> {
     Matrix3f matrix;
     Vector3f translation;
@@ -60,11 +63,11 @@ public class AffineTransform implements Affine<AffineTransform> {
         return this;
     }
 
-    @Override
-    public AffineTransform rotateAround(Quaternionfc quaternion, float x, float y, float z) {
-        var mat = asPose();
-        return this.with(mat.rotateAround(quaternion, x, y, z));
-    }
+//    @Override
+//    public AffineTransform rotateAround(Quaternionfc quaternion, float x, float y, float z) {
+//        var mat = asPose();
+//        return this.with(mat.rotateAround(quaternion, x, y, z));
+//    }
 
     @Override
     public AffineTransform scale(float factorX, float factorY, float factorZ) {
@@ -85,9 +88,9 @@ public class AffineTransform implements Affine<AffineTransform> {
 
     @Override
     public AffineTransform translate(float x, float y, float z) {
-//        var vec = new Vector3f(x, y ,z);
-//        translation.add(vec.mul(matrix));
-        translation.add(x, y, z);
+        var vec = new Vector3f(x, y ,z);
+        translation.add(vec.mul(matrix));
+      //  translation.add(x, y, z);
         return this;
     }
 
@@ -104,16 +107,25 @@ public class AffineTransform implements Affine<AffineTransform> {
         return new AffineTransform(new Matrix3f(matrix), new Vector3f(translation));
     }
 
-    public AffineTransform mul(AffineTransform transform, AffineTransform dest) {
-        //return new AffineTransform(this.asPose().mul(transform.asPose()));
-
-        dest.translation = transform.translation.mul(matrix, new Vector3f()).add(translation);
-        matrix.mul(transform.matrix, dest.matrix);
-        return dest;
-    }
     public AffineTransform mul(AffineTransform transform) {
-        return mul(transform, this);
+        //return new AffineTransform(this.asPose().mul(transform.asPose()));
+        return new AffineTransform(
+                matrix.mul(transform.matrix, new Matrix3f()),
+                transform.translation.mul(matrix, new Vector3f()).add(translation)
+        );
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(matrix, translation);
+    }
+
+//    @Override
+//    public boolean equals(Object o) {
+//        if (o == null || getClass() != o.getClass()) return false;
+//        AffineTransform that = (AffineTransform) o;
+//        return Objects.equals(matrix, that.matrix) && Objects.equals(translation, that.translation);
+//    }
 
     @Override
     public boolean equals(Object obj) {
@@ -122,5 +134,13 @@ public class AffineTransform implements Affine<AffineTransform> {
         if (!(obj instanceof AffineTransform affine))
             return false;
         return matrix.equals(affine.matrix) && translation.equals(affine.translation);
+    }
+
+    @Override
+    public String toString() {
+        return "AffineTransform{" +
+                "matrix=\n" + matrix +
+                ", translation=" + translation +
+                '}';
     }
 }

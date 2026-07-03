@@ -1,6 +1,7 @@
 package com.mirandnyan.cme.util.math;
 
 import com.mojang.math.Axis;
+import org.checkerframework.checker.units.qual.A;
 import org.joml.Matrix4f;
 import org.junit.jupiter.api.Test;
 
@@ -29,6 +30,34 @@ public class AffineTransformTest {
                 ;
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testTransitiveInvariant1() {
+        var a1 = new AffineTransform().rotate(Axis.YP.rotationDegrees(90f));
+        var a2 = new AffineTransform().translate(3f, 5f, 11f);
+
+        var actual = new AffineTransform()
+                .rotate(Axis.YP.rotationDegrees(90f))
+                .translate(3f, 5f, 11f);
+
+        assertEquals(a1.mul(a2), actual);
+    }
+
+    @Test
+    public void testTransitiveInvariant2() {
+        var a1 = new AffineTransform().translate(1f, 2f, 3f);
+        var a2 = new AffineTransform().rotate(Axis.YP.rotationDegrees(90f));
+        var a3 = new AffineTransform().translate(3f, 5f, 11f);
+
+        var actual = new AffineTransform()
+                .translate(1f, 2f, 3f)
+                .rotate(Axis.YP.rotationDegrees(90f))
+                .translate(3f, 5f, 11f);
+
+        assertEquals(a3.mul(a2).mul(a1), actual);
+
+        assertEquals(a3.mul(a2.mul(a1)), actual);
     }
 
     @Test
