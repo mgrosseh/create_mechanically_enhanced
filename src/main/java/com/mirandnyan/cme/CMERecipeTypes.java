@@ -1,5 +1,6 @@
 package com.mirandnyan.cme;
 
+import com.mirandnyan.cme.content.blocks.part_crafter.PartCrafterRecipe;
 import com.mirandnyan.cme.recipes.coin_minting.CatCoinDieMintingRecipe;
 import com.mojang.serialization.Codec;
 import com.simibubi.create.AllRecipeTypes;
@@ -27,6 +28,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 public enum CMERecipeTypes implements IRecipeTypeInfo, StringRepresentable {
+    PART_CRAFTING(PartCrafterRecipe.Serializer::new),
     COIN_MINTING(CatCoinDieMintingRecipe::new);
 
 

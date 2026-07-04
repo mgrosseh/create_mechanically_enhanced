@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_cardboard": {
+      "conditions": {
+        "items": [
+          {
+            "items": "create:cardboard"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "create_mechanically_enhanced:saw_head_cardboard_from_cardboard"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_cardboard"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "create_mechanically_enhanced:saw_head_cardboard_from_cardboard"
+    ]
+  }
+}

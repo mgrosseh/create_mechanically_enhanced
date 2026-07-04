@@ -45,6 +45,10 @@ import java.util.stream.Stream;
 import static com.mirandnyan.cme.CreateMechanicallyEnhanced.REGISTRATE;
 
 public class CMEMechanicalParts {
+    public static final int CARDBOARD_TANK_CAPACITY = 100;
+    public static final int COPPER_TANK_CAPACITY = 800;
+    public static final int NETHERITE_TANK_CAPACITY = 1200;
+
 
     // TODO: maybe make them with transform(Item, MechanicalToolSlot, apply) out of Items
 
@@ -270,7 +274,7 @@ public class CMEMechanicalParts {
             .material(CMEMaterials.CARDBOARD)
             .origin(new AffineTransform().translate(8f, 8f, 8f), MechanicalToolSlot.TANK_SLOT)
             .item(CMEItems.SMALL_CARDBOARD_TANK)
-            .data(new CardboardTankPartData(100))
+            .data(new CardboardTankPartData(CARDBOARD_TANK_CAPACITY))
             .defaultModel("tank")
             .build();
 
@@ -278,7 +282,7 @@ public class CMEMechanicalParts {
             .material(CMEMaterials.COPPER)
             .origin(new AffineTransform().translate(8f, 8f, 8f), MechanicalToolSlot.TANK_SLOT)
             .item(CMEItems.SMALL_COPPER_TANK)
-            .data(new MechanicalTankPartData(800))
+            .data(new MechanicalTankPartData(COPPER_TANK_CAPACITY))
             .defaultModel("tank")
             .build();
 
@@ -286,7 +290,7 @@ public class CMEMechanicalParts {
             .material(CMEMaterials.NETHERITE)
             .origin(new AffineTransform().translate(8f, 8f, 8f), MechanicalToolSlot.TANK_SLOT)
             .item(CMEItems.SMALL_NETHERITE_TANK)
-            .data(new MechanicalTankPartData(1200))
+            .data(new MechanicalTankPartData(NETHERITE_TANK_CAPACITY))
             .defaultModel("tank")
             .build();
 

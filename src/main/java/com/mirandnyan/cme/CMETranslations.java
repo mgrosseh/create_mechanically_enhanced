@@ -88,6 +88,8 @@ public class CMETranslations {
     public static final LangEntry NETHER_STAR_ACCELERATOR_TOOLTIP = simpleTooltip("tooltip.nether_star_accelerator", "Immune to explosions");
     public static final LangEntry NOT_CARDBOARD_TOOLTIP = simpleTooltip("tooltip.not_cardboard", "Something seems off");
 
+    public static final LangEntry PART_CRAFTER_CONTAINER_TITLE = new LangEntry("container.part_crafter" ,"Part Crafter");
+
     protected static LangEntry simpleTooltip(String key, String textEnglish) {
         return new StyledLangEntry(key, textEnglish, c -> c.withStyle(ChatFormatting.GRAY));
     }

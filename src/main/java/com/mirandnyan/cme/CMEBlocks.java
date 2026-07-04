@@ -31,18 +31,11 @@ public class CMEBlocks {
             .initialProperties(() -> Blocks.SMITHING_TABLE)
             //.properties(p -> p)
             .blockstate((ctx, prov) ->
-                    prov.simpleBlock(ctx.get(), prov.models()
-                                    .cubeBottomTop("part_crafter",
-                                            CreateMechanicallyEnhanced.asResource("block", "part_crafter", "side"),
-                                            CreateMechanicallyEnhanced.asResource("block", "part_crafter", "bottom"),
-                                            CreateMechanicallyEnhanced.asResource("block", "part_crafter", "top")
-                                    )
-                    )
+                    prov.horizontalBlock(ctx.get(), prov.models().getExistingFile(CreateMechanicallyEnhanced.asResource("block", "part_crafter")))
             )
             .item()
-            // TODO
-//            .model((c, p) -> p.withExistingParent("part_crafter",
-//                    CreateMechanicallyEnhanced.asResource("block", "part_crafter")))
+            .model((c, p) -> p.withExistingParent("part_crafter",
+                    CreateMechanicallyEnhanced.asResource("block", "part_crafter")))
             .recipe((ctx, prov) ->
                     ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
                             .pattern("CC")

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_not_cardboard": {
+      "conditions": {
+        "items": [
+          {
+            "items": "create_mechanically_enhanced:not_cardboard"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "create_mechanically_enhanced:drill_head_cardboard_from_not_cardboard"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_not_cardboard"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "create_mechanically_enhanced:drill_head_cardboard_from_not_cardboard"
+    ]
+  }
+}

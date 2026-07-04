@@ -1,5 +1,6 @@
 package com.mirandnyan.cme;
 
+import com.mirandnyan.cme.content.blocks.part_crafter.PartCrafterRecipe;
 import com.mirandnyan.cme.content.equipment.mechanical_tool.MechanicalToolItem;
 import com.mirandnyan.cme.content.items.TooltipItem;
 import com.mirandnyan.cme.content.items.cat_coin_die.CatCoinDieItem;
@@ -26,12 +27,14 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import javax.tools.Tool;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,13 +47,38 @@ public class CMEItems {
             .model(getExisting("default"))
             .register();
 
+    public static final ItemEntry<TooltipItem> NOT_CARDBOARD = inTab(
+            tooltip("not_cardboard", CMETranslations.NOT_CARDBOARD_TOOLTIP)
+                    .lang("Cardboard?")
+                    .defaultModel()
+                    .recipe((ctx, prov) ->
+                            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get())
+                                    .requires(CMETags.Items.NOT_CARDBOARD_BINDING)
+                                    .requires(CMETags.Items.WOODEN_RODS)
+                                    .requires(CMETags.Items.WOODEN_RODS)
+                                    .requires(CMETags.Items.NOT_CARDBOARD_BASE)
+                                    .requires(CMETags.Items.WATER_BUCKETS)
+                                    .unlockedBy("has_cardboard_base", RegistrateRecipeProvider.has(CMETags.Items.NOT_CARDBOARD_BASE))
+                                    .save(prov)
+                    )
+                    .tag(AllTags.AllItemTags.PULPIFIABLE.tag)
+                    .register()
+    );
+
     // TODO: add cardboard grip
     public static final ItemEntry<Item> WOODEN_GRIP = inTab(part("grip_wooden").lang("Wooden Grip").register());
     public static final ItemEntry<Item> NETHERITE_GRIP = inTab(part("grip_netherite").lang("Netherite Grip").register());
 
+    public static final ItemEntry<Item> CARDBOARD_CASING_ACCELERATOR = inTab(part("accelerator_cardboard_casing")
+            .lang("Cardboard Encased Accelerator")
+            .recipe((ctx, prov) -> {
+                with_not_cardboard(ctx, prov);
+                with_cardboard(ctx, prov);
+            })
+            .register());
+    // TODO: maybe remove simple accelerator
     public static final ItemEntry<Item> SIMPLE_ANDESITE_ACCELERATOR = inTab(part("accelerator_simple_andesite").lang("Simple Connector").register());
     public static final ItemEntry<Item> STONE_ACCELERATOR = inTab(part("accelerator_stone").lang("Stone Accelerator").register());
-    public static final ItemEntry<Item> CARDBOARD_CASING_ACCELERATOR = inTab(part("accelerator_cardboard_casing").lang("Cardboard Encased Accelerator").register());
     public static final ItemEntry<Item> ANDESITE_CASING_ACCELERATOR = inTab(part("accelerator_andesite_casing").lang("Andesite Encased Accelerator").register());
     public static final ItemEntry<Item> COPPER_CASING_ACCELERATOR = inTab(part("accelerator_copper_casing").lang("Copper Encased Accelerator").register());
     public static final ItemEntry<Item> BRASS_CASING_ACCELERATOR = inTab(part("accelerator_brass_casing").lang("Brass Encased Accelerator").register());
@@ -66,28 +94,64 @@ public class CMEItems {
                     .lang("Nether Star Accelerator")
                     .register());
 
-    public static final ItemEntry<Item> SMALL_CARDBOARD_COG = inTab(part("small_cog_cardboard").register());
-    public static final ItemEntry<Item> SMALL_WOODEN_COG = inTab(part("small_cog_wooden").register());
-    public static final ItemEntry<Item> SMALL_ANDESITE_COG = inTab(part("small_cog_andesite").register());
-    public static final ItemEntry<Item> SMALL_BRASS_COG = inTab(part("small_cog_brass").register());
-    public static final ItemEntry<Item> SMALL_NETHERITE_COG = inTab(part("small_cog_netherite").register());
+    public static final ItemEntry<Item> SMALL_CARDBOARD_COG = inTab(part("small_cog_cardboard")
+            .lang("Small Cardboard Cog")
+            .recipe((ctx, prov) -> {
+                with_not_cardboard(ctx, prov);
+                with_cardboard(ctx, prov);
+            })
+            .register());
+    public static final ItemEntry<Item> SMALL_WOODEN_COG = inTab(part("small_cog_wooden").lang("Small Wooden Cog").register());
+    public static final ItemEntry<Item> SMALL_ANDESITE_COG = inTab(part("small_cog_andesite").lang("Small Andesite Cog").register());
+    public static final ItemEntry<Item> SMALL_BRASS_COG = inTab(part("small_cog_brass").lang("Small Brass Cog").register());
+    public static final ItemEntry<Item> SMALL_NETHERITE_COG = inTab(part("small_cog_netherite").lang("Small Netherite Cog").register());
 
-    public static final ItemEntry<Item> SMALL_CARDBOARD_GEARBOX = inTab(part("small_gearbox_cardboard").register());
-    public static final ItemEntry<Item> SMALL_ANDESITE_GEARBOX = inTab(part("small_gearbox_andesite").register());
-    public static final ItemEntry<Item> SMALL_COPPER_GEARBOX = inTab(part("small_gearbox_copper").register());
-    public static final ItemEntry<Item> SMALL_BRASS_GEARBOX = inTab(part("small_gearbox_brass").register());
-    public static final ItemEntry<Item> SMALL_NETHERITE_GEARBOX = inTab(part("small_gearbox_netherite").register());
+    public static final ItemEntry<Item> SMALL_CARDBOARD_GEARBOX = inTab(part("small_gearbox_cardboard")
+            .lang("Small Cardboard Gearbox")
+            .recipe((ctx, prov) -> {
+                with_not_cardboard(ctx, prov);
+                with_cardboard(ctx, prov);
+            })
+            .register());
+    public static final ItemEntry<Item> SMALL_ANDESITE_GEARBOX = inTab(part("small_gearbox_andesite").lang("Small Andesite Gearbox").register());
+    public static final ItemEntry<Item> SMALL_COPPER_GEARBOX = inTab(part("small_gearbox_copper").lang("Small Copper Gearbox").register());
+    public static final ItemEntry<Item> SMALL_BRASS_GEARBOX = inTab(part("small_gearbox_brass").lang("Small Brass Gearbox").register());
+    public static final ItemEntry<Item> SMALL_NETHERITE_GEARBOX = inTab(part("small_gearbox_netherite").lang("Small Netherite Gearbox").register());
 
-    public static final ItemEntry<Item> SMALL_CARDBOARD_TANK = inTab(part("tank_cardboard").register()); // TODO: tooltip: may leak air
-    public static final ItemEntry<Item> SMALL_COPPER_TANK = inTab(part("tank_copper").register());
-    public static final ItemEntry<Item> SMALL_NETHERITE_TANK = inTab(part("tank_netherite").register());
+    public static final ItemEntry<TooltipItem> SMALL_CARDBOARD_TANK = inTab(tooltipPart("tank_cardboard",
+            "Capacity: " + CMEMechanicalParts.CARDBOARD_TANK_CAPACITY + "\nMay leak air.")
+            .lang("Cardboard Tank")
+            .recipe((ctx, prov) -> {
+                with_not_cardboard(ctx, prov);
+                with_cardboard(ctx, prov);
+            })
+            .register());
+    public static final ItemEntry<TooltipItem> SMALL_COPPER_TANK = inTab(tooltipPart("tank_copper", "Capacity: " + CMEMechanicalParts.COPPER_TANK_CAPACITY)
+            .lang("Copper Tank")
+            .register());
+    public static final ItemEntry<TooltipItem> SMALL_NETHERITE_TANK = inTab(tooltipPart("tank_netherite",
+            "Capacity: " + CMEMechanicalParts.NETHERITE_TANK_CAPACITY)
+            .lang("Netherite Tank")
+            .register());
 
-    public static final ItemEntry<Item> CARDBOARD_DRILL_HEAD = inTab(part("drill_head_cardboard").lang("Cardboard Drill Head").register());
+    public static final ItemEntry<Item> CARDBOARD_DRILL_HEAD = inTab(part("drill_head_cardboard")
+            .lang("Cardboard Drill Head")
+            .recipe((ctx, prov) -> {
+                with_not_cardboard(ctx, prov);
+                with_cardboard(ctx, prov);
+            })
+            .register());
     public static final ItemEntry<Item> IRON_DRILL_HEAD = inTab(part("drill_head_iron").lang("Iron Drill Head").register());
     public static final ItemEntry<Item> DIAMOND_DRILL_HEAD = inTab(part("drill_head_diamond").lang("Diamond Drill Head").register());
     public static final ItemEntry<Item> NETHERITE_DRILL_HEAD = inTab(part("drill_head_netherite").lang("Netherite Drill Head").register());
 
-    public static final ItemEntry<Item> CARDBOARD_SAW_HEAD = inTab(part("saw_head_cardboard").lang("Cardboard Saw head").register());
+    public static final ItemEntry<Item> CARDBOARD_SAW_HEAD = inTab(part("saw_head_cardboard")
+            .lang("Cardboard Saw head")
+            .recipe((ctx, prov) -> {
+                with_not_cardboard(ctx, prov);
+                with_cardboard(ctx, prov);
+            })
+            .register());
     public static final ItemEntry<Item> IRON_SAW_HEAD = inTab(part("saw_head_iron").lang("Iron Saw head").register());
     public static final ItemEntry<Item> COPPER_SAW_HEAD = inTab(part("saw_head_copper").lang("Copper Saw head").register());
     public static final ItemEntry<Item> NETHERITE_SAW_HEAD = inTab(part("saw_head_netherite").lang("Netherite Saw Head").register());
@@ -99,24 +163,6 @@ public class CMEItems {
 
     public static final ItemEntry<Item> BLASTING_MINING_REFINER = inTab(part("mining_refiner_blasting").lang("Blasting Refiner").register());
     public static final ItemEntry<Item> SILK_BRUSH_MINING_REFINER = inTab(part("mining_refiner_silk_brush").lang("Silk Brush Refiner").register());
-
-    public static final ItemEntry<TooltipItem> NOT_CARDBOARD = inTab(
-            tooltip("not_cardboard", CMETranslations.NOT_CARDBOARD_TOOLTIP)
-                    .lang("Cardboard?")
-                    .defaultModel()
-                    .recipe((ctx, prov) ->
-                                    ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get())
-                                            .requires(CMETags.Items.NOT_CARDBOARD_BINDING)
-                                            .requires(CMETags.Items.WOODEN_RODS)
-                                            .requires(CMETags.Items.WOODEN_RODS)
-                                            .requires(CMETags.Items.NOT_CARDBOARD_BASE)
-                                            .requires(CMETags.Items.WATER_BUCKETS)
-                                            .unlockedBy("has_cardboard_base", RegistrateRecipeProvider.has(CMETags.Items.NOT_CARDBOARD_BASE))
-                                            .save(prov)
-                    )
-                    .tag(AllTags.AllItemTags.PULPIFIABLE.tag)
-                    .register()
-    );
 
     public static final ItemEntry<CatCoinDieItem> CAT_COIN_DIE = inTab(REGISTRATE.item("cat_coin_die", CatCoinDieItem::new)
             .defaultModel()
@@ -189,6 +235,19 @@ public class CMEItems {
             coin("brass_coin_minted_experience", "Minted Brass Coin (Experience)", CMETranslations.CAT_COIN_TIER_3,
                     coin_recipe(UNMINTED_BRASS_COIN, AllItems.EXP_NUGGET));
 
+
+
+    private static <T extends Item> void with_not_cardboard(DataGenContext<Item, T> ctx, RegistrateRecipeProvider prov) {
+        PartCrafterRecipe.builder(Ingredient.of(CMEItems.NOT_CARDBOARD), RecipeCategory.MISC, ctx.get())
+                .unlockedBy("has_not_cardboard", RegistrateRecipeProvider.has(CMEItems.NOT_CARDBOARD))
+                .save(prov, CreateMechanicallyEnhanced.asResource(ctx.getName() + "_from_not_cardboard"));
+    }
+    private static <T extends Item> void with_cardboard(DataGenContext<Item, T> ctx, RegistrateRecipeProvider prov) {
+        PartCrafterRecipe.builder(Ingredient.of(AllItems.CARDBOARD), RecipeCategory.MISC, ctx.get())
+                        .unlockedBy("has_cardboard", RegistrateRecipeProvider.has(AllItems.CARDBOARD))
+                        .save(prov, CreateMechanicallyEnhanced.asResource(ctx.getName() + "_from_cardboard"));
+    }
+
     private static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateRecipeProvider> coin_recipe(ItemLike unminted) {
         return (ctx, prov) ->
                 CreateRecipeUtil.pressing(CreateMechanicallyEnhanced.asResource("coin_minting", ctx.getName()))
@@ -223,6 +282,16 @@ public class CMEItems {
 
     private static ItemBuilder<Item, CreateRegistrate> part(String name) {
         return REGISTRATE.item(name, Item::new)
+                .properties(p -> p.stacksTo(1))
+                .model(CMEItems::getExisting);
+    }
+
+    private static ItemBuilder<TooltipItem, CreateRegistrate> tooltipPart(String name, String tooltip) {
+        var entry = CMETranslations.tooltip("tooltip." + name, tooltip);
+        return tooltipPart(name, entry);
+    }
+    private static ItemBuilder<TooltipItem, CreateRegistrate> tooltipPart(String name, CMETranslations.LangEntry tooltip) {
+        return tooltip(name, tooltip)
                 .properties(p -> p.stacksTo(1))
                 .model(CMEItems::getExisting);
     }

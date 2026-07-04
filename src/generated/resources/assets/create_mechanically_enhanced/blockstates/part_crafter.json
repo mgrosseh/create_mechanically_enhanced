@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
+    "facing=east": {
+      "model": "create_mechanically_enhanced:block/part_crafter",
+      "y": 90
+    },
+    "facing=north": {
       "model": "create_mechanically_enhanced:block/part_crafter"
+    },
+    "facing=south": {
+      "model": "create_mechanically_enhanced:block/part_crafter",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "create_mechanically_enhanced:block/part_crafter",
+      "y": 270
     }
   }
 }

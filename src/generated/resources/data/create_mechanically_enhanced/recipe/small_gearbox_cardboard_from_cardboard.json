@@ -1,0 +1,10 @@
+{
+  "type": "create_mechanically_enhanced:part_crafting",
+  "ingredient": {
+    "item": "create:cardboard"
+  },
+  "result": {
+    "count": 1,
+    "id": "create_mechanically_enhanced:small_gearbox_cardboard"
+  }
+}

@@ -111,6 +111,8 @@ public class CreateMechanicallyEnhanced {
 
         REGISTRATE.setCreativeTab(CMEItems.MAIN);
 
+        CMERecipeTypes.register(modEventBus);
+        CMEMenus.register();
         CMEAttributes.register(modEventBus);
         CMEBlocks.register();
         CMEItems.register(modEventBus);
@@ -120,7 +122,6 @@ public class CreateMechanicallyEnhanced {
         CMEMaterials.register();
         CMEMechanicalParts.register();
         MechanicalToolSlot.register();
-        CMERecipeTypes.register(modEventBus);
         CMEMobEffects.register(eventBus);
 
         modEventBus.addListener(EventPriority.HIGHEST, CMEDatagen::gatherDataHighPriority);
