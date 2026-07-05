@@ -57,10 +57,10 @@ public class PartCrafterScreen extends AbstractContainerScreen<PartCrafterMenu> 
         guiGraphics.blit(BG_LOCATION, i, j, 0, 0, this.imageWidth, this.imageHeight);
         int k = (int)(41.0F * this.scrollOffs);
         ResourceLocation resourcelocation = this.isScrollBarActive() ? SCROLLER_SPRITE : SCROLLER_DISABLED_SPRITE;
-        guiGraphics.blitSprite(resourcelocation, i + 119, j + 15 + k, 12, 15);
-        int l = this.leftPos + 52;
-        int i1 = this.topPos + 14;
-        int j1 = this.startIndex + 12;
+        guiGraphics.blitSprite(resourcelocation, i + 119, j + SCROLLER_HEIGHT + k, SCROLLER_WIDTH, SCROLLER_HEIGHT);
+        int l = this.leftPos + RECIPES_X;
+        int i1 = this.topPos + RECIPES_Y;
+        int j1 = this.startIndex + SCROLLER_WIDTH;
         this.renderButtons(guiGraphics, mouseX, mouseY, l, i1, j1);
         this.renderRecipes(guiGraphics, l, i1, j1);
     }
@@ -68,9 +68,9 @@ public class PartCrafterScreen extends AbstractContainerScreen<PartCrafterMenu> 
     protected void renderTooltip(@NotNull GuiGraphics guiGraphics, int x, int y) {
         super.renderTooltip(guiGraphics, x, y);
         if (this.displayRecipes) {
-            int i = this.leftPos + 52;
-            int j = this.topPos + 14;
-            int k = this.startIndex + 12;
+            int i = this.leftPos + RECIPES_X;
+            int j = this.topPos + RECIPES_Y;
+            int k = this.startIndex + SCROLLER_WIDTH;
             List<RecipeHolder<PartCrafterRecipe>> list = this.menu.getRecipes();
 
             for(int l = this.startIndex; l < k && l < this.menu.getNumRecipes(); ++l) {
