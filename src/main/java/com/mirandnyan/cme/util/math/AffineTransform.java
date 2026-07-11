@@ -6,74 +6,40 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.joml.*;
 
-import java.util.Objects;
+public record AffineTransform(RMat3f matrix, RVec3f translation) implements Affine<AffineTransform> {
 
-// TODO: make record
-public class AffineTransform implements Affine<AffineTransform> {
-    Matrix3f matrix;
-    Vector3f translation;
+    public static final AffineTransform identity = new AffineTransform(RMat3f.identity, RVec3f.zero);
 
-    public AffineTransform() {
-        matrix = new Matrix3f();
-        translation = new Vector3f(0, 0, 0);
-    }
-    public AffineTransform(Matrix3f matrix, Vector3f translation) {
-        this.matrix = matrix;
-        this.translation = translation;
-    }
-    public AffineTransform(Matrix4f matrix) {
-        with(matrix);
-    }
+//    public static AffineTransform fromMatrix4d(Matrix4fc matrix4d) {
+//        var translation = matrix4d.getTranslation(new Vector3f());
+//        var matrix = matrix4d.get3x3(new Matrix3f());
+//        return new AffineTransform(matrix, RVec3f.from(translation));
+//    }
 
-    public static AffineTransform withMatrix(Matrix3f matrix) {
-        return new AffineTransform(matrix, new Vector3f(0, 0, 0));
-    }
-    public static AffineTransform withTranslation(Vector3f translation) {
-        return new AffineTransform(new Matrix3f(), translation);
-    }
-
-    public static AffineTransform modelToBlock() {
-        return new AffineTransform().scale(1 / 16f).translate(-0.5f);
-    }
-    public static AffineTransform blockToModel() {
-        return modelToBlock().inverse();
-    }
+    public static final AffineTransform modelToBlock = identity.scale(1 / 16f).translate(-0.5f);
+    public static final AffineTransform blockToModel = modelToBlock.inverse();
 
 
     public AffineTransform convertToBlockSpace() {
-        return modelToBlock().mul(this).mul(blockToModel());
+        return modelToBlock.mul(this).mul(blockToModel);
     }
 
     public AffineTransform inverse() {
-        var mat = matrix.invert(new Matrix3f());
-        var trans = mat.transform(translation, new Vector3f()).negate();
-        return new AffineTransform(mat, trans);
-    }
-
-    public AffineTransform with(Matrix4fc matrix) {
-        this.translation = matrix.getTranslation(new Vector3f(0, 0, 0));
-        this.matrix = matrix.get3x3(new Matrix3f());
-        return this;
+        var mat = matrix.inverse();
+        return new AffineTransform(mat, mat.transform(translation).negate());
     }
 
     @Override
     public AffineTransform rotate(Quaternionfc quaternion) {
-        matrix.rotate(quaternion);
-        //translation.rotate(quaternion);
-        return this;
+        return new AffineTransform(matrix.rotate(quaternion), translation);
     }
-
-//    @Override
-//    public AffineTransform rotateAround(Quaternionfc quaternion, float x, float y, float z) {
-//        var mat = asPose();
-//        return this.with(mat.rotateAround(quaternion, x, y, z));
-//    }
 
     @Override
     public AffineTransform scale(float factorX, float factorY, float factorZ) {
-        matrix.scale(factorX, factorY, factorZ);
-        translation.mul(factorX, factorY, factorZ);
-        return this;
+        return new AffineTransform(
+                matrix.scale(factorX, factorY, factorZ),
+                translation
+        );
     }
 
     public AffineTransform scaleAround(float factorX, float factorY, float factorZ, float x, float y, float z) {
@@ -88,14 +54,18 @@ public class AffineTransform implements Affine<AffineTransform> {
 
     @Override
     public AffineTransform translate(float x, float y, float z) {
-        var vec = new Vector3f(x, y ,z);
-        translation.add(vec.mul(matrix));
-      //  translation.add(x, y, z);
-        return this;
+        var vec = new RVec3f(x, y ,z);
+        var translation = this.translation.add(matrix.transform(vec));
+        return new AffineTransform(matrix, translation);
     }
 
     public Matrix4f asPose() {
-        return new Matrix4f().set(matrix).setTranslation(translation);
+        return new Matrix4f(
+                matrix.xAxis().x(), matrix.xAxis().y(), matrix.xAxis().z(), 0,
+                matrix.yAxis().x(), matrix.yAxis().y(), matrix.yAxis().z(), 0,
+                matrix.zAxis().x(), matrix.zAxis().y(), matrix.zAxis().z(), 0,
+                translation.x(),    translation.y(),       translation.z(), 1
+        );
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -103,44 +73,10 @@ public class AffineTransform implements Affine<AffineTransform> {
         ms.mulPose(asPose());
     }
 
-    public AffineTransform copy() {
-        return new AffineTransform(new Matrix3f(matrix), new Vector3f(translation));
-    }
-
-    public AffineTransform mul(AffineTransform transform) {
-        //return new AffineTransform(this.asPose().mul(transform.asPose()));
+    public AffineTransform mul(AffineTransform rhs) {
         return new AffineTransform(
-                matrix.mul(transform.matrix, new Matrix3f()),
-                transform.translation.mul(matrix, new Vector3f()).add(translation)
+                matrix.mul(rhs.matrix),
+                matrix.transform(rhs.translation).add(translation)
         );
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(matrix, translation);
-    }
-
-//    @Override
-//    public boolean equals(Object o) {
-//        if (o == null || getClass() != o.getClass()) return false;
-//        AffineTransform that = (AffineTransform) o;
-//        return Objects.equals(matrix, that.matrix) && Objects.equals(translation, that.translation);
-//    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (!(obj instanceof AffineTransform affine))
-            return false;
-        return matrix.equals(affine.matrix) && translation.equals(affine.translation);
-    }
-
-    @Override
-    public String toString() {
-        return "AffineTransform{" +
-                "matrix=\n" + matrix +
-                ", translation=" + translation +
-                '}';
     }
 }

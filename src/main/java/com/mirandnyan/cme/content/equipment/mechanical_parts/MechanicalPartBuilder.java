@@ -70,7 +70,7 @@ public class MechanicalPartBuilder {
         return this;
     }
     public MechanicalPartBuilder origin(RegistryEntry<MechanicalToolSlot, MechanicalToolSlot> slot) {
-        return origin(new AffineTransform(), slot); // TODO: maybe different value for tool origin
+        return origin(AffineTransform.identity, slot); // TODO: maybe different value for tool origin
     }
     public MechanicalPartBuilder origin(AffineTransform transform, ResourceKey<MechanicalToolSlot> slot) {
         this.origin = transform;
@@ -121,16 +121,11 @@ public class MechanicalPartBuilder {
         if (models.isEmpty())
             defaultModel();
 
-        // Annoying model space to hand space offsets
-        var pixelToBlock = AffineTransform.modelToBlock();
-        var blockToPixel = AffineTransform.blockToModel();
-
-        var originTrans = pixelToBlock.copy().mul(origin).mul(blockToPixel);
-        origin = originTrans.inverse();
+        origin = origin.convertToBlockSpace().inverse();
 
         var defs = new MechanicalPartSlotDefs(origin, fitsInto, slots.stream()
                 .map(def -> new MechanicalPartSlotDefs.SlotDefinition(
-                        pixelToBlock.copy().mul(def.transform()).mul(blockToPixel),
+                        def.transform().convertToBlockSpace(),
                         def.slot()))
                 .toArray(MechanicalPartSlotDefs.SlotDefinition[]::new));
 
